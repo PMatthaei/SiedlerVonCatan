@@ -1,0 +1,59 @@
+- Discovery Service
+- Controllervererbung
+- Aufteilung der Protokollereignisse-> JSON bilden, JSON aufdröseln
+- "Viewflow" -> neue Scenes einfügen je nach Spielbedarf: 	Spiel starten -> Ladebildschirm -> Insel
+															Spiel beenden -> wieder in Menu kommen
+- Disconnect behandeln in View und Programm
+- View für Karten + Animationen
+- Richtiger Spieler unten links (evtl noch makiert !!)
+- Lambdaausdrücke wo möglich(senden, listeners)
+- Ausrauben von gezielt gewählten karten !
+- KI!!
+
+
+- NICE TO HAVE:
+	- In-Game menu auf "ESC"
+	
+
+	
+				if(serverIsle.getBuildings().size() != 0 ){ //Wenn Gebäude vorhanden sind
+				// Erstellt Gebäude
+				for (Building building : serverIsle.getBuildings()) {
+					JSONObject json3 = new JSONObject();
+
+					// ID des Eigentümers verpacken
+					json3.put("Eigentümer", building.getOwner().getPlayerID());
+
+					HashSet<MapLocation> set = building.getSite().getConnectedTiles();
+					
+					JSONArray buildingPositionArray	= new JSONArray();
+					JSONObject xYCoordinates = new JSONObject();
+					
+					for(MapLocation mL : set){
+						xYCoordinates.put("x", mL.getX());
+						xYCoordinates.put("y", mL.getY());
+						buildingPositionArray.put(xYCoordinates);
+
+						//JSONObjekt resetten
+						xYCoordinates = new JSONObject();
+					}
+
+					switch (building.getBuildingType()) {
+					case ROAD:
+						json3.put("Typ", "Straße");
+						break;
+					case CASTLE:
+						json3.put("Typ", "Stadt");
+						break;
+					case HUT:
+						json3.put("Typ", "Dorf");
+						break;
+					default:
+						break;
+
+					}
+					json3.put("Ort", buildingPositionArray);
+					jsonarray.put(json3);
+				}
+				json.put("Gebäude", jsonarray);
+			}
