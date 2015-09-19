@@ -7,9 +7,9 @@ import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
+import data.isle.Site;
 import utilities.game.Colors;
 import utilities.game.PlayerColors;
-import model.isle.Site;
 
 /**
  * Klasse zum Rendern der Strassen

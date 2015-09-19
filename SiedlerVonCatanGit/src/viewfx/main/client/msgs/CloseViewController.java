@@ -5,15 +5,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import view.main.GameView;
-import viewfx.Controller;
+import viewfx.AbstractViewController;
 import viewfx.ViewController;
 import viewfx.ViewFactory;
 import viewfx.main.server.StartServerViewController;
+import viewswt.main.GameView;
 import controller.GameController;
 import controller.ServerController;
-import model.GameModel;
-import model.isle.MapLocation;
+import data.GameModel;
+import data.isle.MapLocation;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,7 +30,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-public class CloseViewController extends ViewController implements Initializable,Controller{
+public class CloseViewController extends ViewController implements Initializable,AbstractViewController{
 	    
     private Stage closeStage;
     

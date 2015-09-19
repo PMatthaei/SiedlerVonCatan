@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import model.PlayerModel;
-import model.buildings.Building;
-import model.buildings.BuildingType;
-import model.isle.Site;
-import model.isle.TileEdge;
+import data.PlayerModel;
+import data.buildings.Building;
+import data.buildings.BuildingType;
+import data.isle.Site;
+import data.isle.TileEdge;
 
 public class LongestRoadAlgorithm {
 

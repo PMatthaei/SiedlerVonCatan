@@ -15,26 +15,6 @@ import java.util.logging.SimpleFormatter;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
-import model.GameModel;
-import model.ClientIsleModel;
-import model.Model;
-import model.PlayerModel;
-import model.ServerIsleModel;
-import model.ServerModel;
-import model.buildings.Building;
-import model.buildings.BuildingFactory;
-import model.buildings.BuildingType;
-import model.cards.DevelopmentCard;
-import model.cards.DevelopmentCardType;
-import model.cards.ResourceType;
-import model.isle.Dice;
-import model.isle.MapLocation;
-import model.isle.Robber;
-import model.isle.Site;
-import model.isle.Tile;
-import model.isle.TileEdge;
-import model.isle.TileStates;
-import model.isle.TileType;
 import network.client.PlayerProtokoll;
 import network.server.Server;
 import network.server.ServerProtokoll;
@@ -43,12 +23,32 @@ import org.json.JSONException;
 
 import com.sun.corba.se.spi.activation.ServerOperations;
 
+import data.ClientIsleModel;
+import data.GameModel;
+import data.Model;
+import data.PlayerModel;
+import data.ServerIsleModel;
+import data.ServerModel;
+import data.buildings.Building;
+import data.buildings.BuildingFactory;
+import data.buildings.BuildingType;
+import data.cards.DevelopmentCard;
+import data.cards.DevelopmentCardType;
+import data.cards.ResourceType;
+import data.isle.Dice;
+import data.isle.MapLocation;
+import data.isle.Robber;
+import data.isle.Site;
+import data.isle.Tile;
+import data.isle.TileEdge;
+import data.isle.TileStates;
+import data.isle.TileType;
 import sounds.Sound;
 import utilities.game.GameStates;
-import view.main.GameView;
-import view.main.IslePanel;
 import viewfx.main.server.StartServerViewController;
-import viewfx.main.server.TablePlayer;
+import viewfx.main.server.PlayersTable;
+import viewswt.main.GameView;
+import viewswt.main.IslePanel;
 
 public class ServerController{
 	

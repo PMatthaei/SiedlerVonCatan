@@ -6,16 +6,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
-import model.ServerIsleModel;
-import model.ServerModel;
-import model.isle.HarborTile;
-import model.isle.MapLocation;
-import model.isle.Site;
-import model.isle.Tile;
-import model.isle.TileEdge;
-
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import data.ServerIsleModel;
+import data.ServerModel;
+import data.isle.HarborTile;
+import data.isle.MapLocation;
+import data.isle.Site;
+import data.isle.Tile;
+import data.isle.TileEdge;
 
 /**
  * Parst die eingehenden Strings und ints etc. in Spielobjekte unseres Spiels

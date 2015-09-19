@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import viewfx.Controller;
+import viewfx.AbstractViewController;
 import viewfx.ViewController;
 import controller.GameController;
 import controller.ServerController;
-import model.ServerModel;
-import model.PlayerModel;
-import model.isle.MapLocation;
+import data.PlayerModel;
+import data.ServerModel;
+import data.isle.MapLocation;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
@@ -27,10 +27,11 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class StartServerViewController extends ViewController implements Initializable,Controller{
+public class StartServerViewController extends ViewController implements Initializable{
 	
 	private ServerController servercontroller;
-    
+	private ServerModel servermodel;
+	
     private Stage primaryStage;
     
 	@FXML
@@ -49,20 +50,20 @@ public class StartServerViewController extends ViewController implements Initial
 	private ComboBox<String> maxplayersComboBox;
 	
 	@FXML
-	private TableView<TablePlayer> connectedPlayersTable;
+	private TableView<PlayersTable> connectedPlayersTable;
 	
 	@FXML
-	private TableColumn<TablePlayer,String> playersColumn,colorsColumn,readyColumn;
+	private TableColumn<PlayersTable,String> playersColumn,colorsColumn,readyColumn;
 	
-	private final ObservableList<TablePlayer> data = FXCollections.observableArrayList();
+	private final ObservableList<PlayersTable> data = FXCollections.observableArrayList();
 	
     @Override
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-    	ServerModel servermodel = new ServerModel();
+    	servermodel = new ServerModel();
     	servercontroller = new ServerController(servermodel);
     	servercontroller.setStartServerViewController(this);
     	
-    	addPaneBackground(gridPane, "/res/start/fish.png");
+    	addBackground(gridPane, "/textures/start/fish.png");
 
     	startServerBtn.setOnAction((event) -> {
         	String maxplayers = maxplayersComboBox.getValue();
@@ -96,22 +97,26 @@ public class StartServerViewController extends ViewController implements Initial
         maxplayersComboBox.getItems().clear();
         maxplayersComboBox.getItems().addAll("2","3","4","5","6");
 
-        playersColumn.setCellValueFactory(new PropertyValueFactory<TablePlayer,String>("name"));
-        colorsColumn.setCellValueFactory(new PropertyValueFactory<TablePlayer,String>("color"));
-        readyColumn.setCellValueFactory(new PropertyValueFactory<TablePlayer,String>("ready"));
+        playersColumn.setCellValueFactory(new PropertyValueFactory<PlayersTable,String>("name"));
+        colorsColumn.setCellValueFactory(new PropertyValueFactory<PlayersTable,String>("color"));
+        readyColumn.setCellValueFactory(new PropertyValueFactory<PlayersTable,String>("ready"));
         
         servercontroller.getServerModel().getPlayers().addListener((MapChangeListener.Change<? extends Integer,? extends PlayerModel> c) -> {
         	PlayerModel player = c.getValueAdded();
-        	boolean validMapChange = player != null && (player.getPlayerName() != null || player.getPlayerColor() != null);
-			if(validMapChange){
-        		data.add(new TablePlayer(player.getPlayerName(), player.getPlayerColor().toString(), "Bereit"));
+        	boolean validChangeEvent = player != null && (player.getPlayerName() != null || player.getPlayerColor() != null);
+			if(validChangeEvent){
+				addTablePlayer(generatePlayer(player,"Bereit"));
         	}
             connectedPlayersTable.setItems(data);
         });
         
     }
+
+	private PlayersTable generatePlayer(PlayerModel player,String status) {
+		return new PlayersTable(player.getPlayerName(), player.getPlayerColor().toString(), status);
+	}
         
-    public void addTablePlayer(TablePlayer player){
+    public void addTablePlayer(PlayersTable player){
     	data.add(player);
     }
     
@@ -129,11 +134,11 @@ public class StartServerViewController extends ViewController implements Initial
 		
 	}
 
-	public TableView<TablePlayer> getConnectedPlayersTable() {
+	public TableView<PlayersTable> getConnectedPlayersTable() {
 		return connectedPlayersTable;
 	}
 	
-	public ObservableList<TablePlayer> getData() {
+	public ObservableList<PlayersTable> getData() {
 		return data;
 	}
 	/**

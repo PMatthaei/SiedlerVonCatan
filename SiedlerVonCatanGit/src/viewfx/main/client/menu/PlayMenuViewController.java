@@ -12,13 +12,14 @@ import java.util.ResourceBundle;
 
 
 
+
 import utilities.game.PlayerColors;
-import viewfx.Controller;
+import viewfx.AbstractViewController;
 import viewfx.ViewController;
 import controller.GameController;
 import controller.ServerController;
-import model.PlayerModel;
-import model.isle.MapLocation;
+import data.PlayerModel;
+import data.isle.MapLocation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -35,7 +36,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class PlayMenuViewController extends ViewController implements Initializable,Controller{
+public class PlayMenuViewController extends ViewController implements Initializable,AbstractViewController{
 	
 	private GameController controller;
     

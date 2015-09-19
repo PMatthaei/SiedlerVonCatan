@@ -10,14 +10,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import model.ClientIsleModel;
-import model.PlayerModel;
-import model.ServerIsleModel;
-import model.ServerModel;
-import model.isle.MapLocation;
-import model.isle.Robber;
-import model.isle.Site;
-import model.isle.Tile;
+import data.ClientIsleModel;
+import data.PlayerModel;
+import data.ServerIsleModel;
+import data.ServerModel;
+import data.isle.MapLocation;
+import data.isle.Robber;
+import data.isle.Site;
+import data.isle.Tile;
 
 /**
  * Bereitet Daten unseres Models so auf, dass sie vom Protokoll verwendet werden

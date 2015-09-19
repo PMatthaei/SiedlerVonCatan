@@ -22,6 +22,12 @@ public class ViewFactory {
       return ViewFactory; 
     } 
     
+    /**
+     * 
+     * @param path
+     * @param primarystage
+     * @return
+     */
 	public Scene loadGameView(String path, Stage primarystage){
 		FXMLLoader loader = new FXMLLoader(this.getClass().getResource(path));
 
@@ -29,14 +35,10 @@ public class ViewFactory {
 		try {
 			page = loader.load();
 			//Alle Controller müssen das Interface implementieren um hier verwendet werden zu können
-			Controller controller = loader.getController();
-			
-			if(primarystage == null){
-				System.err.println("Stage für Controller:"+ controller.getClass() + " ist null!");
-			}
-			System.out.println(controller + ""  + primarystage + "");
+			AbstractViewController controller = loader.getController();
+		
 			controller.setStage(primarystage);
-			
+			//evtl controller.setData(data); mit Interface um korrektes MVC zu bauen
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -48,7 +50,7 @@ public class ViewFactory {
 	}
 	
 	/**
-	 * Lädt eine Pane dass zur Spielsteuerung wichtig ist(nicht nur ein Pane enthält für die Optik)
+	 * Lädt eine Pane zur Spielsteuerung
 	 * @param path
 	 * @param gamecontroller
 	 * @return
@@ -59,7 +61,7 @@ public class ViewFactory {
 		Pane pane = null;
 		try {
 			pane = loader.load();
-			Controller controller = (Controller)loader.getController();
+			AbstractViewController controller = (AbstractViewController)loader.getController();
 			controller.setGameController(gamecontroller);
 			
 		} catch (IOException e) {

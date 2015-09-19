@@ -37,22 +37,22 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import data.ClientIsleModel;
+import data.buildings.Building;
+import data.buildings.BuildingType;
+import data.isle.HarborTile;
+import data.isle.HarborType;
+import data.isle.MapLocation;
+import data.isle.PositionType;
+import data.isle.Robber;
+import data.isle.Site;
+import data.isle.Tile;
+import data.isle.TileEdge;
+import data.isle.TileNumbersRegular;
+import data.isle.TileType;
 import utilities.game.PlayerColors;
-import view.main.IslePanel;
+import viewswt.main.IslePanel;
 import network.client.Client;
-import model.ClientIsleModel;
-import model.buildings.Building;
-import model.buildings.BuildingType;
-import model.isle.HarborTile;
-import model.isle.HarborType;
-import model.isle.MapLocation;
-import model.isle.PositionType;
-import model.isle.Robber;
-import model.isle.Site;
-import model.isle.Tile;
-import model.isle.TileEdge;
-import model.isle.TileNumbersRegular;
-import model.isle.TileType;
 
 /**
  * 

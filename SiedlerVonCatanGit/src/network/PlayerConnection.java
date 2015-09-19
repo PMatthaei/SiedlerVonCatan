@@ -10,11 +10,11 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import model.PlayerModel;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import data.PlayerModel;
 
 /**
  * regelt den Ablauf von Schreiben und lesen von Nachrichten * @author Michi
@@ -22,16 +22,13 @@ import org.json.JSONObject;
 public class PlayerConnection extends Thread {
 
 	private Socket socket;
-	private BufferedReader reader/*
-								 * = new BufferedReader(new
-								 * InputStreamReader(socket.getInputStream()))
-								 */;
+	private BufferedReader reader;
 	private PrintWriter writer;
 	private Protokoll protokoll;
 	private int id = 0;
 
 	public PlayerConnection(Socket socket, int id) throws JSONException {
-		this.socket = socket;
+		this.setSocket(socket);
 		this.id = id;
 
 		try {
@@ -83,12 +80,25 @@ public class PlayerConnection extends Thread {
 	public boolean isJSONValid(String test) {
 		try {
 			new JSONObject(test);
-
 		} catch (JSONException ex) {
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * @return the socket
+	 */
+	public Socket getSocket() {
+		return socket;
+	}
+
+	/**
+	 * @param socket the socket to set
+	 */
+	public void setSocket(Socket socket) {
+		this.socket = socket;
 	}
 
 }

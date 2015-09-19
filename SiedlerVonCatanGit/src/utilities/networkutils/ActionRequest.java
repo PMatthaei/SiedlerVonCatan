@@ -2,11 +2,11 @@ package utilities.networkutils;
 
 import java.util.ArrayList;
 
+import data.buildings.Building;
+import data.isle.Robber;
+import data.isle.Site;
+import data.isle.Tile;
 import utilities.game.GameObject;
-import model.buildings.Building;
-import model.isle.Robber;
-import model.isle.Site;
-import model.isle.Tile;
 
 /**
  * Hält alle Informationen, die der Client an den Server zur Abfrage auf eine gültige Aktion schicken soll.

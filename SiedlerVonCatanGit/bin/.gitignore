@@ -1,11 +1,15 @@
 /ai/
 /beispielcode/
+/config.properties
 /controller/
 /de/
 /model/
 /network/
 /res/
-/sounds/
 /utilities/
 /view/
-/config.properties
+/viewfx/
+/viewswt/
+/sounds/
+/data/
+/textures/

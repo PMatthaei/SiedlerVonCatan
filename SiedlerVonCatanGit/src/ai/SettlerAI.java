@@ -2,14 +2,14 @@ package ai;
 
 import org.json.JSONException;
 
+import data.PlayerModel;
+import data.buildings.Building;
+import data.buildings.BuildingFactory;
+import data.buildings.BuildingType;
+import data.isle.Site;
 import ai.tactics.Brain;
 import network.client.Client;
 import network.client.PlayerProtokoll;
-import model.PlayerModel;
-import model.buildings.Building;
-import model.buildings.BuildingFactory;
-import model.buildings.BuildingType;
-import model.isle.Site;
 
 /**
  * 

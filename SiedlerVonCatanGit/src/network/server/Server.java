@@ -1,12 +1,12 @@
 package network.server;
 
-import model.PlayerModel;
 import network.PlayerConnection;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import viewfx.main.server.TablePlayer;
+import viewfx.main.server.PlayersTable;
+import data.PlayerModel;
 import de.lmu.ifi.dbs.sep1415.discovery.ServerDiscoveryService;
 
 import java.io.IOException;

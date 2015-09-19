@@ -1,16 +1,16 @@
 package network.client;
 
-import model.GameModel;
-import model.PlayerModel;
-import model.isle.Tile;
 import network.PlayerConnection;
 
 import org.json.JSONException;
 
 import utilities.game.PlayerColors;
-import view.main.GameView;
-import view.start.StartView;
+import viewswt.main.GameView;
+import viewswt.start.StartView;
 import controller.GameController;
+import data.GameModel;
+import data.PlayerModel;
+import data.isle.Tile;
 
 import java.io.IOException;
 import java.net.Socket;

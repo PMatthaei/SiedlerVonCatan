@@ -11,17 +11,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import data.ClientIsleModel;
+import data.PlayerModel;
+import data.ServerIsleModel;
+import data.ServerModel;
+import data.buildings.BuildingType;
+import data.isle.MapLocation;
+import data.isle.Robber;
+import data.isle.Site;
+import data.isle.Tile;
+import data.isle.TileEdge;
 import utilities.game.PlayerColors;
-import model.ClientIsleModel;
-import model.PlayerModel;
-import model.ServerIsleModel;
-import model.ServerModel;
-import model.buildings.BuildingType;
-import model.isle.MapLocation;
-import model.isle.Robber;
-import model.isle.Site;
-import model.isle.Tile;
-import model.isle.TileEdge;
 
 /**
  * Bereitet Daten unseres Models so auf, dass sie vom Protokoll verwendet werden

@@ -12,7 +12,7 @@ import javafx.stage.StageStyle;
 import viewfx.main.server.StartServerViewController;
 
 
-public abstract class ViewController implements Controller{
+public abstract class ViewController implements AbstractViewController{
 
 	/** Koordinaten für Drags **/
 	public double dragx, dragy;
@@ -23,7 +23,7 @@ public abstract class ViewController implements Controller{
 
     private HashMap<Button,Stage> stagemap = new HashMap<Button,Stage>();
     
-	public void addPaneBackground(Pane stackpane, String path){
+	public void addBackground(Pane stackpane, String path){
         String image = ViewController.class.getResource(path).toExternalForm();
         stackpane.setStyle(	"-fx-background-image: url('" + image + "'); " +
                    			"-fx-background-position: center center; " +

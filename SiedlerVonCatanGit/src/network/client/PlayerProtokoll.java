@@ -10,21 +10,6 @@ import java.util.logging.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
-import model.ClientIsleModel;
-import model.PlayerModel;
-import model.TradeModel;
-import model.buildings.Building;
-import model.buildings.BuildingType;
-import model.cards.DevelopmentCard;
-import model.cards.DevelopmentCardType;
-import model.isle.HarborTile;
-import model.isle.HarborType;
-import model.isle.MapLocation;
-import model.isle.Site;
-import model.isle.Tile;
-import model.isle.TileEdge;
-import model.isle.TileNumbersRegular;
-import model.isle.TileType;
 import network.PlayerConnection;
 import network.Protokoll;
 
@@ -35,14 +20,29 @@ import org.json.JSONObject;
 import sounds.Sound;
 import utilities.game.PlayerColors;
 import utilities.game.GameStates;
-import view.endscreens.DefeatView;
-import view.endscreens.WinView;
-import view.interaction.DiceView;
-import view.main.GameView;
-import view.player.PlayerPanel;
-import view.robber.DiscardCardsView;
-import view.trade.TradeReceivePanel;
+import viewswt.endscreens.DefeatView;
+import viewswt.endscreens.WinView;
+import viewswt.interaction.DiceView;
+import viewswt.main.GameView;
+import viewswt.player.PlayerPanel;
+import viewswt.robber.DiscardCardsView;
+import viewswt.trade.TradeReceivePanel;
 import controller.GameController;
+import data.ClientIsleModel;
+import data.PlayerModel;
+import data.TradeModel;
+import data.buildings.Building;
+import data.buildings.BuildingType;
+import data.cards.DevelopmentCard;
+import data.cards.DevelopmentCardType;
+import data.isle.HarborTile;
+import data.isle.HarborType;
+import data.isle.MapLocation;
+import data.isle.Site;
+import data.isle.Tile;
+import data.isle.TileEdge;
+import data.isle.TileNumbersRegular;
+import data.isle.TileType;
 
 /**
  * Client verbindet sich -> Spiel starten -> Spiel fertig -> Warten auf

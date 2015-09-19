@@ -10,11 +10,11 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import data.buildings.Building;
+import data.buildings.BuildingType;
+import data.isle.MapLocation;
+import data.isle.TileType;
 import utilities.game.PlayerColors;
-import model.buildings.Building;
-import model.buildings.BuildingType;
-import model.isle.MapLocation;
-import model.isle.TileType;
 
 /**
  * Rendert ein Gebaeude

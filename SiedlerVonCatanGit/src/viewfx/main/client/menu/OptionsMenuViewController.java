@@ -3,11 +3,11 @@ package viewfx.main.client.menu;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import viewfx.Controller;
+import viewfx.AbstractViewController;
 import viewfx.ViewController;
 import controller.GameController;
 import controller.ServerController;
-import model.isle.MapLocation;
+import data.isle.MapLocation;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -19,7 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class OptionsMenuViewController extends ViewController implements Initializable,Controller{
+public class OptionsMenuViewController extends ViewController implements Initializable,AbstractViewController{
 	    
     private Stage primaryStage;
 

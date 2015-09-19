@@ -11,13 +11,15 @@ import java.util.ResourceBundle;
 
 
 
-import view.main.GameView;
-import viewfx.Controller;
+
+
+import viewfx.AbstractViewController;
 import viewfx.ViewController;
 import viewfx.ViewFactory;
 import viewfx.Views;
+import viewswt.main.GameView;
 import controller.GameController;
-import model.GameModel;
+import data.GameModel;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -32,7 +34,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class StartClientViewController extends ViewController implements Initializable,Controller{
+public class StartClientViewController extends ViewController implements Initializable{
 	
 	private GameModel game;
 	private GameController controller;
@@ -59,10 +61,8 @@ public class StartClientViewController extends ViewController implements Initial
 //		view = new GameView(game, controller);
 //		controller.setView(view);
 		
-    	addPaneBackground(stackpane, "/res/start/background3.png");
+    	addBackground(stackpane, "/textures/start/background3.png");
     	
-		System.out.println(getStage());
-
     	closeBtn.setOnAction((event) -> {
     		handleMenuButton(closeBtn,Views.CLOSE);
     		Stage closestage = getStagesMap().get(closeBtn);
