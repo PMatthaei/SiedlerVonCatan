@@ -1,4 +1,4 @@
-package beispielcode.example.chat;
+package networkdiscovery.chat;
 
 import java.io.BufferedReader;
 import java.io.IOException;

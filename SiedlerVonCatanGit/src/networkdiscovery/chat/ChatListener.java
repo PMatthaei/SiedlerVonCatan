@@ -1,4 +1,4 @@
-package beispielcode.example.chat;
+package networkdiscovery.chat;
 
 /**
  * Listener to chat messages.

@@ -1,4 +1,4 @@
-package beispielcode.example.chat;
+package networkdiscovery.chat;
 
 /**
  * API for attaching to a chat component.

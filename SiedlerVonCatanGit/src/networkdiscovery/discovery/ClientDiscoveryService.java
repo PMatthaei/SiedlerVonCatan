@@ -1,4 +1,4 @@
-package beispielcode.discovery;
+package networkdiscovery.discovery;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

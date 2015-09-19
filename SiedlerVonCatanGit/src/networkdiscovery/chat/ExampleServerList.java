@@ -1,4 +1,4 @@
-package beispielcode.example.chat;
+package networkdiscovery.chat;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -17,7 +17,7 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import beispielcode.discovery.ClientDiscoveryService;
+import networkdiscovery.discovery.ClientDiscoveryService;
 
 /**
  * Example how to get a list of all discovered game servers.

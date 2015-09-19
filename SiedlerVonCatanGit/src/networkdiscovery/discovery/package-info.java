@@ -28,5 +28,5 @@
  * 
  * @author Erich Schubert
  */
-package beispielcode.discovery;
+package networkdiscovery.discovery;
 

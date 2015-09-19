@@ -1,4 +1,4 @@
-package beispielcode.example.chat;
+package networkdiscovery.chat;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -11,16 +11,16 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import beispielcode.discovery.ClientDiscoveryService;
+import networkdiscovery.discovery.ClientDiscoveryService;
 
 /**
  * A simple chat client.
  * 
  * @author Erich Schubert
  */
-public class ChatClient extends AbstractChatObservable implements Runnable {
+public class CatanClient extends AbstractChatObservable implements Runnable {
 	/** Class logger, use logging.properties to configure logging. */
-	private static final Logger LOG = Logger.getLogger(ChatClient.class.getName());
+	private static final Logger LOG = Logger.getLogger(CatanClient.class.getName());
 
 	/** Chat client version */
 	private static final String VERSION = "Example 0.1";
@@ -37,7 +37,7 @@ public class ChatClient extends AbstractChatObservable implements Runnable {
 	 * @param addr
 	 *            Target address.
 	 */
-	public ChatClient(InetSocketAddress addr) {
+	public CatanClient(InetSocketAddress addr) {
 		super();
 		this.addr = addr;
 	}
@@ -93,9 +93,9 @@ public class ChatClient extends AbstractChatObservable implements Runnable {
 	 * 
 	 * @return First server discovered
 	 */
-	private static Map.Entry<InetSocketAddress, String> discoverServer() {
-		Collection<Map.Entry<InetSocketAddress, String>> servers;
-		ClientDiscoveryService discovery = new ClientDiscoveryService("chat-client", VERSION, "chat-server");
+	private static Entry<InetSocketAddress, String> discoverServer() {
+		Collection<Entry<InetSocketAddress, String>> servers;
+		ClientDiscoveryService discovery = new ClientDiscoveryService("catan-client", VERSION, "catan-server");
 		discovery.start();
 		while ((servers = discovery.getDiscoveredServers()).size() == 0) {
 			if (LOG.isLoggable(Level.INFO)) {
@@ -116,21 +116,21 @@ public class ChatClient extends AbstractChatObservable implements Runnable {
 		if (!iter.hasNext()) {
 			return null;
 		}
-		Map.Entry<InetSocketAddress, String> server = iter.next();
+		Entry<InetSocketAddress, String> server = iter.next();
 		// Stop discovery thread.
 		discovery.shutdown();
 		return server;
 	}
 
 	public static void main(String[] args) {
-		final Map.Entry<InetSocketAddress, String> server = discoverServer();
+		final Entry<InetSocketAddress, String> server = discoverServer();
 		if (server == null) {
 			System.err.println("No chat server discovered.");
 			return;
 		}
 
 		// Compose the chat client + UI
-		final ChatClient client = new ChatClient(server.getKey());
+		final CatanClient client = new CatanClient(server.getKey());
 		// Couple text UI events to the chat client
 		// This is adapter code.
 		TextUI ui = new TextUI() {

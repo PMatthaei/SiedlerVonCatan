@@ -41,12 +41,12 @@ import javax.swing.event.ChangeListener;
 import org.json.JSONException;
 
 import data.PlayerModel;
-import de.lmu.ifi.dbs.sep1415.discovery.ClientDiscoveryService;
 import sounds.Sound;
 import utilities.game.Colors;
 import utilities.game.PlayerColors;
 import viewswt.ViewSettings;
 import network.client.Client;
+import networkdiscovery.discovery.ClientDiscoveryService;
 
 /**
  * 

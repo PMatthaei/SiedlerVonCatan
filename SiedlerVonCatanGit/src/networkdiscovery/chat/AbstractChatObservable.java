@@ -1,4 +1,4 @@
-package beispielcode.example.chat;
+package networkdiscovery.chat;
 
 import java.util.ArrayList;
 import java.util.Collection;

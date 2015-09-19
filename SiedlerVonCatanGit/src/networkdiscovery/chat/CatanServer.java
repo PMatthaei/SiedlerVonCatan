@@ -1,4 +1,4 @@
-package beispielcode.example.chat;
+package networkdiscovery.chat;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -11,7 +11,8 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import beispielcode.discovery.ServerDiscoveryService;
+import networkdiscovery.catan.server.ConnectionThread;
+import networkdiscovery.discovery.ServerDiscoveryService;
 
 /**
  * This is a simple chat server using Java NIO, and one thread per client.
@@ -21,9 +22,9 @@ import beispielcode.discovery.ServerDiscoveryService;
  * 
  * @author Erich Schubert
  */
-public class ChatServer extends AbstractChatObservable implements Runnable, ChatListener {
+public class CatanServer extends AbstractChatObservable implements Runnable, ChatListener {
 	/** Class logger, use logging.properties to configure logging. */
-	private static final Logger LOG = Logger.getLogger(ChatServer.class.getName());
+	private static final Logger LOG = Logger.getLogger(CatanServer.class.getName());
 
 	/** Chat server version */
 	private static final String VERSION = "Example 0.1";
@@ -46,7 +47,7 @@ public class ChatServer extends AbstractChatObservable implements Runnable, Chat
 	 * @throws IOException
 	 *             when the server cannot start.
 	 */
-	public ChatServer() throws IOException {
+	public CatanServer() throws IOException {
 		ssc = ServerSocketChannel.open();
 		ssc.bind(null); // Bind to an arbitrary port.
 		if (LOG.isLoggable(Level.INFO)) {
@@ -54,7 +55,7 @@ public class ChatServer extends AbstractChatObservable implements Runnable, Chat
 		}
 		// Get the port we have been (automatically) assigned
 		int port = ((InetSocketAddress) ssc.getLocalAddress()).getPort();
-		discovery = new ServerDiscoveryService("chat-server", VERSION, port, "chat-client");
+		discovery = new ServerDiscoveryService("catan-server", VERSION, port, "catan-client");
 		// Add self to listeners (to broadcast)
 		addListener(this);
 	}
@@ -101,7 +102,7 @@ public class ChatServer extends AbstractChatObservable implements Runnable, Chat
 	public void disconnected(String text) {
 		// Ignore.
 	}
-
+	
 	@Override
 	public synchronized void received(String message, TextSocketChannel sender) {
 		// Send message to all connected clients (except sender)
@@ -120,6 +121,16 @@ public class ChatServer extends AbstractChatObservable implements Runnable, Chat
 				LOG.log(Level.SEVERE, "IO error sending to client " + t.conn.getInfo(), e);
 			}
 		}
+	}
+
+	/**
+	 * Shutdown the chat server.
+	 */
+	public void shutdown() {
+		if (LOG.isLoggable(Level.INFO)) {
+			LOG.info("Server shutdown.");
+		}
+		shutdown = true;
 	}
 
 	/**
@@ -162,19 +173,10 @@ public class ChatServer extends AbstractChatObservable implements Runnable, Chat
 		}
 	}
 
-	/**
-	 * Shutdown the chat server.
-	 */
-	public void shutdown() {
-		if (LOG.isLoggable(Level.INFO)) {
-			LOG.info("Server shutdown.");
-		}
-		shutdown = true;
-	}
 
 	public static void main(String[] args) {
 		try {
-			final ChatServer server = new ChatServer();
+			final CatanServer server = new CatanServer();
 			new Thread(server).start();
 			// Couple TextUI events to the server
 			// This is adapter code.

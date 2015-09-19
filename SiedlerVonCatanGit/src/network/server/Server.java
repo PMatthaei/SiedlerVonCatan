@@ -1,13 +1,13 @@
 package network.server;
 
 import network.PlayerConnection;
+import networkdiscovery.discovery.ServerDiscoveryService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import viewfx.main.server.PlayersTable;
 import data.PlayerModel;
-import de.lmu.ifi.dbs.sep1415.discovery.ServerDiscoveryService;
 
 import java.io.IOException;
 import java.net.ServerSocket;
