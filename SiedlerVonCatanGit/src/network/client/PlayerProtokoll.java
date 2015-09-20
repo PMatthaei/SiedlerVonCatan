@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
-import network.PlayerConnection;
+import network.PlayerConnectionThread;
 import network.Protokoll;
 
 import org.json.JSONArray;
@@ -67,13 +67,13 @@ public class PlayerProtokoll implements Protokoll {
 
 	private TradeModel tradeModel;
 
-	private PlayerConnection playerconnection;
+	private PlayerConnectionThread playerconnection;
 
 	private GameController controller;
 
 	private GameView view;
 
-	public PlayerProtokoll(PlayerConnection playerConnection, PlayerModel playerModel, GameController controller) {
+	public PlayerProtokoll(PlayerConnectionThread playerConnection, PlayerModel playerModel, GameController controller) {
 
 		this.playerModel = playerModel;
 		this.playerconnection = playerConnection;
@@ -1428,11 +1428,11 @@ public class PlayerProtokoll implements Protokoll {
 		this.playerModel = playerModel;
 	}
 
-	public PlayerConnection getPlayerConnection() {
+	public PlayerConnectionThread getPlayerConnection() {
 		return playerconnection;
 	}
 
-	public void setPlayerConnection(PlayerConnection playerConnection) {
+	public void setPlayerConnection(PlayerConnectionThread playerConnection) {
 		this.playerconnection = playerConnection;
 	}
 

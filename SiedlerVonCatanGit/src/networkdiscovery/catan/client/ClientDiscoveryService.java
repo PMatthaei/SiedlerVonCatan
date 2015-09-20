@@ -1,4 +1,4 @@
-package networkdiscovery.discovery;
+package networkdiscovery.catan.client;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import networkdiscovery.discovery.AbstractDiscoveryService;
 
 /**
  * Discovery service implementation for the game client.
@@ -44,10 +46,12 @@ public class ClientDiscoveryService extends AbstractDiscoveryService {
 	@Override
 	public void handleBroadcast(String type, InetSocketAddress addr, String content) throws IOException {
 		if (!this.server.equals(type)) {
+			LOG.info("Not out server");
 			return; // Not our server
 		}
-		if (LOG.isLoggable(Level.FINE)) {
-			LOG.fine("Saw server announcement from: " + addr + " version: " + content);
+
+		if (LOG.isLoggable(Level.INFO)) {
+			LOG.info("Saw server announcement from: " + addr + " version: " + content);
 		}
 		Object prev = servers.put(addr, content);
 		// Notify threads waiting on us.

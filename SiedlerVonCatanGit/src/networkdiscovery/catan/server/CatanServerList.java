@@ -1,4 +1,4 @@
-package networkdiscovery.chat;
+package networkdiscovery.catan.server;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -17,19 +17,19 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import networkdiscovery.discovery.ClientDiscoveryService;
+import networkdiscovery.catan.client.ClientDiscoveryService;
 
 /**
  * Example how to get a list of all discovered game servers.
  * 
  * @author Erich Schubert
  */
-public class ExampleServerList extends JFrame {
+public class CatanServerList extends JFrame {
 	/** Serialization version */
 	private static final long serialVersionUID = 1L;
 
 	/** Class logger */
-	private static final Logger LOG = Logger.getLogger(ExampleServerList.class.getName());
+	private static final Logger LOG = Logger.getLogger(CatanServerList.class.getName());
 
 	/** Data storage for table */
 	private DefaultTableModel model;
@@ -53,7 +53,7 @@ public class ExampleServerList extends JFrame {
 	 * @param sname
 	 *            Identification for servers
 	 */
-	public ExampleServerList(String cname, String version, String sname) {
+	public CatanServerList(String cname, String version, String sname) {
 		super("Discovery list for " + sname);
 
 		discovery = new ClientDiscoveryService(cname, version, sname);
@@ -153,7 +153,7 @@ public class ExampleServerList extends JFrame {
 	 *            Command line parameters. Ignored.
 	 */
 	public static void main(String[] args) {
-		final ExampleServerList e = new ExampleServerList("chat-client", "Example Client List 0.1", "chat-server");
+		final CatanServerList e = new CatanServerList("catan-client", "Example Client List 0.1", "catan-server");
 		// Let Swing launch (display) the UI.
 		// Any changes to the UI should be done in the proper thread.
 		SwingUtilities.invokeLater(new Runnable() {

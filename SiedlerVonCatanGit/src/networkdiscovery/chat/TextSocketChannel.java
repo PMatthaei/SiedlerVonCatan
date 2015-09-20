@@ -8,6 +8,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 
+import org.json.JSONObject;
+
 /**
  * Class wrapping everything needed for a text-based connection.
  * 
@@ -94,14 +96,20 @@ public class TextSocketChannel {
 	 * @throws IOException
 	 *             when sending failed
 	 */
-	public synchronized void send(String message) throws IOException {
+	public synchronized void send(JSONObject message){
+		String msgString = message.toString();
 		outbuffer.clear();
-		outbuffer.put(encoder.encode(CharBuffer.wrap(message)));
-		if (!message.endsWith("\n")) {
-			outbuffer.put(newline);
+		try {
+			outbuffer.put(encoder.encode(CharBuffer.wrap(msgString)));
+			if (!msgString.endsWith("\n")) {
+				outbuffer.put(newline);
+			}
+			outbuffer.flip();
+				chan.write(outbuffer);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Could not sen JSON. Check Buffer or encoder");
 		}
-		outbuffer.flip();
-		chan.write(outbuffer);
 	}
 
 	/**

@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableMap;
-import network.PlayerConnection;
+import network.PlayerConnectionThread;
 import network.Protokoll;
 
 import org.json.JSONArray;
@@ -125,9 +125,9 @@ public class ServerProtokoll implements Protokoll {
 	 * @param json
 	 */
 	private void mapConnectionsWithPlayerModels(JSONObject json) {
-		for (Map.Entry<Integer, PlayerConnection> playerconnections : server.getPlayerConnectionsMap().entrySet()) {
+		for (Map.Entry<Integer, PlayerConnectionThread> playerconnections : server.getPlayerConnectionsMap().entrySet()) {
 			int key = playerconnections.getKey();
-			PlayerConnection playerconnection = playerconnections.getValue();
+			PlayerConnectionThread playerconnection = playerconnections.getValue();
 			
 			if (iDs == key) {
 				PlayerModel playerModel = new PlayerModel();
@@ -214,7 +214,7 @@ public class ServerProtokoll implements Protokoll {
 		ObservableMap<Integer, PlayerModel> players = serverModel.getPlayers();
 		PlayerModel idPcPlayer = players.get(idPc);		// SpielerModel des Spielers auf PlayerConnection idPc -> sender
 		Set<Entry<Integer, PlayerModel>> playersEntrySet = players.entrySet();
-		HashMap<Integer, PlayerConnection> playerConnectionsMap = getServer().getPlayerConnectionsMap();
+		HashMap<Integer, PlayerConnectionThread> playerConnectionsMap = getServer().getPlayerConnectionsMap();
 
 		while (keys.hasNext()) {
 			

@@ -1,9 +1,11 @@
-package networkdiscovery.discovery;
+package networkdiscovery.catan.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import networkdiscovery.discovery.AbstractDiscoveryService;
 
 /**
  * Discovery service implementation for the game server.
@@ -45,10 +47,11 @@ public class ServerDiscoveryService extends AbstractDiscoveryService {
 		if (!this.client.equals(type)) {
 			return; // Not our client
 		}
-		if (LOG.isLoggable(Level.FINE)) {
-			LOG.fine("Saw client announcement from: " + addr + " version: " + content);
+		if (LOG.isLoggable(Level.INFO)) {
+			LOG.info("Saw client announcement from: " + addr + " version: " + content);
 		}
-		sendAnnouncement(addr, server, port, version);
+		sendAnnouncement(); //Announcement des Servers
+		sendAnnouncement(addr, server, port, version); //Announcement mit addrese des Clients
 	}
 
 	/**

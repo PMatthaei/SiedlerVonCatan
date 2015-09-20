@@ -46,7 +46,7 @@ import utilities.game.Colors;
 import utilities.game.PlayerColors;
 import viewswt.ViewSettings;
 import network.client.Client;
-import networkdiscovery.discovery.ClientDiscoveryService;
+import networkdiscovery.catan.client.ClientDiscoveryService;
 
 /**
  * 

@@ -204,6 +204,7 @@ public abstract class AbstractDiscoveryService extends Thread {
 	 *             When sending failed
 	 */
 	public synchronized void sendAnnouncement(InetSocketAddress addr, String type, int aport, String message) throws IOException {
+		System.out.println("send anc:" + addr + type + aport + message);
 		// Rate limit
 		if (lastSent + 50 >= System.currentTimeMillis()) {
 			return;

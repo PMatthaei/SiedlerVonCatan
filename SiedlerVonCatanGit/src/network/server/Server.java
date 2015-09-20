@@ -1,7 +1,7 @@
 package network.server;
 
-import network.PlayerConnection;
-import networkdiscovery.discovery.ServerDiscoveryService;
+import network.PlayerConnectionThread;
+import networkdiscovery.catan.server.ServerDiscoveryService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +24,7 @@ public class Server implements Runnable {
 	private static ServerSocket serverSocket;
 
 	/** Speichert die PlayerConnections mit  IDs als key **/
-	private HashMap<Integer, PlayerConnection> playerConnectionsMap;
+	private HashMap<Integer, PlayerConnectionThread> connections;
 
 	/** Das Kommunikationsprotokoll **/
 	private ServerProtokoll serverprotokoll;
@@ -33,7 +33,7 @@ public class Server implements Runnable {
 	private ServerDiscoveryService serverDiscovery;
 	
 	/** Ist die Verbindungssuche gestoppt **/
-	private boolean isWaitingStopped = false;
+	private boolean shutdown = false;
 
 	public void run() {
 		try {
@@ -42,7 +42,7 @@ public class Server implements Runnable {
 //			serverDiscovery.sendAnnouncement();
 			
 			serverSocket = new ServerSocket(4654);
-			playerConnectionsMap = new HashMap<Integer, PlayerConnection>();
+			connections = new HashMap<Integer, PlayerConnectionThread>();
 
 			System.out.println("Server auf Port 4654 gestartet.");
 			waitForPlayers();
@@ -60,11 +60,11 @@ public class Server implements Runnable {
 		int id = 0;
 		try {
 			System.out.println("IP : "+serverSocket.getLocalSocketAddress());
-			while (!isWaitingStopped) {
+			while (!shutdown) {
 				
 				Socket clientSocket = serverSocket.accept();
 				
-				PlayerConnection playerConnection = new PlayerConnection(clientSocket, id);
+				PlayerConnectionThread playerConnection = new PlayerConnectionThread(clientSocket, id);
 				getPlayerConnectionsMap().put(id, playerConnection);
 
 				playerConnection.setProtokoll(serverprotokoll);
@@ -74,7 +74,7 @@ public class Server implements Runnable {
 				// starte die Connection
 				playerConnection.start();
 				if (i == 4) {
-					isWaitingStopped = true;
+					shutdown = true;
 				}
 				i++;
 				id++;
@@ -90,22 +90,23 @@ public class Server implements Runnable {
 	 * Sendet ein JSONObjekt an alle Spieler der ConnectionMap
 	 * 
 	 * @param json
+	 * @throws IOException 
 	 */
 	public void sendToAll(JSONObject json) {
-		HashMap<Integer, PlayerConnection> playerconnections = getPlayerConnectionsMap();
+		HashMap<Integer, PlayerConnectionThread> playerconnections = getPlayerConnectionsMap();
 //		playerconnections.forEach(playerconnection -> playerconnection.sendData(json));
 		
 		//@Deprecated
-		for (Entry<Integer, PlayerConnection> playerConnection : playerconnections.entrySet()) {
+		for (Entry<Integer, PlayerConnectionThread> playerConnection : playerconnections.entrySet()) {
 			int playerConnectionKey = playerConnection.getKey();
-			PlayerConnection playerConnectionValue = playerConnection.getValue();
+			PlayerConnectionThread playerConnectionValue = playerConnection.getValue();
 			playerConnectionValue.sendData(json);
 			System.out.println("Server sent to Client "+playerConnectionKey+": " + json);
 		}
 	}
 	
-	public void sendIDPCPlayerAndRest(int idPc, JSONObject idpcobject, JSONObject restobject){
-		for (Entry<Integer, PlayerConnection> entry : playerConnectionsMap.entrySet()) {
+	public void sendIDPCPlayerAndRest(int idPc, JSONObject idpcobject, JSONObject restobject) throws IOException{
+		for (Entry<Integer, PlayerConnectionThread> entry : connections.entrySet()) {
 			if(entry.getKey()==idPc){
 				entry.getValue().sendData(idpcobject);
 			} else {
@@ -120,8 +121,9 @@ public class Server implements Runnable {
 	 * 
 	 * @param id
 	 * @param json
+	 * @throws IOException 
 	 */
-	public void sendToID(int id , JSONObject json){
+	public void sendToID(int id , JSONObject json) {
 		System.out.println("Send "+ json +"to " + id);
 		
 //		Collection<PlayerConnection> playerconnections = getPlayerConnectionsMap().values();
@@ -131,9 +133,9 @@ public class Server implements Runnable {
 //		filteredStreams.forEach(playerconnection -> playerconnection.sendData(json));
 		
 		//@Deprecated
-		for (Map.Entry<Integer, PlayerConnection> entry : getPlayerConnectionsMap().entrySet()) {
+		for (Map.Entry<Integer, PlayerConnectionThread> entry : getPlayerConnectionsMap().entrySet()) {
 			int key = entry.getKey();
-			PlayerConnection value = entry.getValue();
+			PlayerConnectionThread value = entry.getValue();
 			if (id == key) {
 				value.sendData(json);
 			}
@@ -142,7 +144,7 @@ public class Server implements Runnable {
 	
 	public void sendToNonIDConnections(int id, JSONObject json) {
 		//Schicke eine Statusnachricht mit dem neuen Spieler an alle anderen spieler
-		for (Map.Entry<Integer, PlayerConnection> playerConnnectioEntry : playerConnectionsMap.entrySet()) {
+		for (Map.Entry<Integer, PlayerConnectionThread> playerConnnectioEntry : connections.entrySet()) {
 			if(playerConnnectioEntry.getKey()!=id){
 				playerConnnectioEntry.getValue().sendData(json);
 			}	
@@ -174,12 +176,12 @@ public class Server implements Runnable {
 		return getPlayerConnectionsMap().size();
 	}
 	
-	public HashMap<Integer, PlayerConnection> getPlayerConnectionsMap() {
-		return playerConnectionsMap;
+	public HashMap<Integer, PlayerConnectionThread> getPlayerConnectionsMap() {
+		return connections;
 	}
 
-	public void setPlayerConnectionsMap(HashMap<Integer, PlayerConnection> playerConnectionsMap) {
-		this.playerConnectionsMap = playerConnectionsMap;
+	public void setPlayerConnectionsMap(HashMap<Integer, PlayerConnectionThread> playerConnectionsMap) {
+		this.connections = playerConnectionsMap;
 	}
 
 	/**

@@ -17,42 +17,45 @@ import org.json.JSONObject;
 import data.PlayerModel;
 
 /**
- * regelt den Ablauf von Schreiben und lesen von Nachrichten * @author Michi
- **/
-public class PlayerConnection extends Thread {
+ * 
+ * @author Dev
+ *
+ */
+public class PlayerConnectionThread extends Thread {
 
 	private Socket socket;
+	
 	private BufferedReader reader;
 	private PrintWriter writer;
+	
 	private Protokoll protokoll;
 	private int id = 0;
 
-	public PlayerConnection(Socket socket, int id) throws JSONException {
+	public PlayerConnectionThread(Socket socket, int id) throws JSONException {
 		this.setSocket(socket);
 		this.id = id;
 
 		try {
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-			writer = new PrintWriter/**(socket.getOutputStream())**/
-					(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
+			writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	// wartet auf Nachrichten
+	/**
+	 * 
+	 */
 	@Override
 	public void run() {
 
 		try {
-
 			while (true) {
 				if (protokoll != null) {
-					String commandString = reader.readLine();
-
-					if (commandString != null && isJSONValid(commandString)) {
-						protokoll.handleReceivedData(new JSONObject(commandString), id);
+					String msg = reader.readLine();
+					if (msg != null && isValidJSON(msg)) {
+						protokoll.handleReceivedData(new JSONObject(msg), id);
 					}
 				}
 			}
@@ -65,19 +68,22 @@ public class PlayerConnection extends Thread {
 		}
 	}
 
-	public void setProtokoll(Protokoll protokoll) {
-		this.protokoll = protokoll;
-	}
 
-	// daten senden
+	/**
+	 * 
+	 * @param json
+	 */
 	public void sendData(JSONObject json) {
 		writer.println(json);
-		System.out.println(json + " gesendet");
 		writer.flush();
 	}
 
-	// pr�ft ob String ein JSONObject ist
-	public boolean isJSONValid(String test) {
+	/**
+	 * 
+	 * @param test
+	 * @return
+	 */
+	public boolean isValidJSON(String test) {
 		try {
 			new JSONObject(test);
 		} catch (JSONException ex) {
@@ -100,5 +106,8 @@ public class PlayerConnection extends Thread {
 	public void setSocket(Socket socket) {
 		this.socket = socket;
 	}
-
+	
+	public void setProtokoll(Protokoll protokoll) {
+		this.protokoll = protokoll;
+	}
 }

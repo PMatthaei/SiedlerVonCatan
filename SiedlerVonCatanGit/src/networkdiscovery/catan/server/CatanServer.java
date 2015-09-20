@@ -1,4 +1,4 @@
-package networkdiscovery.chat;
+package networkdiscovery.catan.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -6,13 +6,25 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import networkdiscovery.catan.server.ConnectionThread;
-import networkdiscovery.discovery.ServerDiscoveryService;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import network.PlayerConnectionThread;
+import networkdiscovery.catan.server.CatanServer.ConnectionThread;
+import networkdiscovery.chat.AbstractChatObservable;
+import networkdiscovery.chat.ChatListener;
+import networkdiscovery.chat.TextSocketChannel;
+import networkdiscovery.chat.TextUI;
 
 /**
  * This is a simple chat server using Java NIO, and one thread per client.
@@ -23,11 +35,12 @@ import networkdiscovery.discovery.ServerDiscoveryService;
  * @author Erich Schubert
  */
 public class CatanServer extends AbstractChatObservable implements Runnable, ChatListener {
+	
 	/** Class logger, use logging.properties to configure logging. */
 	private static final Logger LOG = Logger.getLogger(CatanServer.class.getName());
 
 	/** Chat server version */
-	private static final String VERSION = "Example 0.1";
+	private static final String VERSION = "v0.1a";
 
 	/** Server socket channel, used for listening for clients. */
 	private ServerSocketChannel ssc;
@@ -35,12 +48,22 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 	/** Make the server discoverable by clients. */
 	private ServerDiscoveryService discovery;
 
+	/** Connected clients */
+	private HashMap<Integer, ConnectionThread> connections = new HashMap<Integer, ConnectionThread>();
+
+	// SERVERVARIABLES
 	/** Flag to request shutdown */
 	private boolean shutdown = false;
+	
+	/** Server full **/
+	private boolean full = false;
+	
+	/** Current ID of the connection/player **/
+	private int id = 0;
 
-	/** Connected clients */
-	private Collection<ConnectionThread> threads = new LinkedList<>();
-
+	/** Count of Maximum Players allowed on that server **/
+	private int maxPlayers = 4;
+	
 	/**
 	 * Constructor.
 	 * 
@@ -68,7 +91,7 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 		discovery.sendAnnouncement();
 		// Wait for connections
 		while (!shutdown) {
-			// Wait for a new connection.
+			// Wait for a new connection.	        
 			try {
 				SocketChannel chan = ssc.accept();
 				String remotename = chan.getRemoteAddress().toString();
@@ -79,7 +102,10 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 				synchronized (this) {
 					ConnectionThread t = new ConnectionThread(conn);
 					t.start();
-					threads.add(t);
+					connections.put(id,t);
+					LOG.info(remotename + " got the ID: " + id);
+
+					checkMaxPlayers();
 				}
 			} catch (IOException e) {
 				if (LOG.isLoggable(Level.INFO)) {
@@ -93,6 +119,15 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 		discovery.shutdown();
 	}
 
+	private void checkMaxPlayers() {
+		if (id == maxPlayers ) {
+			full = true;
+		} else {
+			id++;
+			LOG.info("Slots: " + id + "/" + maxPlayers+"");
+		}
+	}
+
 	@Override
 	public void connected(String text, TextSocketChannel conn) {
 		// Ignore.
@@ -103,24 +138,109 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 		// Ignore.
 	}
 	
+	/**
+	 * Sendet ein JSONObjekt an alle Spieler der ConnectionMap
+	 * 
+	 * @param json
+	 * @throws IOException 
+	 */
+	public void send2All(JSONObject json) {
+		//@Deprecated
+		for (Entry<Integer, ConnectionThread> cts : connections.entrySet()) {
+			ConnectionThread ct = cts.getValue();
+			ct.conn.send(json);
+		}
+		LOG.info("Server sent to Clients: " + json);
+	}
+	
+	/**
+	 * 
+	 * @param idPc
+	 * @param idpcobject
+	 * @param restobject
+	 * @throws IOException
+	 */
+	public void sendIDPCPlayerAndRest(int idPc, JSONObject idpcobject, JSONObject restobject) throws IOException{
+		for (Entry<Integer, ConnectionThread> cts : connections.entrySet()) {
+			ConnectionThread ct = cts.getValue();
+			if(cts.getKey() == idPc){
+				ct.conn.send(idpcobject);
+				LOG.info("Server sent "+ idpcobject +" to " + id);
+			} else {
+				ct.conn.send(restobject);
+				LOG.info("Server sent "+ restobject +" to " + id);
+
+			}
+		}	
+	}
+	
+	
+	/**
+	 * Sendet ein JSONObjekt an der Spieler mit der ID id
+	 * 
+	 * @param id
+	 * @param json
+	 * @throws IOException 
+	 */
+	public void send2ID(int id , JSONObject json) {
+		//@Deprecated
+		for (Map.Entry<Integer, ConnectionThread> entry : connections.entrySet()) {
+			int key = entry.getKey();
+			ConnectionThread ct = entry.getValue();
+			if (id == key) {
+				ct.conn.send(json);
+			}
+		}
+		LOG.info("Server sent "+ json +" to " + id);
+
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param json
+	 */
+	public void send2NonID(int id, JSONObject json) {
+		for (Map.Entry<Integer, ConnectionThread> ct : connections.entrySet()) {
+			if(ct.getKey() != id){
+				ct.getValue().conn.send(json);
+			}
+		}
+		LOG.info("Server sent "+ json +" to all EXCEPT " + id);
+	}
+	
+	/**
+	 * 
+	 */
 	@Override
 	public synchronized void received(String message, TextSocketChannel sender) {
 		// Send message to all connected clients (except sender)
-		for (Iterator<ConnectionThread> it = threads.iterator(); it.hasNext();) {
-			ConnectionThread t = it.next();
+	   
+		Iterator<Entry<Integer, ConnectionThread>> it = connections.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry<Integer, ConnectionThread> pair = (Map.Entry<Integer, ConnectionThread>)it.next();
+			
+	        ConnectionThread t = pair.getValue();
+	        int id = pair.getKey();
+	        
 			if (!t.isAlive()) {
 				it.remove();
 				continue;
 			}
+			
 			if (t.conn == sender) {
 				continue;
 			}
+			
 			try {
-				t.conn.send((sender != null ? sender.getInfo() : "Server") + ": " + message);
-			} catch (IOException e) {
-				LOG.log(Level.SEVERE, "IO error sending to client " + t.conn.getInfo(), e);
+				String s = "{"+id +": " + message+"}";
+				JSONObject json = new JSONObject(s);
+				t.conn.send(json);
+				
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
-		}
+	    }
 	}
 
 	/**
@@ -185,9 +305,10 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 				public void connected(String text, TextSocketChannel conn) {
 					super.connected(text, conn);
 					try {
-						conn.send("Hello. This is chat server: " + VERSION);
-					} catch (IOException e) {
-						LOG.log(Level.SEVERE, "IO on welcome message.", e);
+						JSONObject json = new JSONObject("{Hello. This is chat server: " + VERSION +"}");
+						conn.send(json);
+					} catch (JSONException e) {
+						e.printStackTrace();
 					}
 				}
 

@@ -1,4 +1,4 @@
-package networkdiscovery.chat;
+package networkdiscovery.catan.client;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -11,7 +11,12 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import networkdiscovery.discovery.ClientDiscoveryService;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import networkdiscovery.chat.AbstractChatObservable;
+import networkdiscovery.chat.TextSocketChannel;
+import networkdiscovery.chat.TextUI;
 
 /**
  * A simple chat client.
@@ -23,7 +28,7 @@ public class CatanClient extends AbstractChatObservable implements Runnable {
 	private static final Logger LOG = Logger.getLogger(CatanClient.class.getName());
 
 	/** Chat client version */
-	private static final String VERSION = "Example 0.1";
+	private static final String VERSION = "v0.1a";
 
 	/** Address to connect to. */
 	private InetSocketAddress addr;
@@ -42,16 +47,13 @@ public class CatanClient extends AbstractChatObservable implements Runnable {
 		this.addr = addr;
 	}
 
-	protected void send(String line) {
+	protected void send(JSONObject msg) {
 		if (conn == null) {
-			System.err.println("Not connected!");
+			LOG.info("Not connected!");
 			return;
 		}
-		try {
-			conn.send(line);
-		} catch (IOException e) {
-			LOG.log(Level.SEVERE, "IO error on sending.", e);
-		}
+		
+		conn.send(msg);
 	}
 
 	/**
@@ -59,19 +61,24 @@ public class CatanClient extends AbstractChatObservable implements Runnable {
 	 */
 	@Override
 	public void run() {
+		
 		String remotename = addr.toString();
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info("Connecting to " + remotename + ".");
 		}
+		
 		SocketChannel chan;
+		
 		try {
 			chan = SocketChannel.open(addr);
 		} catch (IOException e) {
 			LOG.log(Level.SEVERE, "IO Exception when connecting to server.", e);
 			return;
 		}
+		
 		conn = new TextSocketChannel(chan, Charset.forName("UTF-8"), remotename);
 		fireConnected(remotename, conn);
+		
 		try {
 			while (conn.isOpen()) {
 				String message = conn.read();
@@ -145,7 +152,12 @@ public class CatanClient extends AbstractChatObservable implements Runnable {
 			@Override
 			protected void onUserInput(String line) {
 				// On user input, send the text to the server.
-				client.send(line);
+				try {
+					client.send(new JSONObject(" {Nachricht: "+line+"}"));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		};
 		client.addListener(ui);

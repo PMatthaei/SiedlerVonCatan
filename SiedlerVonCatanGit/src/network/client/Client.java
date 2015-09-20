@@ -1,6 +1,6 @@
 package network.client;
 
-import network.PlayerConnection;
+import network.PlayerConnectionThread;
 
 import org.json.JSONException;
 
@@ -45,7 +45,7 @@ public class Client {
 			System.exit(0);
 		}
 
-		PlayerConnection playerConnection = new PlayerConnection(socket, 0);
+		PlayerConnectionThread playerConnection = new PlayerConnectionThread(socket, 0);
 
 		GameModel game = new GameModel();
 		GameController controller = new GameController(game);
