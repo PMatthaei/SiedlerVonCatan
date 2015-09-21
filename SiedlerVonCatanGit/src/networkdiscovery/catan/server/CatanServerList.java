@@ -43,6 +43,7 @@ public class CatanServerList extends JFrame {
 	/** Thread for updating the list */
 	private Thread updateThread;
 
+	
 	/**
 	 * Constructor
 	 * 
@@ -153,7 +154,7 @@ public class CatanServerList extends JFrame {
 	 *            Command line parameters. Ignored.
 	 */
 	public static void main(String[] args) {
-		final CatanServerList e = new CatanServerList("catan-client", "Example Client List 0.1", "catan-server");
+		final CatanServerList e = new CatanServerList("catan-client-ee", "v1.0a", "catan-server-ee");
 		// Let Swing launch (display) the UI.
 		// Any changes to the UI should be done in the proper thread.
 		SwingUtilities.invokeLater(new Runnable() {

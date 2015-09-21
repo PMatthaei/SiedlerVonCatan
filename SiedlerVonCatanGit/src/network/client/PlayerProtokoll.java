@@ -12,6 +12,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import network.PlayerConnectionThread;
 import network.Protokoll;
+import networkdiscovery.json.JSONListener;
+import networkdiscovery.json.JSONSocketChannel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,7 +61,7 @@ import data.isle.TileType;
  * @author Michi, Vroni, Patrick
  *
  */
-public class PlayerProtokoll implements Protokoll {
+public class PlayerProtokoll implements Protokoll,JSONListener {
 
 	private static Logger log = Logger.getLogger(PlayerProtokoll.class.getName());
 
@@ -89,7 +91,28 @@ public class PlayerProtokoll implements Protokoll {
 		}
 
 	}
+	
+	@Override
+	public void connected(String text, JSONSocketChannel conn) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void disconnected(String text) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public synchronized void received(JSONObject msg, JSONSocketChannel conn) {
+		try {
+			handleReceivedData(msg, conn.getId()); //let the protokoll handle the incoming data
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * setzt die Farbe und den Namen des spielers und verschickt diese an den
 	 * Server
@@ -1451,5 +1474,6 @@ public class PlayerProtokoll implements Protokoll {
 	public void setView(GameView view) {
 		this.view = view;
 	}
+
 
 }

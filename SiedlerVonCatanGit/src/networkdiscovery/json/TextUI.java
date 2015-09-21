@@ -1,8 +1,10 @@
-package networkdiscovery.chat;
+package networkdiscovery.json;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import org.json.JSONObject;
 
 /**
  * A primitive text-based chat UI.
@@ -14,7 +16,7 @@ import java.io.InputStreamReader;
  * 
  * @author Erich Schubert
  */
-public abstract class TextUI implements ChatListener {
+public abstract class TextUI implements JSONListener {
 	/**
 	 * Constructor.
 	 */
@@ -23,7 +25,7 @@ public abstract class TextUI implements ChatListener {
 	}
 
 	@Override
-	public void connected(String text, TextSocketChannel conn) {
+	public void connected(String text, JSONSocketChannel conn) {
 		System.out.println("Connected: " + text);
 	}
 
@@ -33,11 +35,8 @@ public abstract class TextUI implements ChatListener {
 	}
 
 	@Override
-	public void received(String text, TextSocketChannel conn) {
+	public void received(JSONObject text, JSONSocketChannel conn) {
 		System.out.print(text);
-		if (!text.endsWith("\n")) {
-			System.out.println();
-		}
 	}
 
 	/**

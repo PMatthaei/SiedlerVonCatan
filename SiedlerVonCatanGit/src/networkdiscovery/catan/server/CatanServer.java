@@ -20,11 +20,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import network.PlayerConnectionThread;
+import network.server.ServerProtokoll;
 import networkdiscovery.catan.server.CatanServer.ConnectionThread;
-import networkdiscovery.chat.AbstractChatObservable;
-import networkdiscovery.chat.ChatListener;
-import networkdiscovery.chat.TextSocketChannel;
-import networkdiscovery.chat.TextUI;
+import networkdiscovery.json.AbstractJSONObservable;
+import networkdiscovery.json.JSONListener;
+import networkdiscovery.json.JSONSocketChannel;
+import networkdiscovery.json.TextUI;
 
 /**
  * This is a simple chat server using Java NIO, and one thread per client.
@@ -34,7 +35,7 @@ import networkdiscovery.chat.TextUI;
  * 
  * @author Erich Schubert
  */
-public class CatanServer extends AbstractChatObservable implements Runnable, ChatListener {
+public class CatanServer extends AbstractJSONObservable implements Runnable, JSONListener {
 	
 	/** Class logger, use logging.properties to configure logging. */
 	private static final Logger LOG = Logger.getLogger(CatanServer.class.getName());
@@ -63,6 +64,9 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 
 	/** Count of Maximum Players allowed on that server **/
 	private int maxPlayers = 4;
+
+	/** Protokoll to handle incoming JSON-Messages **/
+	private ServerProtokoll serverprotokoll;
 	
 	/**
 	 * Constructor.
@@ -78,7 +82,7 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 		}
 		// Get the port we have been (automatically) assigned
 		int port = ((InetSocketAddress) ssc.getLocalAddress()).getPort();
-		discovery = new ServerDiscoveryService("catan-server", VERSION, port, "catan-client");
+		discovery = new ServerDiscoveryService("catan-server-ee", VERSION, port, "catan-client-ee");
 		// Add self to listeners (to broadcast)
 		addListener(this);
 	}
@@ -95,7 +99,8 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 			try {
 				SocketChannel chan = ssc.accept();
 				String remotename = chan.getRemoteAddress().toString();
-				TextSocketChannel conn = new TextSocketChannel(chan, Charset.forName("UTF-8"), remotename);
+				JSONSocketChannel conn = new JSONSocketChannel(chan, Charset.forName("UTF-8"), remotename);
+				conn.setId(id);
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info("Connect by " + remotename + ". Notifying " + listeners.size() + " listeners.");
 				}
@@ -129,7 +134,7 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 	}
 
 	@Override
-	public void connected(String text, TextSocketChannel conn) {
+	public void connected(String text, JSONSocketChannel conn) {
 		// Ignore.
 	}
 
@@ -160,7 +165,7 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 	 * @param restobject
 	 * @throws IOException
 	 */
-	public void sendIDPCPlayerAndRest(int idPc, JSONObject idpcobject, JSONObject restobject) throws IOException{
+	public void send2IDAndRest(int idPc, JSONObject idpcobject, JSONObject restobject) throws IOException{
 		for (Entry<Integer, ConnectionThread> cts : connections.entrySet()) {
 			ConnectionThread ct = cts.getValue();
 			if(cts.getKey() == idPc){
@@ -213,7 +218,7 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 	 * 
 	 */
 	@Override
-	public synchronized void received(String message, TextSocketChannel sender) {
+	public synchronized void received(JSONObject message, JSONSocketChannel sender) {
 		// Send message to all connected clients (except sender)
 	   
 		Iterator<Entry<Integer, ConnectionThread>> it = connections.entrySet().iterator();
@@ -253,6 +258,10 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 		shutdown = true;
 	}
 
+	public int getConnectedThreads(){
+		return connections.size();
+	}
+	
 	/**
 	 * Thread for a single connection.
 	 * 
@@ -260,7 +269,7 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 	 */
 	public class ConnectionThread extends Thread {
 		/** Connection channel */
-		private TextSocketChannel conn;
+		private JSONSocketChannel conn;
 
 		/**
 		 * Constructor.
@@ -268,7 +277,7 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 		 * @param conn
 		 *            Connection
 		 */
-		public ConnectionThread(TextSocketChannel conn) {
+		public ConnectionThread(JSONSocketChannel conn) {
 			this.conn = conn;
 		}
 
@@ -278,7 +287,7 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 			fireConnected(remotename, conn);
 			try {
 				while (!shutdown && conn.isOpen()) {
-					String message = conn.read();
+					JSONObject message = conn.read();
 					if (message == null) {
 						break; // Disconnected.
 					}
@@ -288,9 +297,12 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info("Disconnected from " + remotename + ": " + e.getMessage());
 				}
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
 			fireDisconnected(remotename);
 		}
+		
 	}
 
 
@@ -302,7 +314,7 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 			// This is adapter code.
 			TextUI ui = new TextUI() {
 				@Override
-				public void connected(String text, TextSocketChannel conn) {
+				public void connected(String text, JSONSocketChannel conn) {
 					super.connected(text, conn);
 					try {
 						JSONObject json = new JSONObject("{Hello. This is chat server: " + VERSION +"}");
@@ -314,11 +326,16 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 
 				@Override
 				protected void onUserInput(String line) {
-					server.fireReceived(null, line);
+					try {
+						server.fireReceived(null, new JSONObject(line));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 
 				@Override
-				public void received(String text, TextSocketChannel conn) {
+				public void received(JSONObject text, JSONSocketChannel conn) {
 					if (conn == null) {
 						return; // Hide our own messages.
 					}
@@ -335,4 +352,13 @@ public class CatanServer extends AbstractChatObservable implements Runnable, Cha
 			LOG.log(Level.SEVERE, "IO Exception when starting chat server.", e);
 		}
 	}
+	
+	public HashMap<Integer, ConnectionThread> getConnections() {
+		return connections;
+	}
+
+	public void setServerprotokoll(ServerProtokoll serverprotokoll) {
+		this.serverprotokoll = serverprotokoll;
+	}
+	
 }

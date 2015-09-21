@@ -1,4 +1,4 @@
-package viewfx.main.server;
+package viewfx.main.utilities;
 
 import javafx.beans.property.SimpleStringProperty;
 

@@ -80,11 +80,13 @@ public class PlayMenuViewController extends ViewController implements Initializa
     			showStatus("Bitte wähle eine Farbe", true);
     			return;
     		}
+    		
     		PlayerModel clientplayer = controller.getGame().getClientplayer();
     		if(clientplayer.getPlayerName() == null){
     			showStatus("Bitte gib dir einen Namen", true);
     			return;
     		}
+    		
 			clientplayer.setPlayerColor(color);
     		String ip = ipField.getText();
     		String port = portField.getText();
@@ -94,7 +96,7 @@ public class PlayMenuViewController extends ViewController implements Initializa
     		}
     		try {
     			showStatus("Verbindet ...", false);
-				controller.getClient().startClient(clientplayer, ip, port);
+//				controller.getClient().startClient(clientplayer, ip, port);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

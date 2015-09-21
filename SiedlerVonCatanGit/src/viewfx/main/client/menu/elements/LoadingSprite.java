@@ -8,11 +8,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import viewfx.main.utilities.SandboxFX;
 import viewfx.main.utilities.SpriteAnimation;
 
 public class LoadingSprite {
-    private static final Image IMAGE = new Image(SandboxFX.class.getResourceAsStream("/res/symbols/loading_sprite.png"));
+    private static final Image IMAGE = new Image(LoadingSprite.class.getResourceAsStream("/res/symbols/loading_sprite.png"));
 
     private static final int COLUMNS  =   9;
     private static final int COUNT    =  9;

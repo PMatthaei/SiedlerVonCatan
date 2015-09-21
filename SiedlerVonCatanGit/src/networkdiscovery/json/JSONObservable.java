@@ -1,18 +1,18 @@
-package networkdiscovery.chat;
+package networkdiscovery.json;
 
 /**
  * API for attaching to a chat component.
  * 
  * @author Erich Schubert
  */
-public interface ChatObservable {
+public interface JSONObservable {
 	/**
 	 * Add a chat listener.
 	 * 
 	 * @param listener
 	 *            Listener to add
 	 */
-	void addListener(ChatListener listener);
+	void addListener(JSONListener listener);
 
 	/**
 	 * Remove a chat listener.
@@ -20,5 +20,5 @@ public interface ChatObservable {
 	 * @param listener
 	 *            Listener to remove
 	 */
-	void removeListener(ChatListener listener);
+	void removeListener(JSONListener listener);
 }

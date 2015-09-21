@@ -18,8 +18,12 @@ import javafx.scene.control.TableView;
 import network.client.PlayerProtokoll;
 import network.server.Server;
 import network.server.ServerProtokoll;
+import networkdiscovery.catan.server.CatanServer;
+import networkdiscovery.json.JSONSocketChannel;
+import networkdiscovery.json.TextUI;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.sun.corba.se.spi.activation.ServerOperations;
 
@@ -46,7 +50,7 @@ import data.isle.TileType;
 import sounds.Sound;
 import utilities.game.GameStates;
 import viewfx.main.server.StartServerViewController;
-import viewfx.main.server.PlayersTable;
+import viewfx.main.utilities.PlayersTable;
 import viewswt.main.GameView;
 import viewswt.main.IslePanel;
 
@@ -61,12 +65,17 @@ public class ServerController{
 	
 	private ServerModel servermodel;
 	
-	private Server server;
+	private CatanServer server;
 	private StartServerViewController startviewcontroller;
 		
 	public ServerController(ServerModel servermodel) {
 		this.servermodel = servermodel;
-		this.setServer(new Server());
+		try {
+			this.server = new CatanServer();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		this.serverprotokoll = new ServerProtokoll(server, servermodel, this);
 		server.setServerprotokoll(serverprotokoll);
 
@@ -90,8 +99,7 @@ public class ServerController{
 	
 
 	public void startServer() {
-	    Thread serverthread = new Thread(server);
-	    serverthread.start();
+		new Thread(server).start();
 	}
 	
 	
@@ -955,22 +963,6 @@ public class ServerController{
 
 	public void setServerProtokoll(ServerProtokoll serverProtokoll) {
 		this.serverprotokoll = serverProtokoll;
-	}
-
-
-	/**
-	 * @return the server
-	 */
-	public Server getServer() {
-		return server;
-	}
-
-
-	/**
-	 * @param server the server to set
-	 */
-	public void setServer(Server server) {
-		this.server = server;
 	}
 
 	public void setStartServerViewController(StartServerViewController startServerViewController) {

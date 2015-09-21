@@ -1,11 +1,13 @@
-package networkdiscovery.chat;
+package networkdiscovery.json;
+
+import org.json.JSONObject;
 
 /**
  * Listener to chat messages.
  * 
  * @author Erich Schubert
  */
-public interface ChatListener {
+public interface JSONListener {
 	/**
 	 * Connection event.
 	 * 
@@ -14,7 +16,7 @@ public interface ChatListener {
 	 * @param conn
 	 *            Connection
 	 */
-	void connected(String text, TextSocketChannel conn);
+	void connected(String text, JSONSocketChannel conn);
 
 	/**
 	 * Disconnection event.
@@ -32,5 +34,5 @@ public interface ChatListener {
 	 * @param conn
 	 *            Connection
 	 */
-	void received(String text, TextSocketChannel conn);
+	void received(JSONObject text, JSONSocketChannel conn);
 }

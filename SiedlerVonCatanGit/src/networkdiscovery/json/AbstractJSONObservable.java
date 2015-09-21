@@ -1,29 +1,31 @@
-package networkdiscovery.chat;
+package networkdiscovery.json;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import org.json.JSONObject;
 
 /**
  * Manage listeners for chat events.
  * 
  * @author Erich Schubert
  */
-public class AbstractChatObservable implements ChatObservable {
+public class AbstractJSONObservable implements JSONObservable {
 	/** Chat listeners. */
-	protected Collection<ChatListener> listeners = new ArrayList<>();
+	protected Collection<JSONListener> listeners = new ArrayList<>();
 
 	/** Constructor. */
-	public AbstractChatObservable() {
+	public AbstractJSONObservable() {
 		super();
 	}
 
 	@Override
-	public void addListener(ChatListener listener) {
+	public void addListener(JSONListener listener) {
 		listeners.add(listener);
 	}
 
 	@Override
-	public void removeListener(ChatListener listener) {
+	public void removeListener(JSONListener listener) {
 		listeners.remove(listener);
 	}
 
@@ -35,8 +37,8 @@ public class AbstractChatObservable implements ChatObservable {
 	 * @param conn
 	 *            Connection
 	 */
-	protected void fireConnected(String remotename, TextSocketChannel conn) {
-		for (ChatListener listener : listeners) {
+	protected void fireConnected(String remotename, JSONSocketChannel conn) {
+		for (JSONListener listener : listeners) {
 			listener.connected(remotename, conn);
 		}
 	}
@@ -49,8 +51,8 @@ public class AbstractChatObservable implements ChatObservable {
 	 * @param message
 	 *            Message
 	 */
-	protected void fireReceived(TextSocketChannel conn, String message) {
-		for (ChatListener listener : listeners) {
+	protected void fireReceived(JSONSocketChannel conn, JSONObject message) {
+		for (JSONListener listener : listeners) {
 			listener.received(message, conn);
 		}
 	}
@@ -62,7 +64,7 @@ public class AbstractChatObservable implements ChatObservable {
 	 *            Remote name
 	 */
 	protected void fireDisconnected(String remotename) {
-		for (ChatListener listener : listeners) {
+		for (JSONListener listener : listeners) {
 			listener.disconnected(remotename);
 		}
 	}

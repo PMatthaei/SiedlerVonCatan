@@ -20,6 +20,10 @@ import java.util.stream.Collectors;
 import javafx.collections.ObservableMap;
 import network.PlayerConnectionThread;
 import network.Protokoll;
+import networkdiscovery.catan.server.CatanServer;
+import networkdiscovery.catan.server.CatanServer.ConnectionThread;
+import networkdiscovery.json.JSONListener;
+import networkdiscovery.json.JSONSocketChannel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,22 +62,14 @@ import data.isle.Tile;
 import data.isle.TileType;
 
 /**
- * Client verbindet sich -> Spiel starten  ->
- * Spiel fertig -> Warten auf Spielbeginn ->
- * -> wenn alle da sind -> ersten der beginnt und reihenfolge festlegen -> alle außer erste -> warten
- * -> der der dran ist bekommt dorfbauen -> zug beendet -> nächster usw bis
- * -> dorf bauen und straße bauen fertig ist -> richtiger spieler mit würfeln dran -> anderen warten
- * -> würfeln -> bei 7 räuber bewegen -> sonst ressourcenverteilen -> handel bau phase dem spieler zuteilen ->
- * warten auf zug beenden buttonklick oder timer -> spieler muss warten -> nächster ist dran
- * 
  * 
  * 
  * @author Michi, Laura, Vroni, Patrick
  *
  */
-public class ServerProtokoll implements Protokoll {
+public class ServerProtokoll implements Protokoll,JSONListener {
 
-	private Server server;
+	private CatanServer server;
 
 	private ServerProtokollHelper serverprotokollhelper;
 	
@@ -86,7 +82,7 @@ public class ServerProtokoll implements Protokoll {
 		
 	
 	/** zuständig für die Antworten des Servers **/
-	public ServerProtokoll(Server server, ServerModel servermodel, ServerController servercontroller) {
+	public ServerProtokoll(CatanServer server, ServerModel servermodel, ServerController servercontroller) {
 		this.server = server;
 		this.serverModel = servermodel;
 		this.servercontroller = servercontroller;
@@ -95,7 +91,28 @@ public class ServerProtokoll implements Protokoll {
 		this.serverprotokollhelper = new ServerProtokollHelper(serverModel);
 		
 	}
+	
+	@Override
+	public void connected(String text, JSONSocketChannel conn) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void disconnected(String text) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public synchronized void received(JSONObject msg, JSONSocketChannel conn) {
+		try {
+			handleReceivedData(msg, conn.getId());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Einmalige Übermittlung der Version und des Protokolls.Füllt außerdem die
 	 * Hashmap mit Playermodeln des GameModels.
@@ -116,7 +133,7 @@ public class ServerProtokoll implements Protokoll {
 		}
 	}
 	
-	private static int iDs = 0;
+	private static int id = 0;
 	
 	/**
 	 * PlayerModel mit PlayerID 1 und Key 1 in der PlayerModelHashMap auf dem Server
@@ -124,22 +141,35 @@ public class ServerProtokoll implements Protokoll {
 	 * PlayerConnection mit Key 1 in der HashMap der PlayerConnections
 	 * @param json
 	 */
+//	private void mapConnectionsWithPlayerModels(JSONObject json) {
+//		for (Map.Entry<Integer, ConnectionThread> cts : server.getConnections().entrySet()) {
+//			int key = cts.getKey();
+//			ConnectionThread ct = cts.getValue();
+//			
+//			if (id == key) {
+//				PlayerModel playerModel = new PlayerModel();
+//				playerModel.setPlayerID(id);
+//				serverModel.getPlayers().put(key, playerModel);
+//							
+//				id++;
+//				ct.sendData(json);
+//			}
+//		}
+//	}
+	
 	private void mapConnectionsWithPlayerModels(JSONObject json) {
-		for (Map.Entry<Integer, PlayerConnectionThread> playerconnections : server.getPlayerConnectionsMap().entrySet()) {
-			int key = playerconnections.getKey();
-			PlayerConnectionThread playerconnection = playerconnections.getValue();
-			
-			if (iDs == key) {
+		for (Map.Entry<Integer, ConnectionThread> cts : server.getConnections().entrySet()) {
+			int key = cts.getKey();			
+			if (id == key) {
 				PlayerModel playerModel = new PlayerModel();
-				playerModel.setPlayerID(iDs);
+				playerModel.setPlayerID(id);
 				serverModel.getPlayers().put(key, playerModel);
 							
-				iDs++;
-				playerconnection.sendData(json);
+				id++;
+				server.send2ID(id,json);
 			}
 		}
 	}
-
 	
 	/** 6.1 sendet Fehlermeldung error **/
 	public void sendfailedActionAll(String error) throws JSONException {
@@ -149,7 +179,7 @@ public class ServerProtokoll implements Protokoll {
 		json2.put("Meldung", error);
 		json.put("Fehler", json2);
 		
-		server.sendToAll(json);
+		server.send2All(json);
 	
 	}
 	
@@ -159,7 +189,7 @@ public class ServerProtokoll implements Protokoll {
 		json2.put("Meldung", error);
 		json.put("Fehler", json2);
 		
-		server.sendToID(id, json);
+		server.send2ID(id, json);
 	
 	}
 	
@@ -174,7 +204,7 @@ public class ServerProtokoll implements Protokoll {
 		JSONObject json2 = new JSONObject();
 		json.put("Ok", json2);
 				
-		server.sendToID(id, json);
+		server.send2ID(id, json);
 	}
 
 	/**
@@ -199,7 +229,7 @@ public class ServerProtokoll implements Protokoll {
 		json2.put("Nachricht", winningmsg);
 		json.put("Spiel beendet", json2);
 		
-		server.sendToAll(json);
+		server.send2All(json);
 	}
 
 	/**
@@ -214,7 +244,7 @@ public class ServerProtokoll implements Protokoll {
 		ObservableMap<Integer, PlayerModel> players = serverModel.getPlayers();
 		PlayerModel idPcPlayer = players.get(idPc);		// SpielerModel des Spielers auf PlayerConnection idPc -> sender
 		Set<Entry<Integer, PlayerModel>> playersEntrySet = players.entrySet();
-		HashMap<Integer, PlayerConnectionThread> playerConnectionsMap = getServer().getPlayerConnectionsMap();
+//		HashMap<Integer, ConnectionThread> playerConnectionsMap = server.getConnections();
 
 		while (keys.hasNext()) {
 			
@@ -226,7 +256,7 @@ public class ServerProtokoll implements Protokoll {
 				
 				System.out.println("ID " + idPc + " wurde vergeben");
 				
-				server.sendToID(idPc, makeJSONWelcome(idPc));
+				server.send2ID(idPc, makeJSONWelcome(idPc));
 				sendAndSavePlayerStatus(idPc, GameStates.GAME_START);
 
 				//Für jeden bereits verbundenen Spieler eine Statusnachricht an den neu verbundenen Spieler schicken
@@ -235,14 +265,15 @@ public class ServerProtokoll implements Protokoll {
 					String newplayerStatus = playerModel.getPlayerStatus();
 					if(idPc != newplayerID){ //Nicht dem Sender des hallo schicken
 						//Connection die bereits beigetretene Spieler wissen will
-						playerConnectionsMap.get(idPc).sendData(makeJSONPlayerStatus(newplayerID,newplayerStatus)); 
+//						playerConnectionsMap.get(idPc).sendData(makeJSONPlayerStatus(newplayerID,newplayerStatus)); 
+						server.send2ID(idPc, makeJSONPlayerStatus(newplayerID,newplayerStatus));
 					}
 				}
 				
 				int playerID = idPcPlayer.getPlayerID();
 				String playerStatus = idPcPlayer.getPlayerStatus();
 				//Schicke eine Statusnachricht mit dem neuen Spieler an alle anderen spieler
-				server.sendToNonIDConnections(idPc, makeJSONPlayerStatus(playerID,playerStatus));
+				server.send2NonID(idPc, makeJSONPlayerStatus(playerID,playerStatus));
 
 				break;
 			}
@@ -295,14 +326,14 @@ public class ServerProtokoll implements Protokoll {
 			case "Spiel starten": {
 				
 				JSONObject playerStatus = makeJSONPlayerStatus(idPc, GameStates.WAIT_GAME_START.getGameState());
-				server.sendToAll(playerStatus);
+				server.send2All(playerStatus);
 				idPcPlayer.setPlayerStatus(GameStates.WAIT_GAME_START.getGameState());
 				
-				System.out.println("Verbundene Spieler: " + server.getNumberOfPlayerConnections());
+				System.out.println("Verbundene Spieler: " + server.getConnectedThreads());
 				
 				//TODO: Eventuell hier KI einklinken?
 				
-				if (server.getNumberOfPlayerConnections() == serverModel.getPlayersAllowed()) {
+				if (server.getConnectedThreads() == serverModel.getPlayersAllowed()) {
 					try {
 						Thread.sleep(4000);
 					} catch (InterruptedException e) {
@@ -314,7 +345,7 @@ public class ServerProtokoll implements Protokoll {
 					
 					// Allen Clients Daten schicken
 					System.out.println("Server sendet Spiel gestartet an alle Clients.");
-					server.sendToAll(gameStart);
+					server.send2All(gameStart);
 
 					// Anfangs Spielerstatus senden
 					System.out.println("Server lädt Anfangskonfiguration");
@@ -346,7 +377,7 @@ public class ServerProtokoll implements Protokoll {
 				json.put("Würfelwurf", json2);
 				
 				System.out.println("Server versendet Würfelaktion an " + idPc + " :" + json);
-				server.sendToAll(json);
+				server.send2All(json);
 								
 				handleDiceThrow(idPc, diceSum);
 				
@@ -383,7 +414,7 @@ public class ServerProtokoll implements Protokoll {
 				processRobberMove(robbertile, targetplayer, idPcPlayer);
 
 				// Räuber versetzt senden und lokalen Status auf Bauen/Handel ändern
-				server.sendToAll(makeJSONRobberMoved(location,target,idPcPlayer.getPlayerID()));
+				server.send2All(makeJSONRobberMoved(location,target,idPcPlayer.getPlayerID()));
 				sendAndSavePlayerStatus(idPc, GameStates.BUILD_OR_TRADE);
 
 				break;
@@ -444,7 +475,7 @@ public class ServerProtokoll implements Protokoll {
 							
 					//schicke den Bauvorgang
 					JSONObject jsonBuilding = makeJSONBuildingProcess(idPc, building);
-					server.sendToAll(jsonBuilding);
+					server.send2All(jsonBuilding);
 					System.out.println("Server schickt "+jsonBuilding+ " an alle Clients");
 
 				} else {
@@ -454,12 +485,12 @@ public class ServerProtokoll implements Protokoll {
 					
 					// ... schicke eine Kostennachricht an den Besitzer ...
 					JSONObject costs = getBuildingsCosts(buildingtype, idPc);
-					server.sendToID(idPc, costs);
+					server.send2ID(idPc, costs);
 					System.out.println("Server schickt Kosten: " +costs+ " an Client: " + idPc);
 
 					//  ... und den Bauvorgang an alle Spieler
 					JSONObject jsonBuilding = makeJSONBuildingProcess(idPc, building);
-					server.sendToAll(jsonBuilding);
+					server.send2All(jsonBuilding);
 					System.out.println("Server schickt Gebäudebau: " +jsonBuilding+ " an alle Clients");
 				}
 			
@@ -506,7 +537,7 @@ public class ServerProtokoll implements Protokoll {
 				
 				JSONObject jsonOffer = makeJSONTradeOffer(tradeModel);
 
-				server.sendToAll(jsonOffer);
+				server.send2All(jsonOffer);
 				
 				servercontroller.getServerModel().setTradingAllowed(false);
 				break;
@@ -528,7 +559,7 @@ public class ServerProtokoll implements Protokoll {
 				json2.put("Handel id", tradeModel.getTradeid());
 				jsonOfferAccepted.put("Handelsangebot angenommen", json2);
 				
-				server.sendToAll(jsonOfferAccepted);
+				server.send2All(jsonOfferAccepted);
 				break;
 			}
 
@@ -557,13 +588,13 @@ public class ServerProtokoll implements Protokoll {
 				int[] demand = tradeModel.getDemand();
 				int[] offer = tradeModel.getOffer();
 				
-				server.sendToAll(getCosts(offer, idPcPlayer.getPlayerID()));
-				server.sendToAll(getProfit(demand, idPcPlayer.getPlayerID()));
-				server.sendToAll(getCosts(demand, tradepartnerID));
-				server.sendToAll(getProfit(offer, tradepartnerID));
+				server.send2All(getCosts(offer, idPcPlayer.getPlayerID()));
+				server.send2All(getProfit(demand, idPcPlayer.getPlayerID()));
+				server.send2All(getCosts(demand, tradepartnerID));
+				server.send2All(getProfit(offer, tradepartnerID));
 				
 				tradeModel.reset(); //Resetet alle wichtigen Daten des Handels bis auf die TradeID sodass ein neuer Trade gestartet werden kann
-				server.sendToAll(jsonCloseDeal);
+				server.send2All(jsonCloseDeal);
 				
 				servercontroller.getServerModel().setTradingAllowed(true);
 				break;
@@ -584,7 +615,7 @@ public class ServerProtokoll implements Protokoll {
 				jsonAbortDeal.put("Handelsangebot abgebrochen", json2);
 				
 				tradeModel.reset(); //Resetet alle wichtigen Daten des Handels bis auf die TradeID sodass ein neuer Trade gestartet werden kann
-				server.sendToAll(jsonAbortDeal);
+				server.send2All(jsonAbortDeal);
 				break;
 			}
 			
@@ -600,8 +631,8 @@ public class ServerProtokoll implements Protokoll {
 				servercontroller.processProfit(demandarray, idPcPlayer);
 				
 				//Versenden der Kosten und Profit Nachrichten
-				server.sendToAll(getCosts(offerarray, idPcPlayer.getPlayerID()));
-				server.sendToAll(getProfit(demandarray, idPcPlayer.getPlayerID()));
+				server.send2All(getCosts(offerarray, idPcPlayer.getPlayerID()));
+				server.send2All(getProfit(demandarray, idPcPlayer.getPlayerID()));
 				break;
 			}
 			
@@ -610,12 +641,12 @@ public class ServerProtokoll implements Protokoll {
 				int[] droppedResArray = serverprotokollhelper.parseRessourcesArray(droppedRes);
 
 				servercontroller.processCosts(droppedResArray, idPcPlayer);
-				server.sendToID(idPc, getCosts(droppedResArray, idPc));
+				server.send2ID(idPc, getCosts(droppedResArray, idPc));
 				int resourcessum = servercontroller.sumUp(droppedResArray);
 
 				JSONObject ressources = getCostsSum(resourcessum, idPc);
 
-				server.sendToNonIDConnections(idPc, ressources);
+				server.send2NonID(idPc, ressources);
 
 				break;
 			}
@@ -629,15 +660,15 @@ public class ServerProtokoll implements Protokoll {
 					sendChatMsgToID(idPc, "Es ist leider keine Entwicklungskarte mehr vorhanden.");
 				}
 				JSONObject jsondevcard = makeJSONBoughtDevCards(idPc, devcard.getDevelopmentCardType());
-				server.sendToID(idPc,jsondevcard);
-				server.sendToNonIDConnections(idPc, makeJSONBoughtDevCardsSecret(idPc));
+				server.send2ID(idPc,jsondevcard);
+				server.send2NonID(idPc, makeJSONBoughtDevCardsSecret(idPc));
 				
 				servercontroller.processCosts(DevelopmentCardType.getDevcardCosts(), idPcPlayer);
 				servercontroller.returnRessource(DevelopmentCardType.getDevcardCosts()); //ressourcen an bank zurückgeben
 				
 				servercontroller.giveDevCard(devcard, idPcPlayer);
 				
-				server.sendToAll(getCosts(DevelopmentCardType.getDevcardCosts(), idPc));
+				server.send2All(getCosts(DevelopmentCardType.getDevcardCosts(), idPc));
 				sendChatMsgToAll("Spieler "+ idPcPlayer.getPlayerName()+" hat eine Entwicklungskarte gekauft.", 1337);;
 				break;
 			}
@@ -645,7 +676,7 @@ public class ServerProtokoll implements Protokoll {
 			case "Ritter ausspielen": {
 				//Ritter-ausspielen-Objekt an andere Spieler mit dem Namen schicken
 				json.put("Spieler", idPcPlayer.getPlayerID());	
-				server.sendToAll(json);
+				server.send2All(json);
 				
 				sendAndSavePlayerStatus(idPc, GameStates.BUILD_OR_TRADE);
 				
@@ -682,7 +713,7 @@ public class ServerProtokoll implements Protokoll {
 			case "Straßenbaukarte ausspielen":{
 				//Straßenbaukarte-ausspielen-Objekt an andere Spieler mit dem Namen schicken
 				json.put("Spieler", idPcPlayer.getPlayerID());
-				server.sendToAll(json);
+				server.send2All(json);
 				
 				BuildingType buildingtype = BuildingType.ROAD;
 				if(!servercontroller.hasAvailableBuildings(idPcPlayer, buildingtype)){
@@ -696,7 +727,7 @@ public class ServerProtokoll implements Protokoll {
 						Building b = servercontroller.grabBuilding(buildingtype, idPcPlayer);
 						servercontroller.build(road, b, true);
 						JSONObject jsonBuilding = makeJSONBuildingProcess(idPc, b);
-						server.sendToAll(jsonBuilding);
+						server.send2All(jsonBuilding);
 
 					} else {
 						System.err.println("Keinen validen Bauplatz erhalten.");
@@ -714,7 +745,7 @@ public class ServerProtokoll implements Protokoll {
 				String ressourceAsString = json.getJSONObject("Monopol").getString("Rohstoff");
 				int playerId = idPcPlayer.getPlayerID();
 				json.getJSONObject("Monopol").put("Spieler",playerId);
-				server.sendToAll(json);
+				server.send2All(json);
 				
 				int tRessource = serverprotokollhelper.parse2RessourcePosition(ressourceAsString);
 				
@@ -734,14 +765,14 @@ public class ServerProtokoll implements Protokoll {
 					if(playerId != p.getPlayerID() && tRessource!=-1){
 						
 						p.setResourceCards(tRessource, 0);
-						server.sendToAll(getIndividualCosts(p.getPlayerID(), tRessource, playerres));
+						server.send2All(getIndividualCosts(p.getPlayerID(), tRessource, playerres));
 					}
 					
 					//Profit für den Monopolkartenspieler
 					if(playerId == p.getPlayerID() && tRessource!=-1 ){
 						
 						p.setResourceCards(tRessource, p.getResourceCards(tRessource)+sumOfRessources);
-						server.sendToAll(getIndividualProfit(p.getPlayerID(), tRessource, sumOfRessources));
+						server.send2All(getIndividualProfit(p.getPlayerID(), tRessource, sumOfRessources));
 					}
 				}
 				
@@ -755,7 +786,7 @@ public class ServerProtokoll implements Protokoll {
 				int[] ressourceArray = serverprotokollhelper.parseRessourcesArray(ressources);
 				
 				json.getJSONObject("Erfindung").put("Spieler", idPcPlayer.getPlayerID());
-				server.sendToAll(json);
+				server.send2All(json);
 				
 				//Nimm die Ressourcen von der Bank
 				servercontroller.collectResArrayOfStack(ressourceArray);
@@ -764,9 +795,9 @@ public class ServerProtokoll implements Protokoll {
 				servercontroller.processProfit(ressourceArray, idPcPlayer);;
 				
 				//profit nachricht an alle schicken (Nur der Spieler der die Karte gespielt hat erhält Rohstoffe)
-				server.sendToID(idPc, getProfit(ressourceArray, idPcPlayer.getPlayerID()));
+				server.send2ID(idPc, getProfit(ressourceArray, idPcPlayer.getPlayerID()));
 				int arraysum = servercontroller.sumUp(ressourceArray);
-				server.sendToNonIDConnections(idPc, getProfitSum(arraysum, idPcPlayer.getPlayerID()));
+				server.send2NonID(idPc, getProfitSum(arraysum, idPcPlayer.getPlayerID()));
 
 				servercontroller.returnDevCard(DevelopmentCardType.DISCOVERY);
 
@@ -811,8 +842,8 @@ public class ServerProtokoll implements Protokoll {
 	public void startKonfiguration() {
 
 		// initialisiere die Reihenfolge der Spieler
-		ServerModel.setOrder(new int[getServer().getNumberOfPlayerConnections()]);
-		ServerModel.setOrignalOrder(new int[getServer().getNumberOfPlayerConnections()]);
+		ServerModel.setOrder(new int[server.getConnectedThreads()]);
+		ServerModel.setOrignalOrder(new int[server.getConnectedThreads()]);
 		
 		int j = 0;
 		for (PlayerModel player : serverModel.getPlayers().values()){
@@ -829,7 +860,7 @@ public class ServerProtokoll implements Protokoll {
 			if (id == ServerModel.getOrder()[0]) {
 				//build or trade senden um zu zeigen spieler ist am zug und darf gleich bauen
 				JSONObject buildOrTradeStatus = makeJSONPlayerStatus(id, GameStates.BUILD_OR_TRADE.getGameState());
-				server.sendToAll(buildOrTradeStatus);
+				server.send2All(buildOrTradeStatus);
 				//Spieler darf kostenlos bauen
 				sendAndSavePlayerStatus(id, GameStates.BUILD_VILLAGE);
 
@@ -897,13 +928,13 @@ public class ServerProtokoll implements Protokoll {
 						//Kosten/Ertragnachricht mit richtiger Arraypostion schicken und lokal das Array bearbeiten
 						//Ziel
 						JSONObject individualCosts = getIndividualCosts(targetplayer.getPlayerID(), randomRessouceNumber);
-						server.sendToID(targetplayer.getPlayerID(), individualCosts);
+						server.send2ID(targetplayer.getPlayerID(), individualCosts);
 						targetplayer.getResourceCards()[randomRessouceNumber]--;
 						
 						// Auftraggeber
 						int robberplayerid = robberplayer.getPlayerID();
 						JSONObject individualProfit = getIndividualProfit(robberplayerid, randomRessouceNumber);
-						server.sendToID(robberplayerid, individualProfit);
+						server.send2ID(robberplayerid, individualProfit);
 						robberplayer.getResourceCards()[randomRessouceNumber]++;
 						System.out.println("Räuber versetzen behandelt. Rohstoffe ausgetauscht");
 					} else {
@@ -930,7 +961,7 @@ public class ServerProtokoll implements Protokoll {
 			for (Map.Entry<Integer, PlayerModel> entry3 : serverModel.getPlayers().entrySet()) {
 				Integer playerid = entry3.getKey();
 				if (playerid == firstInOrderID) {
-					server.sendToAll(makeJSONPlayerStatus(firstInOrderID, GameStates.BUILD_OR_TRADE.getGameState()));
+					server.send2All(makeJSONPlayerStatus(firstInOrderID, GameStates.BUILD_OR_TRADE.getGameState()));
 					sendAndSavePlayerStatus(firstInOrderID, GameStates.BUILD_VILLAGE);
 				} else {
 					sendAndSavePlayerStatus(playerid, GameStates.WAIT);
@@ -944,7 +975,7 @@ public class ServerProtokoll implements Protokoll {
 				Integer playerid = entry3.getKey();
 				
 				if(player.getVictoryPoints()>=10){
-					server.sendToAll(makeJSONPlayerStatus(playerid, GameStates.WAIT.getGameState()));
+					server.send2All(makeJSONPlayerStatus(playerid, GameStates.WAIT.getGameState()));
 					gameWon(player.getPlayerID());
 					break;
 				}
@@ -997,7 +1028,7 @@ public class ServerProtokoll implements Protokoll {
 		case "dice_7":
 			int diceSum = 0;
 			JSONObject json = makeJSONSevenPipThrow(cheaterid,diceSum);
-			server.sendToAll(json);
+			server.send2All(json);
 			handleDiceThrow(cheaterid, diceSum);
 			
 			break;
@@ -1015,7 +1046,7 @@ public class ServerProtokoll implements Protokoll {
 			PlayerModel player = serverModel.getPlayers().get(cheaterid);
 			player.setVictoryPoints(player.getVictoryPoints()+amountAsInt);
 			
-			server.sendToAll(makeJSONPlayerStatus(cheaterid, player.getPlayerStatus()));
+			server.send2All(makeJSONPlayerStatus(cheaterid, player.getPlayerStatus()));
 		}
 		System.out.println("pattern");
 		Pattern pattern = Pattern.compile("(\\d+)\\s(clay|ore|wood|wheat|sheep)");
@@ -1054,7 +1085,7 @@ public class ServerProtokoll implements Protokoll {
 			int[] profit = new int[5];
 			profit[position] = amountAsInt;
 			
-			server.sendToAll(getProfit(profit, cheaterid));
+			server.send2All(getProfit(profit, cheaterid));
 		 }
 	}
 	
@@ -1066,7 +1097,7 @@ public class ServerProtokoll implements Protokoll {
 	private void sendAndSavePlayerStatus(int idPc, GameStates state) {
 		// Allen Clients den Status des Spielers schicken
 		JSONObject playerStatus = makeJSONPlayerStatus(idPc, state.getGameState() );
-		server.sendToAll(playerStatus);
+		server.send2All(playerStatus);
 		// Den Status lokal im Spieler speichern
 		PlayerModel playerModel = serverModel.getPlayers().get(idPc);
 		playerModel.setPlayerStatus(state.getGameState());
@@ -1093,7 +1124,7 @@ public class ServerProtokoll implements Protokoll {
 			e.printStackTrace();
 		}
 
-		server.sendToAll(jsonMsg);
+		server.send2All(jsonMsg);
 	}
 	
 	/**
@@ -1114,7 +1145,7 @@ public class ServerProtokoll implements Protokoll {
 			e.printStackTrace();
 		}
 
-		server.sendToID(id, jsonMsg);
+		server.send2ID(id, jsonMsg);
 	}
 	
 	
@@ -1562,7 +1593,7 @@ public class ServerProtokoll implements Protokoll {
 			}
 			json2.put("Spieler", id);
 			json.put("Ertrag", json2);
-			server.sendToAll(json);
+			server.send2All(json);
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -1819,12 +1850,11 @@ public class ServerProtokoll implements Protokoll {
 		return (int) (Math.random() * (high - low) + low);
 	}
 
-
-	public Server getServer() {
+	public CatanServer getServer() {
 		return server;
 	}
-
-	public void setServer(Server server) {
+	
+	public void setServer(CatanServer server) {
 		this.server = server;
 	}
 }

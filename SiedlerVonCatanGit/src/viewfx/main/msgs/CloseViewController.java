@@ -1,4 +1,4 @@
-package viewfx.main.client.msgs;
+package viewfx.main.msgs;
 
 import java.io.IOException;
 import java.net.URL;

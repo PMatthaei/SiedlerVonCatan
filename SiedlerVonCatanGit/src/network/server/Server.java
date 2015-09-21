@@ -6,7 +6,7 @@ import networkdiscovery.catan.server.ServerDiscoveryService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import viewfx.main.server.PlayersTable;
+import viewfx.main.utilities.PlayersTable;
 import data.PlayerModel;
 
 import java.io.IOException;

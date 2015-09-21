@@ -5,9 +5,11 @@ import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,12 +17,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
+import java.util.Map.Entry;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import network.client.Client;
 import network.client.PlayerProtokoll;
+import networkdiscovery.catan.client.CatanClient;
+import networkdiscovery.catan.client.ClientDiscoveryService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,7 +71,7 @@ import viewswt.start.StartView;
 
 public class GameController {
 
-	private static Logger log = Logger.getLogger(GameController.class.getName());
+	private static final Logger LOG = Logger.getLogger(GameController.class.getName());
 	private FileHandler fh;
 
 	/** Die Daten des Spiels **/
@@ -75,7 +81,8 @@ public class GameController {
 	private GameView view;
 	
 	/** Client der mit dem Server kommuniziert **/
-	private Client client;
+	private CatanClient client;
+//	private Client client;
 	
 
 
@@ -84,14 +91,13 @@ public class GameController {
 
 	
 	/** Zaehler wie viele Entwicklungskarten im gesamten Spiel verkauft wurden **/
-	private int DevCard = -1; //TODO anders
+	private int DevCard = -1; //TODO anders machen
 	
 	/** default -1 für keine devCard diese Runde gekauft*/
 	private int devCardBuyThisTurn=-1;
 	
 	public GameController(GameModel model) {
 		this.setGameModel(model);
-		this.client = new Client();
 //		 writeInLog();
 
 	}
@@ -103,13 +109,13 @@ public class GameController {
 	 */
 	public void start() {
 		System.out.println("Starte das Spiel..");
+		
 		//Initalisiere die Insel nachdem der Server die Basisinformationen geschickt hat
 		model.initGame();
 		view.setVisible(true);
 
 	}
-
-	
+		
 	
 	
 	
@@ -310,7 +316,7 @@ public class GameController {
 					
 					System.out.println("Gebäude auf Platz: " + site + " gesetzt ");
 					System.out.println("Liste der Gebäude auf dem Spielfeld: " + buildings);
-					log.info("Gebaeude " + building +" gebaut");
+					LOG.info("Gebaeude " + building +" gebaut");
 					
 					// Update alle validen Bauplaetze ausgehend von dem gerade bebauten Platz(löscht Plätze die nichtmehr bebaut werden dürfen)
 					updateValidSites(site);
@@ -467,7 +473,7 @@ public class GameController {
 	 * @return Liste der getroffenen Feld
 	 */
 	private ArrayList<Tile> getTileByPip(int pip) {
-		log.info("Kacheln mit Nummer: " + pip +" getroffen");
+		LOG.info("Kacheln mit Nummer: " + pip +" getroffen");
 		ArrayList<Tile> hitTiles = new ArrayList<Tile>();
 
 		HashMap<MapLocation, Tile> landTiles = model.getClientIsle().getAlltiles();
@@ -829,12 +835,12 @@ public class GameController {
 		try {
 			// This block configure the logger with handler and formatter
 			fh = new FileHandler("logfile/eisfreie_eleven_logfile.log");
-			log.addHandler(fh);
+			LOG.addHandler(fh);
 			SimpleFormatter formatter = new SimpleFormatter();
 			fh.setFormatter(formatter);
 
 			// the following statement is used to log any messages
-			log.info("Logger Started");
+			LOG.info("Logger Started");
 
 		} catch (SecurityException e) {
 			e.printStackTrace();
@@ -995,29 +1001,15 @@ public class GameController {
 	public int getDevCard() {
 		return DevCard;
 	}
-	public void setDevCard(int DevCard)
-	{
+	
+	public void setDevCard(int DevCard)	{
 		this.DevCard = DevCard;
 	}
 
 
-
-	/**
-	 * @return the client
-	 */
-	public Client getClient() {
+	public CatanClient getClient() {
 		return client;
 	}
-
-
-
-	/**
-	 * @param client the client to set
-	 */
-	public void setClient(Client client) {
-		this.client = client;
-	}
-
 
 
 }

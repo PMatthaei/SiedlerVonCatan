@@ -14,16 +14,19 @@ import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import networkdiscovery.chat.AbstractChatObservable;
-import networkdiscovery.chat.TextSocketChannel;
-import networkdiscovery.chat.TextUI;
+import controller.GameController;
+import data.GameModel;
+import network.client.PlayerProtokoll;
+import networkdiscovery.json.AbstractJSONObservable;
+import networkdiscovery.json.JSONSocketChannel;
+import networkdiscovery.json.TextUI;
 
 /**
  * A simple chat client.
  * 
  * @author Erich Schubert
  */
-public class CatanClient extends AbstractChatObservable implements Runnable {
+public class CatanClient extends AbstractJSONObservable implements Runnable {
 	/** Class logger, use logging.properties to configure logging. */
 	private static final Logger LOG = Logger.getLogger(CatanClient.class.getName());
 
@@ -34,7 +37,7 @@ public class CatanClient extends AbstractChatObservable implements Runnable {
 	private InetSocketAddress addr;
 
 	/** Out connection */
-	private TextSocketChannel conn;
+	private JSONSocketChannel conn;
 
 	/**
 	 * Constructor.
@@ -76,12 +79,12 @@ public class CatanClient extends AbstractChatObservable implements Runnable {
 			return;
 		}
 		
-		conn = new TextSocketChannel(chan, Charset.forName("UTF-8"), remotename);
+		conn = new JSONSocketChannel(chan, Charset.forName("UTF-8"), remotename);
 		fireConnected(remotename, conn);
 		
 		try {
 			while (conn.isOpen()) {
-				String message = conn.read();
+				JSONObject message = conn.read();
 				if (message == null) {
 					break; // Disconnected.
 				}
@@ -91,7 +94,10 @@ public class CatanClient extends AbstractChatObservable implements Runnable {
 			if (LOG.isLoggable(Level.INFO)) {
 				LOG.info("Disconnected from " + remotename + ": " + e.getMessage());
 			}
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+		
 		fireDisconnected(remotename);
 	}
 
@@ -102,7 +108,7 @@ public class CatanClient extends AbstractChatObservable implements Runnable {
 	 */
 	private static Entry<InetSocketAddress, String> discoverServer() {
 		Collection<Entry<InetSocketAddress, String>> servers;
-		ClientDiscoveryService discovery = new ClientDiscoveryService("catan-client", VERSION, "catan-server");
+		ClientDiscoveryService discovery = new ClientDiscoveryService("catan-client-ee", VERSION, "catan-server-ee");
 		discovery.start();
 		while ((servers = discovery.getDiscoveredServers()).size() == 0) {
 			if (LOG.isLoggable(Level.INFO)) {
@@ -129,6 +135,26 @@ public class CatanClient extends AbstractChatObservable implements Runnable {
 		return server;
 	}
 
+	public void startClient(){
+		final Entry<InetSocketAddress, String> server = discoverServer();
+		if (server == null) {
+			System.err.println("No chat server discovered.");
+			return;
+		}
+		final CatanClient client = new CatanClient(server.getKey());
+
+		new Thread(client).start();
+		
+		GameModel game = new GameModel();
+		GameController controller = new GameController(game);
+		
+		controller.setGameModel(game);
+		//TODO wie playerdaten mit denen er connecten möchte zusammensammeln
+//		PlayerProtokoll playerProtokoll = new PlayerProtokoll(conn, playerModel, controller);
+//		playerConnection.setProtokoll(playerProtokoll);
+//		playerConnection.start();
+	}
+	
 	public static void main(String[] args) {
 		final Entry<InetSocketAddress, String> server = discoverServer();
 		if (server == null) {

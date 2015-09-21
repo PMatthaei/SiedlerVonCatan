@@ -1,4 +1,4 @@
-package networkdiscovery.chat;
+package networkdiscovery.json;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -17,12 +18,14 @@ import org.json.JSONObject;
  * 
  * @author Erich Schubert
  */
-public class TextSocketChannel {
+public class JSONSocketChannel {
 	/** Buffer size */
 	private static final int BUFFER_SIZE = 8192;
 
 	/** Info (name) of the channel */
 	private final String info;
+	
+	private int id;
 
 	/** Current channel. */
 	private final ByteChannel chan;
@@ -52,7 +55,7 @@ public class TextSocketChannel {
 	 * @param info
 	 *            Channel info.
 	 */
-	public TextSocketChannel(ByteChannel chan, Charset charset, String info) {
+	public JSONSocketChannel(ByteChannel chan, Charset charset, String info) {
 		this.chan = chan;
 		this.info = info;
 
@@ -77,15 +80,17 @@ public class TextSocketChannel {
 	 * @return Line read, or {@code null} on disconnection.
 	 * @throws IOException
 	 *             On IO errors
+	 * @throws JSONException 
 	 */
-	public String read() throws IOException {
+	public JSONObject read() throws IOException, JSONException {
 		inbuffer.clear();
 		int bytes = chan.read(inbuffer);
 		if (bytes < 0) {
 			return null; // Disconnected
 		}
 		inbuffer.flip();
-		return decoder.decode(inbuffer).toString();
+//		return decoder.decode(inbuffer).toString();
+		return new JSONObject(decoder.decode(inbuffer).toString());
 	}
 
 	/**
@@ -108,7 +113,7 @@ public class TextSocketChannel {
 				chan.write(outbuffer);
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Could not sen JSON. Check Buffer or encoder");
+			System.out.println("Could not send JSON. Check Buffer or encoder");
 		}
 	}
 
@@ -129,5 +134,19 @@ public class TextSocketChannel {
 	 */
 	public void close() throws IOException {
 		chan.close();
+	}
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
 	}
 }

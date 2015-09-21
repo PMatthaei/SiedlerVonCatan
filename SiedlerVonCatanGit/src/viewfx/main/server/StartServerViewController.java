@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import viewfx.AbstractViewController;
 import viewfx.ViewController;
+import viewfx.main.utilities.PlayersTable;
 import controller.GameController;
 import controller.ServerController;
 import data.PlayerModel;
