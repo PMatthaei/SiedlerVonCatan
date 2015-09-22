@@ -1,5 +1,3 @@
-/ai/
-/controller/
 /data/
 /network/
 /networkdiscovery/
@@ -8,3 +6,5 @@
 /utilities/
 /viewfx/
 /viewswt/
+/ai/
+/controller/

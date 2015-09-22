@@ -1,5 +1,7 @@
 package viewfx.main.server;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,11 +43,9 @@ public class StartServerViewController extends ViewController implements Initial
 	@FXML
 	private GridPane gridPane;
 	
+
 	@FXML
-	private Label minimizeLabel;
-	
-	@FXML
-	private Label closeLabel;
+	private Label closeLabel,minimizeLabel,ipLabel;
 	
 	@FXML
 	private ComboBox<String> maxplayersComboBox;
@@ -72,9 +72,10 @@ public class StartServerViewController extends ViewController implements Initial
         		maxplayers = maxplayersComboBox.getPromptText();
         	}
         	servercontroller.getModel().setPlayersAllowed(Integer.parseInt(maxplayers));
-        	System.out.println(maxplayers);
         	startServerBtn.setDisable(true);
         	servercontroller.startServer();
+        	
+        	updateAdressInfoFields();
         });
         
         closeLabel.setOnMouseClicked((event) -> {
@@ -112,6 +113,16 @@ public class StartServerViewController extends ViewController implements Initial
         });
         
     }
+
+	private void updateAdressInfoFields() {
+		try {
+			InetSocketAddress inetSocketAddress = (InetSocketAddress) servercontroller.getServer().getSsc().getLocalAddress();
+			ipLabel.setText(""+inetSocketAddress);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private PlayersTable generatePlayer(PlayerModel player,String status) {
 		return new PlayersTable(player.getPlayerName(), player.getPlayerColor().toString(), status);
@@ -155,5 +166,9 @@ public class StartServerViewController extends ViewController implements Initial
 	public void setServercontroller(ServerController servercontroller) {
 		this.servercontroller = servercontroller;
 	}
-
+	
+	public Label getIpLabel() {
+		return ipLabel;
+	}
+	
 }

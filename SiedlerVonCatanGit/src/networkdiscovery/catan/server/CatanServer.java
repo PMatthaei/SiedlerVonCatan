@@ -40,15 +40,21 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 	/** Class logger, use logging.properties to configure logging. */
 	private static final Logger LOG = Logger.getLogger(CatanServer.class.getName());
 
-	/** Chat server version */
+	/** Server version */
 	private static final String VERSION = "v0.1a";
+	
+	/** Name the server was given by a serveradmin **/
+	private static String NAME;
 
 	/** Server socket channel, used for listening for clients. */
 	private ServerSocketChannel ssc;
 
 	/** Make the server discoverable by clients. */
 	private ServerDiscoveryService discovery;
-
+	
+	/** Protokoll to handle incoming JSON-Messages **/
+	private ServerProtokoll serverprotokoll;
+	
 	/** Connected clients */
 	private HashMap<Integer, ConnectionThread> connections = new HashMap<Integer, ConnectionThread>();
 
@@ -65,8 +71,7 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 	/** Count of Maximum Players allowed on that server **/
 	private int maxPlayers = 4;
 
-	/** Protokoll to handle incoming JSON-Messages **/
-	private ServerProtokoll serverprotokoll;
+
 	
 	/**
 	 * Constructor.
@@ -125,11 +130,12 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 	}
 
 	private void checkMaxPlayers() {
-		if (id == maxPlayers ) {
+		int conns = connections.size();
+		if (conns == maxPlayers ) {
 			full = true;
 		} else {
 			id++;
-			LOG.info("Slots: " + id + "/" + maxPlayers+"");
+			LOG.info("Slots: " + conns + "/" + maxPlayers+"");
 		}
 	}
 
@@ -139,8 +145,23 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 	}
 
 	@Override
-	public void disconnected(String text) {
+	public void disconnected(String discAdr) {
 		// Ignore.
+		Iterator<Entry<Integer, ConnectionThread>> it = connections.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry<Integer, ConnectionThread> pair = (Map.Entry<Integer, ConnectionThread>)it.next();
+	        ConnectionThread ct = pair.getValue();
+	        int id = pair.getKey();
+			String connAdr = ct.conn.getInfo();
+			if(connAdr.equals(discAdr)){
+				connections.remove(id);
+				int conns = connections.size();
+				LOG.info("Nach Disconnect -> Slots: " + conns + "/" + maxPlayers+"");
+				return;
+			}
+	    }
+
+
 	}
 	
 	/**
@@ -359,6 +380,24 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 
 	public void setServerprotokoll(ServerProtokoll serverprotokoll) {
 		this.serverprotokoll = serverprotokoll;
+	}
+
+	/**
+	 * @return the nAME
+	 */
+	public static String getServername() {
+		return NAME;
+	}
+
+	/**
+	 * @param nAME the nAME to set
+	 */
+	public static void setSevername(String nAME) {
+		NAME = nAME;
+	}
+	
+	public ServerSocketChannel getSsc() {
+		return ssc;
 	}
 	
 }

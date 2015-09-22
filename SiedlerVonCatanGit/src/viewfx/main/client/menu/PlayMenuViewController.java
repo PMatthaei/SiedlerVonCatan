@@ -96,7 +96,7 @@ public class PlayMenuViewController extends ViewController implements Initializa
     		}
     		try {
     			showStatus("Verbindet ...", false);
-//				controller.getClient().startClient(clientplayer, ip, port);
+				controller.startClient(); //clientplayer, ip, port als argumente davor
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

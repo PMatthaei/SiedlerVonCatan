@@ -81,6 +81,8 @@
                   <TableColumn fx:id="readyColumn" prefWidth="82.0" text="Bereit" />
               </columns>
             </TableView>
+            <Label text="IP:" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
+            <Label fx:id="ipLabel" GridPane.columnIndex="1" GridPane.valignment="BOTTOM" />
          </children>
       </GridPane>
    </children>

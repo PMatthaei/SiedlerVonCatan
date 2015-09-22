@@ -3,6 +3,7 @@ package controller;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -969,6 +970,8 @@ public class ServerController{
 		this.startviewcontroller = startServerViewController;
 	}
 
-
+	public CatanServer getServer() {
+		return server;
+	}
 }
 

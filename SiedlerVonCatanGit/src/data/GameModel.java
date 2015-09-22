@@ -26,6 +26,8 @@ public class GameModel extends Model {
 
 	private PlayerModel clientplayer;
 
+	private final static String VERSION = "v1.0a";
+	
 	/** Erstellt alle zu Beginn wichtigen Daten des Spiels **/
 	public GameModel() {
 		initModel();
@@ -114,5 +116,12 @@ public class GameModel extends Model {
 	 */
 	public void setClientplayer(PlayerModel clientplayer) {
 		this.clientplayer = clientplayer;
+	}
+
+	/**
+	 * @return the version
+	 */
+	public static String getVersion() {
+		return VERSION;
 	}
 }

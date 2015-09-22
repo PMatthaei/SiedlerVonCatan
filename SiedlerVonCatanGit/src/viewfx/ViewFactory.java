@@ -3,8 +3,6 @@ package viewfx;
 import java.io.IOException;
 
 import controller.GameController;
-import viewfx.main.client.StartClientViewController;
-import viewfx.main.server.StartServerViewController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;

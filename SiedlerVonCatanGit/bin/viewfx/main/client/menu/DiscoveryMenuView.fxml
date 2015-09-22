@@ -31,9 +31,9 @@
          <children>
             <TableView fx:id="serverlist" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="2" GridPane.rowSpan="3">
               <columns>
-                <TableColumn fx:id="playercount" prefWidth="97.0" text="Spieleranzahl" />
-                <TableColumn fx:id="ip" prefWidth="160.0" text="IP-Adresse:" />
-                  <TableColumn fx:id="port" prefWidth="59.0" text="Port" />
+                <TableColumn fx:id="playercountColumn" prefWidth="97.0" text="Spieleranzahl" />
+                <TableColumn fx:id="ipColumn" prefWidth="160.0" text="IP-Adresse:" />
+                  <TableColumn fx:id="portColumn" prefWidth="59.0" text="Port" />
               </columns>
             </TableView>
             <Button fx:id="joinserver" mnemonicParsing="false" prefHeight="50.0" prefWidth="267.0" style="-fx-background-color: #9be466; -fx-font-size: ;" text="Join" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="6">

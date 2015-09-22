@@ -4,7 +4,7 @@ public enum Views {
 
 	STARTSERVER("main/server/StartServerView.fxml", false, false),
 	STARTCLIENT("main/client/StartClientView.fxml", false, false),
-	CLOSE("main/client/msgs/CloseView.fxml", false, false),
+	CLOSE("main/msgs/CloseView.fxml", false, false),
 	LOADGAME("main/client/menu/LoadGameView.fxml", false, false),
 	PLAY("main/client/menu/PlayMenuView.fxml", false, true),
 	STARTUP("main/client/menu/StartUpView.fxml", false, true),

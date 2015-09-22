@@ -99,11 +99,69 @@ public class GameController {
 	public GameController(GameModel model) {
 		this.setGameModel(model);
 //		 writeInLog();
-
+		
 	}
 	
 
+	public void startClient(){
+		final Entry<InetSocketAddress, String> server = discoverServer();
+		if (server == null) {
+			System.err.println("No chat server discovered.");
+			return;
+		}
+		client = new CatanClient(server.getKey());
 
+		new Thread(client).start();
+		
+		//TODO wie playerdaten mit denen er connecten möchte zusammensammeln
+//		PlayerProtokoll playerProtokoll = new PlayerProtokoll(conn, playerModel, controller);
+//		playerConnection.setProtokoll(playerProtokoll);
+//		playerConnection.start();
+	}
+	
+	public void startClient(String ip, int port){
+		client = new CatanClient(new InetSocketAddress(ip, port));
+		new Thread(client).start();
+		
+		//TODO wie playerdaten mit denen er connecten möchte zusammensammeln
+//		PlayerProtokoll playerProtokoll = new PlayerProtokoll(conn, playerModel, controller);
+//		playerConnection.setProtokoll(playerProtokoll);
+//		playerConnection.start();
+	}
+	/**
+	 * Discover a chat server.
+	 * 
+	 * @return First server discovered
+	 */
+	private static Entry<InetSocketAddress, String> discoverServer() {
+		Collection<Entry<InetSocketAddress, String>> servers;
+		ClientDiscoveryService discovery = new ClientDiscoveryService("catan-client-ee", GameModel.getVersion(), "catan-server-ee");
+		discovery.start();
+		while ((servers = discovery.getDiscoveredServers()).size() == 0) {
+			if (LOG.isLoggable(Level.INFO)) {
+				LOG.info("Searching for servers.");
+			}
+			synchronized (discovery) {
+				try {
+					discovery.sendAnnouncement();
+					// Wait for signal
+					discovery.wait();
+				} catch (InterruptedException e) {
+					// We were woken up - good.
+				}
+			}
+		}
+		// Automatically choose the first server.
+		Iterator<Entry<InetSocketAddress, String>> iter = servers.iterator();
+		if (!iter.hasNext()) {
+			return null;
+		}
+		Entry<InetSocketAddress, String> server = iter.next();
+		// Stop discovery thread.
+		discovery.shutdown();
+		return server;
+	}
+	
 	/**
 	 * Startet das Spiel
 	 */

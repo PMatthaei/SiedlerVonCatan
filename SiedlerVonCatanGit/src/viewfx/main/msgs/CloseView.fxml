@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane style="-fx-background-color: #413f57; -fx-border-color: white; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewfx.main.client.msgs.CloseViewController">
+<StackPane style="-fx-background-color: #413f57; -fx-border-color: white; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewfx.main.msgs.CloseViewController">
    <children>
       <GridPane prefHeight="168.0" prefWidth="288.0">
         <columnConstraints>
@@ -33,11 +33,6 @@
             </Label>
             <Button fx:id="yesBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="76.0" style="-fx-background-color: #8ab88f; -fx-text-fill: black;" text="Ja" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Button fx:id="abortBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="82.0" style="-fx-background-color: #8c2330; -fx-text-fill: white;" text="Nein" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.rowIndex="1">
-               <image>
-                  <Image url="@../../../../res/symbols/info.png" />
-               </image>
-            </ImageView>
             <HBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4">
                <children>
                   <Label fx:id="closeLabel" text="x" textFill="WHITE">

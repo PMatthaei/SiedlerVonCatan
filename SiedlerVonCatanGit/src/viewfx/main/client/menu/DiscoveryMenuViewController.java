@@ -25,6 +25,8 @@ import controller.ServerController;
 import data.PlayerModel;
 import data.isle.MapLocation;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -32,7 +34,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -42,8 +46,8 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 	    
     private Stage primaryStage;
 
-	private GameController controller;
-
+    private GameController controller;
+    
 	/** Serialization version */
 	private static final long serialVersionUID = 1L;
 
@@ -66,7 +70,7 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 	private TableView<ServersTable> serverlist;
 	
 	@FXML
-	private TableColumn<ServersTable,String> playercount,ip,port;
+	private TableColumn<ServersTable,String> playercountColumn,ipColumn,portColumn;
     
     @Override
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
@@ -76,18 +80,40 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 		refresh.setOnMouseClicked((event) -> {
 			discovery.getDiscoveredServers().clear();
 			discovery.sendAnnouncement();
+			updateList();
+
 		});
 		
-		playercount.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("playercount"));
-        ip.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("ip"));
-        port.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("port"));
+		joinserver.setOnMouseClicked((event) -> {
+			TableViewSelectionModel<ServersTable> s = serverlist.getSelectionModel();
+			ServersTable selectedItem = s.getSelectedItem();
+			int port = Integer.parseInt(selectedItem.getPort());
+			String ip = selectedItem.getIp();
+			controller.startClient(ip, port);
+		});
+		
+		serverlist.setRowFactory( tv -> {
+		    TableRow<ServersTable> row = new TableRow<>();
+		    row.setOnMouseClicked(event -> {
+		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+		        	ServersTable selectedItem = row.getItem();
+					int port = Integer.parseInt(selectedItem.getPort());
+					String ip = selectedItem.getIp();
+					controller.startClient(ip, port);		        }
+		    });
+		    return row ;
+		});
+		
+		playercountColumn.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("playercount"));
+        ipColumn.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("ip"));
+        portColumn.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("port"));
         
 		updateThread = new UpdateThread();
-
+		
 		start();
     }
     
-	private ServersTable generateServer(String pc,String ip, String port) {
+	private ServersTable generateServer(String pc, String ip, String port) {
 		return new ServersTable(pc, ip, port);
 	}
         
@@ -115,14 +141,13 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 	private class UpdateThread extends Thread {
 		@Override
 		public void run() {
-			while (primaryStage.isShowing()) {
+			while (true) {
 				synchronized (discovery) {
 					try {
 						// Wait for signal
 						discovery.wait();
 						LOG.finest("Server list was updated.");
 						updateList();
-						
 					} catch (InterruptedException e) {
 						// Wait was interrupted. Safe to ignore!
 					}
@@ -142,13 +167,13 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 		if (LOG.isLoggable(Level.FINER)) {
 			LOG.finer("Updating server list: " + col.size() + " entries");
 		}
-//		model.setRowCount(col.size());
 		Iterator<Entry<InetSocketAddress, String>> it = col.iterator();
-		for (int i = 0; it.hasNext(); ++i) {
+		while (it.hasNext()) {
 			Entry<InetSocketAddress, String> pair = it.next();
-//			model.setValueAt(pair.getKey(), i, 0);
-//			model.setValueAt(pair.getValue(), i, 1);
+			ServersTable s = generateServer("Name", ""+pair.getKey().getAddress().getHostAddress(), ""+pair.getKey().getPort());
+			addServersTable(s);
 		}
+        serverlist.setItems(data);
 	}
 	
     public Stage getStage(){
@@ -158,10 +183,7 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
     public void setStage(Stage stage) {
     	primaryStage = stage;
     }
-    
-	/**
-	 * @param controller the controller to set
-	 */
+
 	@Override
 	public void setGameController(GameController controller) {
 		this.controller = controller;
