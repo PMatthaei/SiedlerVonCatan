@@ -138,7 +138,7 @@ public abstract class AbstractDiscoveryService extends Thread {
 		final String p = decoder.decode(packet).toString();
 		System.out.println(p);
 		final String[] msg = p.split("\0", 4);
-		if (msg.length != 4) {
+		if (msg.length < 4) {
 			LOG.warning("Incomplete message received from host " + remote.toString() + ": " + p.replace("\0", "\\0"));
 			return;
 		}
@@ -262,40 +262,5 @@ public abstract class AbstractDiscoveryService extends Thread {
 	 */
 	public int getDiscoveryPort() {
 		return port;
-	}
-
-	/**
-	 * Main method to run the service in discovery mode for debugging. In your
-	 * actual application, you do not need this method.
-	 * 
-	 * @param args
-	 *            Command line parameters
-	 */
-	public static void main(String[] args) {
-		// Our debug handler just reports the messages it received.
-		AbstractDiscoveryService t = new AbstractDiscoveryService() {
-			@Override
-			public void handleBroadcast(String type, InetSocketAddress address, String content,String sname) {
-				System.err.println("Type: " + type);
-				System.err.println("Address: " + address);
-				System.err.println("Content: " + content);
-			}
-		};
-		// Start the discovery thread.
-		t.start();
-
-		try {
-			t.sendBroadcast("test-discovery", 1234, "Discovery test announcement.","testerserver");
-		} catch (IOException e) {
-			LOG.warning(e.getMessage());
-		}
-
-		// Wait only a minute for other announcements.
-		try {
-			Thread.sleep(60 * 1000);
-		} catch (InterruptedException e) {
-			LOG.warning(e.getMessage());
-		}
-		t.shutdown();
 	}
 }

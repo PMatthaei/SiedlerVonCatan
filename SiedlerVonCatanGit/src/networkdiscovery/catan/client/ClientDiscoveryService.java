@@ -113,28 +113,4 @@ public class ClientDiscoveryService extends AbstractDiscoveryService {
 			return Integer.compare(a1.getPort(), a2.getPort());
 		}
 	}
-
-	/**
-	 * Run the test function.
-	 * 
-	 * @param args
-	 *            Parameters
-	 */
-	public static void main(String[] args) {
-		ClientDiscoveryService t = new ClientDiscoveryService("test client", "Test client version 1.", "test server");
-		t.start();
-		t.sendAnnouncement();
-		// Wait for discovery to happen for testing only:
-		try {
-			Thread.sleep(60 * 1000);
-		} catch (InterruptedException e) {
-			LOG.log(Level.SEVERE, e.getMessage(), e);
-		}
-		// Report all discovered servers.
-		for (Map.Entry<InetSocketAddress, ServerIdentifier> entry : t.getDiscoveredServers()) {
-			System.out.println(entry.getKey() + ": " + entry.getValue());
-		}
-		// Stop the discovery thread.
-		t.shutdown();
-	}
 }

@@ -17,7 +17,7 @@ public class ServerDiscoveryService extends AbstractDiscoveryService {
 	private static final Logger LOG = Logger.getLogger(ServerDiscoveryService.class.getName());
 
 	/** Server name and version, client name */
-	String server, version, client,servername;
+	String server, version, client, servername;
 
 	/** Server port */
 	int port;
@@ -66,24 +66,5 @@ public class ServerDiscoveryService extends AbstractDiscoveryService {
 		} catch (IOException e) {
 			LOG.log(Level.SEVERE, e.getMessage(), e);
 		}
-	}
-
-	/**
-	 * Main method to run the service in discovery mode for debugging. In your
-	 * actual application, you do not need this method.
-	 * 
-	 * @param args
-	 *            Parameters, ignored.
-	 */
-	public static void main(String[] args) {
-		ServerDiscoveryService t = new ServerDiscoveryService("test server", "Test server version 1.", 123, "test client","meinserver");
-		t.start();
-		t.sendAnnouncement();
-		try {
-			Thread.sleep(60 * 1000);
-		} catch (InterruptedException e) {
-			LOG.log(Level.SEVERE, e.getMessage(), e);
-		}
-		t.shutdown();
 	}
 }
