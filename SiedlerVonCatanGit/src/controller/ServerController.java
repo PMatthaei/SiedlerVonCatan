@@ -50,8 +50,8 @@ import data.isle.TileStates;
 import data.isle.TileType;
 import sounds.Sound;
 import utilities.game.GameStates;
-import viewfx.main.server.StartServerViewController;
-import viewfx.main.utilities.PlayersTable;
+import viewfx.server.StartServerViewController;
+import viewfx.utilities.PlayersTable;
 import viewswt.main.GameView;
 import viewswt.main.IslePanel;
 
@@ -72,15 +72,7 @@ public class ServerController{
 		
 	public ServerController(ServerModel servermodel) {
 		this.servermodel = servermodel;
-		try {
-			this.server = new CatanServer();
-			server.setServermodel(servermodel);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		this.serverprotokoll = new ServerProtokoll(server, servermodel, this);
-		server.setServerprotokoll(serverprotokoll);
+
 
 //		 writeInLog();
 
@@ -102,6 +94,14 @@ public class ServerController{
 	
 
 	public void startServer() {
+		try {
+			this.server = new CatanServer(servermodel);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		this.serverprotokoll = new ServerProtokoll(server, servermodel, this);
+		server.setServerprotokoll(serverprotokoll);
 		new Thread(server).start();
 	}
 	

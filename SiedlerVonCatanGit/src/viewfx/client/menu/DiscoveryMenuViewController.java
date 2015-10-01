@@ -1,4 +1,4 @@
-package viewfx.main.client.menu;
+package viewfx.client.menu;
 
 import java.net.InetSocketAddress;
 import java.net.URL;
@@ -18,8 +18,8 @@ import networkdiscovery.catan.server.CatanServerList;
 import utilities.game.PlayerColors;
 import viewfx.AbstractViewController;
 import viewfx.ViewController;
-import viewfx.main.utilities.PlayersTable;
-import viewfx.main.utilities.ServersTable;
+import viewfx.utilities.PlayersTable;
+import viewfx.utilities.ServersTable;
 import controller.GameController;
 import controller.ServerController;
 import data.PlayerModel;
@@ -163,12 +163,14 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 		Iterator<Entry<InetSocketAddress, String>> it = col.iterator();
 		while (it.hasNext()) {
 			Entry<InetSocketAddress, String> pair = it.next();
-			ServersTable s = generateServer("Name", ""+pair.getKey().getAddress().getHostAddress(), ""+pair.getKey().getPort());
+			String name = controller.fetchServerName(pair.getKey());
+			System.out.println(pair.getValue());
+			ServersTable s = generateServer(name, ""+pair.getKey().getAddress().getHostAddress(), ""+pair.getKey().getPort());
 			addServersTable(s);
 		}
         serverlist.setItems(data);
 	}
-    
+
 	private ServersTable generateServer(String pc, String ip, String port) {
 		return new ServersTable(pc, ip, port);
 	}

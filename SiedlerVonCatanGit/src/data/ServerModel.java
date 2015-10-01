@@ -340,7 +340,7 @@ public class ServerModel extends Model {
 	/**
 	 * @return the nAME
 	 */
-	public static String getName() {
+	public String getName() {
 		return NAME;
 	}
 

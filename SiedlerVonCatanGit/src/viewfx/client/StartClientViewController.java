@@ -1,4 +1,4 @@
-package viewfx.main.client;
+package viewfx.client;
 
 import java.net.URL;
 import java.util.HashMap;

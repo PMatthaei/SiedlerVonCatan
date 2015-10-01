@@ -132,6 +132,7 @@ public class GameController {
 ;
 		client.setPlayerprotokoll(playerProtokoll);
 	}
+	
 	/**
 	 * Discover a chat server.
 	 * 
@@ -178,7 +179,9 @@ public class GameController {
 
 	}
 		
-	
+	public String fetchServerName(InetSocketAddress adr) {
+		return null;
+	}
 	
 	
 	

@@ -1,4 +1,4 @@
-package viewfx.main.client.menu.elements;
+package viewfx.client.menu.elements;
 
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import viewfx.main.utilities.SpriteAnimation;
+import viewfx.utilities.SpriteAnimation;
 
 public class LoadingSprite {
     private static final Image IMAGE = new Image(LoadingSprite.class.getResourceAsStream("/res/symbols/loading_sprite.png"));

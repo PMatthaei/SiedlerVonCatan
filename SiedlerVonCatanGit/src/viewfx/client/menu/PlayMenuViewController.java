@@ -1,4 +1,4 @@
-package viewfx.main.client.menu;
+package viewfx.client.menu;
 
 import java.net.URL;
 import java.util.ResourceBundle;

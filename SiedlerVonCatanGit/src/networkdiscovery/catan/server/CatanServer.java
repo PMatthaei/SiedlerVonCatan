@@ -63,7 +63,8 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 	 * @throws IOException
 	 *             when the server cannot start.
 	 */
-	public CatanServer() throws IOException {
+	public CatanServer(ServerModel servermodel) throws IOException {
+		this.servermodel = servermodel;
 		ssc = ServerSocketChannel.open();
 		ssc.bind(null); // Bind to an arbitrary port.
 		if (LOG.isLoggable(Level.INFO)) {
@@ -71,7 +72,7 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 		}
 		// Get the port we have been (automatically) assigned
 		int port = ((InetSocketAddress) ssc.getLocalAddress()).getPort();
-		discovery = new ServerDiscoveryService("catan-server-ee", ServerModel.getVersion(), port, "catan-client-ee");
+		discovery = new ServerDiscoveryService("catan-server-ee", ServerModel.getVersion(), port, "catan-client-ee", this.servermodel.getName());
 		// Add self to listeners (to broadcast)
 		addListener(this);
 	}

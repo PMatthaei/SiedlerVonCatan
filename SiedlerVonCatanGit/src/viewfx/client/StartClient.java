@@ -1,12 +1,12 @@
-package viewfx.main.client;
+package viewfx.client;
 
 import java.io.IOException;
 
+import viewfx.GameApplication;
+import viewfx.GameView;
 import viewfx.ViewFactory;
 import viewfx.Views;
-import viewfx.main.GameApplication;
-import viewfx.main.GameView;
-import viewfx.main.server.StartServer;
+import viewfx.server.StartServer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

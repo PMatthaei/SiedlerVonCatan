@@ -9,7 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import viewfx.main.server.StartServerViewController;
+import viewfx.server.StartServerViewController;
 
 
 public abstract class ViewController implements AbstractViewController{

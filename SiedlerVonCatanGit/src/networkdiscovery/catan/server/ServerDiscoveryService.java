@@ -17,7 +17,7 @@ public class ServerDiscoveryService extends AbstractDiscoveryService {
 	private static final Logger LOG = Logger.getLogger(ServerDiscoveryService.class.getName());
 
 	/** Server name and version, client name */
-	String server, version, client;
+	String server, version, client,servername;
 
 	/** Server port */
 	int port;
@@ -33,13 +33,15 @@ public class ServerDiscoveryService extends AbstractDiscoveryService {
 	 *            Server port (that is announced to clients)
 	 * @param sname
 	 *            Client name
+	 * @param name 
 	 */
-	public ServerDiscoveryService(String sname, String sversion, int port, String cname) {
+	public ServerDiscoveryService(String sname, String sversion, int port, String cname, String name) {
 		super();
 		this.server = sname;
 		this.version = sversion;
 		this.port = port;
 		this.client = cname;
+		this.servername = name;
 	}
 
 	@Override
@@ -74,7 +76,7 @@ public class ServerDiscoveryService extends AbstractDiscoveryService {
 	 *            Parameters, ignored.
 	 */
 	public static void main(String[] args) {
-		ServerDiscoveryService t = new ServerDiscoveryService("test server", "Test server version 1.", 123, "test client");
+		ServerDiscoveryService t = new ServerDiscoveryService("test server", "Test server version 1.", 123, "test client","meinserver");
 		t.start();
 		t.sendAnnouncement();
 		try {

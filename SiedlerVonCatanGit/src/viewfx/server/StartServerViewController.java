@@ -1,4 +1,4 @@
-package viewfx.main.server;
+package viewfx.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,7 +9,7 @@ import java.util.ResourceBundle;
 
 import viewfx.AbstractViewController;
 import viewfx.ViewController;
-import viewfx.main.utilities.PlayersTable;
+import viewfx.utilities.PlayersTable;
 import controller.GameController;
 import controller.ServerController;
 import data.PlayerModel;

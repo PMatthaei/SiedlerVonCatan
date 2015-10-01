@@ -1,4 +1,4 @@
-package viewfx.main.msgs;
+package viewfx.msgs;
 
 import java.io.IOException;
 import java.net.URL;
@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 import viewfx.AbstractViewController;
 import viewfx.ViewController;
 import viewfx.ViewFactory;
-import viewfx.main.server.StartServerViewController;
+import viewfx.server.StartServerViewController;
 import viewswt.main.GameView;
 import controller.GameController;
 import controller.ServerController;

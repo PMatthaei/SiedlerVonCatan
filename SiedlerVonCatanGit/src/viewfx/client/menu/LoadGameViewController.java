@@ -1,4 +1,4 @@
-package viewfx.main.client.menu;
+package viewfx.client.menu;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,7 +23,7 @@ import javafx.util.Duration;
 import utilities.game.PlayerColors;
 import viewfx.AbstractViewController;
 import viewfx.ViewController;
-import viewfx.main.client.menu.elements.LoadingSprite;
+import viewfx.client.menu.elements.LoadingSprite;
 import controller.GameController;
 import data.PlayerModel;
 
