@@ -102,7 +102,7 @@ public class ServerStartedView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 					int x = Integer.parseInt(playersList.getSelectedItem().toString());
-					serverModel.setPlayersAllowed(x);
+					serverModel.setMaxPlayers(x);
 					startserverbtn.setEnabled(false);
 					System.out.println("Spielerzahl " + x + " gesetzt");
 					if(modebox.isSelected()){

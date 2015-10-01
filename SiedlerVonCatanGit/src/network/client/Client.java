@@ -52,9 +52,9 @@ public class Client {
 		
 		controller.setGameModel(game);
 		
-		PlayerProtokoll playerProtokoll = new PlayerProtokoll(playerConnection, playerModel, controller);
-		playerConnection.setProtokoll(playerProtokoll);
-		playerConnection.start();
+//		PlayerProtokoll playerProtokoll = new PlayerProtokoll(playerConnection, playerModel, controller);
+//		playerConnection.setProtokoll(playerProtokoll);
+//		playerConnection.start();
 		
 		System.out.println("PlayerConnection-Thread gestartet");
 

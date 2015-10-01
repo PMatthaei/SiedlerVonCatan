@@ -64,6 +64,7 @@ import utilities.game.GameObject;
 import utilities.game.GameUI;
 import utilities.game.LongestRoadAlgorithm;
 import utilities.game.GameStates;
+import utilities.game.PlayerColors;
 import utilities.networkutils.ActionRequest;
 import viewswt.main.GameView;
 import viewswt.main.IslePanel;
@@ -82,9 +83,6 @@ public class GameController {
 	
 	/** Client der mit dem Server kommuniziert **/
 	private CatanClient client;
-//	private Client client;
-	
-
 
 	/** Das Protokoll für die Netzwerkkommunikation **/
 	private PlayerProtokoll playerprotokoll;
@@ -94,7 +92,7 @@ public class GameController {
 	private int DevCard = -1; //TODO anders machen
 	
 	/** default -1 für keine devCard diese Runde gekauft*/
-	private int devCardBuyThisTurn=-1;
+	private int devCardBuyThisTurn=-1; //TODO anders machen
 	
 	public GameController(GameModel model) {
 		this.setGameModel(model);
@@ -103,7 +101,7 @@ public class GameController {
 	}
 	
 
-	public void startClient(){
+	public void startDiscoveringClient(){
 		final Entry<InetSocketAddress, String> server = discoverServer();
 		if (server == null) {
 			System.err.println("No chat server discovered.");
@@ -114,19 +112,25 @@ public class GameController {
 		new Thread(client).start();
 		
 		//TODO wie playerdaten mit denen er connecten möchte zusammensammeln
-//		PlayerProtokoll playerProtokoll = new PlayerProtokoll(conn, playerModel, controller);
-//		playerConnection.setProtokoll(playerProtokoll);
-//		playerConnection.start();
+		PlayerModel playerModel = new PlayerModel();
+		playerModel.setPlayerColor(PlayerColors.RED);
+		playerModel.setPlayerName("Hans");
+		PlayerProtokoll playerProtokoll = new PlayerProtokoll(client, playerModel, this);
+		client.setPlayerprotokoll(playerProtokoll);
 	}
 	
 	public void startClient(String ip, int port){
 		client = new CatanClient(new InetSocketAddress(ip, port));
 		new Thread(client).start();
 		
+		PlayerModel playerModel = new PlayerModel();
+		playerModel.setPlayerColor(PlayerColors.RED);
+		playerModel.setPlayerName("Hans");
+		
 		//TODO wie playerdaten mit denen er connecten möchte zusammensammeln
-//		PlayerProtokoll playerProtokoll = new PlayerProtokoll(conn, playerModel, controller);
-//		playerConnection.setProtokoll(playerProtokoll);
-//		playerConnection.start();
+		PlayerProtokoll playerProtokoll = new PlayerProtokoll(client, playerModel, this);
+;
+		client.setPlayerprotokoll(playerProtokoll);
 	}
 	/**
 	 * Discover a chat server.

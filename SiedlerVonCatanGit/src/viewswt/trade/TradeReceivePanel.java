@@ -151,21 +151,18 @@ public class TradeReceivePanel extends JPanel {
 				switch (playerID){
 				case 0:
 					tradeAccept = playerProtokoll.makeJSONAcceptOffer(tradeId);
-					playerProtokoll.getPlayerConnection().sendData(tradeAccept);
 					break;
 				case 1:
 					tradeAccept = playerProtokoll.makeJSONAcceptOffer(tradeId);
-					playerProtokoll.getPlayerConnection().sendData(tradeAccept);
 					break;
 				case 2:
 					tradeAccept = playerProtokoll.makeJSONAcceptOffer(tradeId);
-					playerProtokoll.getPlayerConnection().sendData(tradeAccept);
 					break;
 				case 3:
 					tradeAccept = playerProtokoll.makeJSONAcceptOffer(tradeId);
-					playerProtokoll.getPlayerConnection().sendData(tradeAccept);
 					break;
 				}
+				controller.getClient().send(tradeAccept);
 				yesButton.setEnabled(false);
 			
 			}

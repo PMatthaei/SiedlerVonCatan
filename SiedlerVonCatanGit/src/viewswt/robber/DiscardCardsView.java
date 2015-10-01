@@ -174,8 +174,9 @@ public class DiscardCardsView extends JPanel  {
 				 * TODO discard selected resource cards of the player - method
 				 */
 				PlayerProtokoll playerProtokoll = gameController.getPlayerProtokoll();
-				playerProtokoll.getPlayerConnection().sendData(
-				playerProtokoll.makeJSONReduceResouces(nrOre, nrClay, nrWood, nrSheep, nrWheat));
+
+				gameController.getClient().send(playerProtokoll.makeJSONReduceResouces(nrOre, nrClay, nrWood, nrSheep, nrWheat));
+
 			}
 		});
 

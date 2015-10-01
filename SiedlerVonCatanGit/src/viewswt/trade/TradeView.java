@@ -1138,12 +1138,12 @@ public class TradeView extends JPanel implements ActionListener, MouseListener {
 				// Hier wird der Handel an den Server übertragen
 				if (bank.isSelected()){
 					JSONObject trade = controller.getPlayerProtokoll().makeJSONBankTrade(controller.getPlayerProtokoll().makeJSONTradeRessources(true), controller.getPlayerProtokoll().makeJSONTradeRessources(false)); // Woher bekommt man playerStatus
-					controller.getPlayerProtokoll().getPlayerConnection().sendData(trade);
+					controller.getClient().send(trade);
 					
 				}
 				else{
 					JSONObject trade = controller.getPlayerProtokoll().makeJSONOffer(controller.getPlayerProtokoll().makeJSONTradeRessources(true), controller.getPlayerProtokoll().makeJSONTradeRessources(false)); // Woher bekommt man playerStatus
-					controller.getPlayerProtokoll().getPlayerConnection().sendData(trade);
+					controller.getClient().send(trade);
 					Timer timer = new Timer(15000, new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {

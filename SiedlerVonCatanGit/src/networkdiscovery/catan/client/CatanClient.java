@@ -39,6 +39,8 @@ public class CatanClient extends AbstractJSONObservable implements Runnable {
 	/** Out connection */
 	private JSONSocketChannel conn;
 
+	/** **/
+	private PlayerProtokoll playerprotokoll;
 	/**
 	 * Constructor.
 	 * 
@@ -50,7 +52,7 @@ public class CatanClient extends AbstractJSONObservable implements Runnable {
 		this.addr = addr;
 	}
 
-	protected void send(JSONObject msg) {
+	public void send(JSONObject msg) {
 		if (conn == null) {
 			LOG.info("Not connected!");
 			return;
@@ -86,8 +88,11 @@ public class CatanClient extends AbstractJSONObservable implements Runnable {
 			while (conn.isOpen()) {
 				JSONObject message = conn.read();
 				if (message == null) {
+					System.out.println("null msg");
 					break; // Disconnected.
 				}
+				System.out.println("incoming msg: " + message);
+				playerprotokoll.handleReceivedData(message, 0);
 				fireReceived(conn, message);
 			}
 		} catch (IOException e) {
@@ -102,7 +107,6 @@ public class CatanClient extends AbstractJSONObservable implements Runnable {
 	}
 
 
-	
 //	public static void main(String[] args) {
 //		final Entry<InetSocketAddress, String> server = discoverServer();
 //		if (server == null) {
@@ -140,4 +144,8 @@ public class CatanClient extends AbstractJSONObservable implements Runnable {
 //		ui.run();
 //		System.exit(0);
 //	}
+	
+	public void setPlayerprotokoll(PlayerProtokoll playerprotokoll) {
+		this.playerprotokoll = playerprotokoll;
+	}
 }

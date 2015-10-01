@@ -164,9 +164,8 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 				PlayerModel playerModel = new PlayerModel();
 				playerModel.setPlayerID(id);
 				serverModel.getPlayers().put(key, playerModel);
-							
-				id++;
 				server.send2ID(id,json);
+				id++;
 			}
 		}
 	}
@@ -333,7 +332,7 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 				
 				//TODO: Eventuell hier KI einklinken?
 				
-				if (server.getConnectedThreads() == serverModel.getPlayersAllowed()) {
+				if (server.getConnectedThreads() == serverModel.getMaxPlayers()) {
 					try {
 						Thread.sleep(4000);
 					} catch (InterruptedException e) {

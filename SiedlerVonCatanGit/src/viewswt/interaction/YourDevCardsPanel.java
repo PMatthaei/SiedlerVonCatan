@@ -240,7 +240,8 @@ public class YourDevCardsPanel extends JPanel implements ActionListener {
 						public void actionPerformed(ActionEvent e) {
 							frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 							//send a message with entwicklungskarte kaufen
-							gameController.getPlayerProtokoll().getPlayerConnection().sendData(gameController.getPlayerProtokoll().makeJSONBuyDevCards());
+//							gameController.getPlayerProtokoll().getPlayerConnection().sendData(gameController.getPlayerProtokoll().makeJSONBuyDevCards());
+							gameController.getClient().send(gameController.getPlayerProtokoll().makeJSONBuyDevCards());
 							//buy devCards vielleicht nicht mehr gebraucht
 //							gameController.buyDevCards(playerModel);  		// TODO		
 							//verschicke BuyDevCards JSONObject

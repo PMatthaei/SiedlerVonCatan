@@ -112,14 +112,7 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 		
 		start();
     }
-    
-	private ServersTable generateServer(String pc, String ip, String port) {
-		return new ServersTable(pc, ip, port);
-	}
-        
-    public void addServersTable(ServersTable server){
-    	data.add(server);
-    }
+
     
 	/**
 	 * Start (show) the user interface.
@@ -175,7 +168,15 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 		}
         serverlist.setItems(data);
 	}
-	
+    
+	private ServersTable generateServer(String pc, String ip, String port) {
+		return new ServersTable(pc, ip, port);
+	}
+        
+    public void addServersTable(ServersTable server){
+    	data.add(server);
+    }
+    
     public Stage getStage(){
     	return primaryStage;
     }

@@ -18,6 +18,7 @@ import data.isle.MapLocation;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -25,6 +26,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -43,6 +45,8 @@ public class StartServerViewController extends ViewController implements Initial
 	@FXML
 	private GridPane gridPane;
 	
+	@FXML
+	private TextField servernameTField;
 
 	@FXML
 	private Label closeLabel,minimizeLabel,ipLabel;
@@ -56,22 +60,26 @@ public class StartServerViewController extends ViewController implements Initial
 	@FXML
 	private TableColumn<PlayersTable,String> playersColumn,colorsColumn,readyColumn;
 	
+	
 	private final ObservableList<PlayersTable> data = FXCollections.observableArrayList();
 	
     @Override
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     	servermodel = new ServerModel();
     	servercontroller = new ServerController(servermodel);
-    	servercontroller.setStartServerViewController(this);
     	
     	addBackground(gridPane, "/textures/start/fish.png");
 
     	startServerBtn.setOnAction((event) -> {
         	String maxplayers = maxplayersComboBox.getValue();
+        	String sname = servernameTField.getText();
         	if(maxplayers == null){
         		maxplayers = maxplayersComboBox.getPromptText();
         	}
-        	servercontroller.getModel().setPlayersAllowed(Integer.parseInt(maxplayers));
+        	if(sname == null || sname.equals("")){
+        		return;
+        	}
+        	servercontroller.assignServerdata(sname, maxplayers); //TODO guten weg mehrere daten auszutauschen!!
         	startServerBtn.setDisable(true);
         	servercontroller.startServer();
         	
@@ -103,16 +111,21 @@ public class StartServerViewController extends ViewController implements Initial
         colorsColumn.setCellValueFactory(new PropertyValueFactory<PlayersTable,String>("color"));
         readyColumn.setCellValueFactory(new PropertyValueFactory<PlayersTable,String>("ready"));
         
-        servercontroller.getServerModel().getPlayers().addListener((MapChangeListener.Change<? extends Integer,? extends PlayerModel> c) -> {
-        	PlayerModel player = c.getValueAdded();
-        	boolean validChangeEvent = player != null && (player.getPlayerName() != null || player.getPlayerColor() != null);
-			if(validChangeEvent){
-				addTablePlayer(generatePlayer(player,"Bereit"));
-        	}
-            connectedPlayersTable.setItems(data);
+        ObservableMap<Integer, PlayerModel> players = servercontroller.getServerModel().getPlayers();
+		players.addListener((MapChangeListener.Change<? extends Integer,? extends PlayerModel> changedvalue) -> {
+        	updateConnectedPlayersTableView(changedvalue);
         });
         
     }
+
+	private void updateConnectedPlayersTableView(MapChangeListener.Change<? extends Integer, ? extends PlayerModel> c) {
+		PlayerModel player = c.getValueAdded();
+		boolean validChangeEvent = player != null && (player.getPlayerName() != null || player.getPlayerColor() != null);
+		if(validChangeEvent){
+			addTablePlayer(generatePlayer(player,"Bereit"));
+		}
+		connectedPlayersTable.setItems(data);
+	}
 
 	private void updateAdressInfoFields() {
 		try {

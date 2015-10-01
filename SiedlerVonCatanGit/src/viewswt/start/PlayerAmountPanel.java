@@ -99,7 +99,7 @@ public class PlayerAmountPanel {
 				try
 				{
 					int x = Integer.parseInt(textf.getText());
-					serverModel.setPlayersAllowed(x);
+					serverModel.setMaxPlayers(x);
 					yesButton.setEnabled(false);
 					
 				}

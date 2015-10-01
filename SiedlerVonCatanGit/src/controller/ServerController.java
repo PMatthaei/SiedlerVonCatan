@@ -58,6 +58,7 @@ import viewswt.main.IslePanel;
 public class ServerController{
 	
 	private FileHandler fh;
+	
 	private Logger log = Logger.getLogger(ServerController.class.getName());
 	
 	private GameView view;
@@ -67,12 +68,13 @@ public class ServerController{
 	private ServerModel servermodel;
 	
 	private CatanServer server;
-	private StartServerViewController startviewcontroller;
+	
 		
 	public ServerController(ServerModel servermodel) {
 		this.servermodel = servermodel;
 		try {
 			this.server = new CatanServer();
+			server.setServermodel(servermodel);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -103,7 +105,10 @@ public class ServerController{
 		new Thread(server).start();
 	}
 	
-	
+	public void assignServerdata(String sname, String maxplayers) {
+    	servermodel.setMaxPlayers(Integer.parseInt(maxplayers));
+    	ServerModel.setName(sname);
+	}
 	
 	
 	
@@ -508,7 +513,7 @@ public class ServerController{
 	 */
 	public DevelopmentCard takeDevelopmentCardFromStack() {
 		int[] devcardStack = servermodel.getDevelopmentStack();
-		int devcardpos = myRandom(0, 5);
+		int devcardpos = randomize(0, 5);
 		if(!devcardsAvailable(devcardStack)){
 			return null;
 		}
@@ -518,7 +523,7 @@ public class ServerController{
 			servermodel.setDevelopmentStack(devcardStack);
 		} else {
 			while(devcardStack[devcardpos] == 0){ //suche solange bis es noch eine gibt
-				devcardpos = myRandom(0, 5);
+				devcardpos = randomize(0, 5);
 			}
 			devcardStack[devcardpos]--;
 			servermodel.setDevelopmentStack(devcardStack);
@@ -953,7 +958,7 @@ public class ServerController{
 	}
 	
 	/**Hilfsfunktion für zufallszahlen in einem Intervall**/
-	public int myRandom(int low, int high) {
+	public int randomize(int low, int high) {
 		return (int) (Math.random() * (high - low) + low);
 	}
 
@@ -966,9 +971,6 @@ public class ServerController{
 		this.serverprotokoll = serverProtokoll;
 	}
 
-	public void setStartServerViewController(StartServerViewController startServerViewController) {
-		this.startviewcontroller = startServerViewController;
-	}
 
 	public CatanServer getServer() {
 		return server;

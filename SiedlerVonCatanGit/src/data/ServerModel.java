@@ -26,6 +26,11 @@ import network.server.ServerProtokoll;
  *
  */
 public class ServerModel extends Model {
+	/** Server version */
+	private static final String VERSION = "v0.1a";
+	
+	/** Name the server was given by a serveradmin **/
+	private static String NAME;
 
 	/** Severprotokoll um ankommende Nachrichten zu verarbeiten **/
 	private ServerProtokoll serverprotokoll;
@@ -33,11 +38,21 @@ public class ServerModel extends Model {
 	/** Das Insel-Model **/
 	private ServerIsleModel serverIsle;
 	
+	// SERVERVARIABLES
+	/** Flag to request shutdown */
+	private boolean shutdown = false;
+	
+	/** Server full **/
+	private boolean full = false;
+	
+	/** Current ID for the next connecting player **/
+	private int id = 0;
+	
 	/** Wie viele Spieler können am spiel teilnehmen - default 4 Spieler*/
-	private int playersAllowed = 4;
+	private int maxPlayers = 4;
 	
 	/** Player Farben zum vergleichen **/
-	private String[] playerColors = { "Rot", "Orange", "Blau", "Weiß" };
+	private String[] playercolors = { "Rot", "Orange", "Blau", "Weiß"};//, "Lila", "Gelb" };
 
 	/** Array welches die Reihenfolge der Spieler darstellt **/
 	private static int[] currentorder;
@@ -50,7 +65,6 @@ public class ServerModel extends Model {
 	@Override
 	public void initModel() {
 		setPlayers(FXCollections.observableHashMap());
-//		setPlayers(new HashMap<Integer, PlayerModel>());
 				
 		serverIsle = new ServerIsleModel();
 		serverIsle.initIsle();
@@ -75,7 +89,7 @@ public class ServerModel extends Model {
 		
 		getLog().info("Server hat Spieldaten initalisiert");
 	}
-	
+	//TODO in controller schieben!!
 	/**
 	 * Berechnet die laengste Strasse unter allen Spielern TODO
 	 */
@@ -216,26 +230,20 @@ public class ServerModel extends Model {
 		this.serverprotokoll = serverprotokoll;
 	}
 
-	public int getPlayersAllowed() {
-		return playersAllowed;
-	}
 
-	public void setPlayersAllowed(int playersAllowed) {
-		this.playersAllowed = playersAllowed;
-	}
 
 	/**
 	 * @return the playerColors
 	 */
 	public String[] getPlayerColors() {
-		return playerColors;
+		return playercolors;
 	}
 
 	/**
 	 * @param playerColors the playerColors to set
 	 */
 	public void setPlayerColors(String[] playerColors) {
-		this.playerColors = playerColors;
+		this.playercolors = playerColors;
 	}
 
 	/**
@@ -264,5 +272,82 @@ public class ServerModel extends Model {
 	 */
 	public static void setOrignalOrder(int[] orignalorder) {
 		ServerModel.orignalorder = orignalorder;
+	}
+
+	/**
+	 * @return the full
+	 */
+	public boolean isFull() {
+		return full;
+	}
+
+	/**
+	 * @param full the full to set
+	 */
+	public void setFull(boolean full) {
+		this.full = full;
+	}
+
+	/**
+	 * @return the shutdown
+	 */
+	public boolean isShutdown() {
+		return shutdown;
+	}
+
+	/**
+	 * @param shutdown the shutdown to set
+	 */
+	public void setShutdown(boolean shutdown) {
+		this.shutdown = shutdown;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the maxPlayers
+	 */
+	public int getMaxPlayers() {
+		return maxPlayers;
+	}
+
+	/**
+	 * @param maxPlayers the maxPlayers to set
+	 */
+	public void setMaxPlayers(int maxPlayers) {
+		this.maxPlayers = maxPlayers;
+	}
+
+	/**
+	 * @return the version
+	 */
+	public static String getVersion() {
+		return VERSION;
+	}
+
+	/**
+	 * @return the nAME
+	 */
+	public static String getName() {
+		return NAME;
+	}
+
+	/**
+	 * @param nAME the nAME to set
+	 */
+	public static void setName(String nAME) {
+		NAME = nAME;
 	}
 }

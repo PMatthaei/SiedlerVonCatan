@@ -12,6 +12,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import network.PlayerConnectionThread;
 import network.Protokoll;
+import networkdiscovery.catan.client.CatanClient;
+import networkdiscovery.catan.server.CatanServer.ConnectionThread;
 import networkdiscovery.json.JSONListener;
 import networkdiscovery.json.JSONSocketChannel;
 
@@ -69,16 +71,16 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 
 	private TradeModel tradeModel;
 
-	private PlayerConnectionThread playerconnection;
+	private CatanClient client;
 
 	private GameController controller;
 
 	private GameView view;
 
-	public PlayerProtokoll(PlayerConnectionThread playerConnection, PlayerModel playerModel, GameController controller) {
+	public PlayerProtokoll(CatanClient client, PlayerModel playerModel, GameController controller) {
 
 		this.playerModel = playerModel;
-		this.playerconnection = playerConnection;
+		this.client = client;
 		this.controller = controller;
 
 		controller.setPlayerProtokoll(this);
@@ -142,7 +144,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 		}
 		json.put("Spieler", json2);
 		log.info("Farbe " + playerModel.getPlayerColor() + " verschickt");
-		playerconnection.sendData(json);
+		client.send(json);
 	}
 
 	/**
@@ -154,7 +156,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 		JSONObject json2 = new JSONObject();
 		json.put("Spiel starten", json2);
 
-		playerconnection.sendData(json);
+		client.send(json);
 	}
 
 	/**
@@ -168,7 +170,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 		controller.getGame().setRoundCounter(controller.getGame().getRoundCounter()+1);
 		// setze die entwicklungskarte zurück die in diesem zug gekauft wurde
 		controller.setDevCard(-1);
-		playerconnection.sendData(json);
+		client.send(json);
 	}
 
 	/**
@@ -212,7 +214,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 
 		json.put("Bauen", json2);
 		System.out.println("Client schickt Bauen " + json);
-		playerconnection.sendData(json);
+		client.send(json);
 	}
 
 	/**
@@ -229,7 +231,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 		json.put("id", playerModel.getPlayerID());
 		json2.put("Chatnachricht senden", json);
 
-		playerconnection.sendData(json2);
+		client.send(json);
 
 	}
 
@@ -354,7 +356,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		playerconnection.sendData(json);
+		client.send(json);
 		System.out.println("Client schickt Räuber versetzen: " + json);
 	}
 
@@ -441,7 +443,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		playerconnection.sendData(json);
+		client.send(json);
 	}
 
 	/** 10.4 Handel abbrechen ***/
@@ -455,7 +457,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		playerconnection.sendData(json);
+		client.send(json);
 	}
 
 	/**
@@ -492,7 +494,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 
 		json.put("Würfeln", json2);
 		System.out.println("Client schickt Würfeln: " + json);
-		playerconnection.sendData(json);
+		client.send(json);
 	}
 
 	/** 11.1 Ritter ausspielen **/
@@ -517,7 +519,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		playerconnection.sendData(json);
+		client.send(json);
 	}
 
 	/**
@@ -539,7 +541,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		playerconnection.sendData(json);
+		client.send(json);
 	}
 
 	/**
@@ -580,7 +582,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		playerconnection.sendData(json);
+		client.send(json);
 	}
 
 	/**
@@ -589,15 +591,15 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 	 * @param ressource
 	 */
 	public void playMonopolyCard(String ressource) {
-		JSONObject monopoly = new JSONObject();
+		JSONObject json = new JSONObject();
 		JSONObject ressourcePick = new JSONObject();
 		try {
 			ressourcePick.put("Rohstoff", ressource);
-			monopoly.put("Monopol", ressourcePick);
+			json.put("Monopol", ressourcePick);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		playerconnection.sendData(monopoly);
+		client.send(json);
 
 	}
 
@@ -614,7 +616,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		playerconnection.sendData(json);
+		client.send(json);
 	}
 
 	/**
@@ -643,7 +645,7 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 				j3.put("Version", json.getJSONObject("Hallo").getString("Version"));
 
 				j2.put("Hallo", j3);
-				playerconnection.sendData(j2);
+				controller.getClient().send(j2);
 				System.out.println("Version wurde gesendet " + j2);
 				break;
 
@@ -1450,15 +1452,6 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 	public void setPlayerModel(PlayerModel playerModel) {
 		this.playerModel = playerModel;
 	}
-
-	public PlayerConnectionThread getPlayerConnection() {
-		return playerconnection;
-	}
-
-	public void setPlayerConnection(PlayerConnectionThread playerConnection) {
-		this.playerconnection = playerConnection;
-	}
-
 
 	/**
 	 * @return the view

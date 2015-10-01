@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import data.ServerModel;
 import network.PlayerConnectionThread;
 import network.server.ServerProtokoll;
 import networkdiscovery.catan.server.CatanServer.ConnectionThread;
@@ -40,12 +41,6 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 	/** Class logger, use logging.properties to configure logging. */
 	private static final Logger LOG = Logger.getLogger(CatanServer.class.getName());
 
-	/** Server version */
-	private static final String VERSION = "v0.1a";
-	
-	/** Name the server was given by a serveradmin **/
-	private static String NAME;
-
 	/** Server socket channel, used for listening for clients. */
 	private ServerSocketChannel ssc;
 
@@ -58,21 +53,10 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 	/** Connected clients */
 	private HashMap<Integer, ConnectionThread> connections = new HashMap<Integer, ConnectionThread>();
 
-	// SERVERVARIABLES
-	/** Flag to request shutdown */
-	private boolean shutdown = false;
-	
-	/** Server full **/
-	private boolean full = false;
-	
-	/** Current ID of the connection/player **/
-	private int id = 0;
-
-	/** Count of Maximum Players allowed on that server **/
-	private int maxPlayers = 4;
+	/** Data of the Server */
+	private ServerModel servermodel;
 
 
-	
 	/**
 	 * Constructor.
 	 * 
@@ -87,7 +71,7 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 		}
 		// Get the port we have been (automatically) assigned
 		int port = ((InetSocketAddress) ssc.getLocalAddress()).getPort();
-		discovery = new ServerDiscoveryService("catan-server-ee", VERSION, port, "catan-client-ee");
+		discovery = new ServerDiscoveryService("catan-server-ee", ServerModel.getVersion(), port, "catan-client-ee");
 		// Add self to listeners (to broadcast)
 		addListener(this);
 	}
@@ -99,29 +83,33 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 		// Send initial announcement, if client was started first
 		discovery.sendAnnouncement();
 		// Wait for connections
-		while (!shutdown) {
+		while (!servermodel.isShutdown()) {
 			// Wait for a new connection.	        
 			try {
 				SocketChannel chan = ssc.accept();
 				String remotename = chan.getRemoteAddress().toString();
 				JSONSocketChannel conn = new JSONSocketChannel(chan, Charset.forName("UTF-8"), remotename);
-				conn.setId(id);
+				conn.setId(servermodel.getId());
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info("Connect by " + remotename + ". Notifying " + listeners.size() + " listeners.");
 				}
 				synchronized (this) {
 					ConnectionThread t = new ConnectionThread(conn);
 					t.start();
-					connections.put(id,t);
-					LOG.info(remotename + " got the ID: " + id);
+					connections.put(servermodel.getId(),t);
+					LOG.info(remotename + " got the ID: " + servermodel.getId());
+					
+					serverprotokoll.handshake();
 
 					checkMaxPlayers();
+					servermodel.setId(servermodel.getId()+1);
+
 				}
-			} catch (IOException e) {
+			} catch (IOException | JSONException e) {
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.severe("IO Error accepting connections: " + e.getMessage());
 				}
-				shutdown = true;
+				servermodel.setShutdown(true);
 				break;
 			}
 		}
@@ -131,12 +119,12 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 
 	private void checkMaxPlayers() {
 		int conns = connections.size();
-		if (conns == maxPlayers ) {
-			full = true;
+		if (conns == servermodel.getMaxPlayers() ) {
+			servermodel.setFull(true);
 		} else {
-			id++;
-			LOG.info("Slots: " + conns + "/" + maxPlayers+"");
+			servermodel.setFull(false);
 		}
+		LOG.info("Slots: " + conns + "/" + servermodel.getMaxPlayers()+"");
 	}
 
 	@Override
@@ -146,7 +134,6 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 
 	@Override
 	public void disconnected(String discAdr) {
-		// Ignore.
 		Iterator<Entry<Integer, ConnectionThread>> it = connections.entrySet().iterator();
 	    while (it.hasNext()) {
 	        Map.Entry<Integer, ConnectionThread> pair = (Map.Entry<Integer, ConnectionThread>)it.next();
@@ -155,8 +142,7 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 			String connAdr = ct.conn.getInfo();
 			if(connAdr.equals(discAdr)){
 				connections.remove(id);
-				int conns = connections.size();
-				LOG.info("Nach Disconnect -> Slots: " + conns + "/" + maxPlayers+"");
+				checkMaxPlayers();
 				return;
 			}
 	    }
@@ -191,10 +177,10 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 			ConnectionThread ct = cts.getValue();
 			if(cts.getKey() == idPc){
 				ct.conn.send(idpcobject);
-				LOG.info("Server sent "+ idpcobject +" to " + id);
+				LOG.info("Server sent "+ idpcobject +" to " + servermodel.getId());
 			} else {
 				ct.conn.send(restobject);
-				LOG.info("Server sent "+ restobject +" to " + id);
+				LOG.info("Server sent "+ restobject +" to " + servermodel.getId());
 
 			}
 		}	
@@ -262,7 +248,8 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 				String s = "{"+id +": " + message+"}";
 				JSONObject json = new JSONObject(s);
 				t.conn.send(json);
-				
+				serverprotokoll.handleReceivedData(json, id);
+
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -276,7 +263,7 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info("Server shutdown.");
 		}
-		shutdown = true;
+		servermodel.setShutdown(true);
 	}
 
 	public int getConnectedThreads(){
@@ -307,7 +294,7 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 			String remotename = conn.getInfo();
 			fireConnected(remotename, conn);
 			try {
-				while (!shutdown && conn.isOpen()) {
+				while (!servermodel.isShutdown() && conn.isOpen()) {
 					JSONObject message = conn.read();
 					if (message == null) {
 						break; // Disconnected.
@@ -327,52 +314,52 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 	}
 
 
-	public static void main(String[] args) {
-		try {
-			final CatanServer server = new CatanServer();
-			new Thread(server).start();
-			// Couple TextUI events to the server
-			// This is adapter code.
-			TextUI ui = new TextUI() {
-				@Override
-				public void connected(String text, JSONSocketChannel conn) {
-					super.connected(text, conn);
-					try {
-						JSONObject json = new JSONObject("{Hello. This is chat server: " + VERSION +"}");
-						conn.send(json);
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-				}
-
-				@Override
-				protected void onUserInput(String line) {
-					try {
-						server.fireReceived(null, new JSONObject(line));
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
-				@Override
-				public void received(JSONObject text, JSONSocketChannel conn) {
-					if (conn == null) {
-						return; // Hide our own messages.
-					}
-					// Prefix client:
-					System.out.print(conn.getInfo() + ": ");
-					super.received(text, conn);
-				}
-			};
-			server.addListener(ui);
-			ui.run();
-			server.shutdown();
-			System.exit(0);
-		} catch (IOException e) {
-			LOG.log(Level.SEVERE, "IO Exception when starting chat server.", e);
-		}
-	}
+//	public static void main(String[] args) {
+//		try {
+//			final CatanServer server = new CatanServer();
+//			new Thread(server).start();
+//			// Couple TextUI events to the server
+//			// This is adapter code.
+//			TextUI ui = new TextUI() {
+//				@Override
+//				public void connected(String text, JSONSocketChannel conn) {
+//					super.connected(text, conn);
+//					try {
+//						JSONObject json = new JSONObject("{Hello. This is chat server: " + VERSION +"}");
+//						conn.send(json);
+//					} catch (JSONException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//
+//				@Override
+//				protected void onUserInput(String line) {
+//					try {
+//						server.fireReceived(null, new JSONObject(line));
+//					} catch (JSONException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//
+//				@Override
+//				public void received(JSONObject text, JSONSocketChannel conn) {
+//					if (conn == null) {
+//						return; // Hide our own messages.
+//					}
+//					// Prefix client:
+//					System.out.print(conn.getInfo() + ": ");
+//					super.received(text, conn);
+//				}
+//			};
+//			server.addListener(ui);
+//			ui.run();
+//			server.shutdown();
+//			System.exit(0);
+//		} catch (IOException e) {
+//			LOG.log(Level.SEVERE, "IO Exception when starting chat server.", e);
+//		}
+//	}
 	
 	public HashMap<Integer, ConnectionThread> getConnections() {
 		return connections;
@@ -382,22 +369,22 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 		this.serverprotokoll = serverprotokoll;
 	}
 
-	/**
-	 * @return the nAME
-	 */
-	public static String getServername() {
-		return NAME;
+	public ServerSocketChannel getSsc() {
+		return ssc;
 	}
 
 	/**
-	 * @param nAME the nAME to set
+	 * @return the servermodel
 	 */
-	public static void setSevername(String nAME) {
-		NAME = nAME;
+	public ServerModel getServermodel() {
+		return servermodel;
 	}
-	
-	public ServerSocketChannel getSsc() {
-		return ssc;
+
+	/**
+	 * @param servermodel the servermodel to set
+	 */
+	public void setServermodel(ServerModel servermodel) {
+		this.servermodel = servermodel;
 	}
 	
 }
