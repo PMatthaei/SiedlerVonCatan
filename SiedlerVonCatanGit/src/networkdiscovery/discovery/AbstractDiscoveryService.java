@@ -136,13 +136,14 @@ public abstract class AbstractDiscoveryService extends Thread {
 	 */
 	private void handlePacket(SocketAddress remote, ByteBuffer packet) throws IOException {
 		final String p = decoder.decode(packet).toString();
-		final String[] msg = p.split("\0", 3);
-		if (msg.length != 3) {
+		System.out.println(p);
+		final String[] msg = p.split("\0", 4);
+		if (msg.length != 4) {
 			LOG.warning("Incomplete message received from host " + remote.toString() + ": " + p.replace("\0", "\\0"));
 			return;
 		}
 		if (LOG.isLoggable(Level.FINEST)) {
-			LOG.finest("Received: " + msg[0] + " " + msg[1] + " " + msg[2]);
+			LOG.finest("Received: " + msg[0] + " " + msg[1] + " " + msg[2]+ " " + msg[3]);
 		}
 		InetSocketAddress add = (InetSocketAddress) remote;
 		// Do we have a non-null address?
@@ -158,7 +159,7 @@ public abstract class AbstractDiscoveryService extends Thread {
 			}
 		}
 		// Callback to user
-		handleBroadcast(msg[0], add, msg[2]);
+		handleBroadcast(msg[0], add, msg[2], msg[3]);
 	}
 
 	/**
@@ -171,7 +172,7 @@ public abstract class AbstractDiscoveryService extends Thread {
 	 * @param countent
 	 *            Message content
 	 */
-	public abstract void handleBroadcast(String type, InetSocketAddress add, String content) throws IOException;
+	public abstract void handleBroadcast(String type, InetSocketAddress add, String content, String sname) throws IOException;
 
 	/**
 	 * Broadcast a service announcement.
@@ -185,8 +186,8 @@ public abstract class AbstractDiscoveryService extends Thread {
 	 * @throws IOException
 	 *             When sending failed
 	 */
-	public void sendBroadcast(String type, int port, String message) throws IOException {
-		sendAnnouncement(new InetSocketAddress(BROADCAST, this.port), type, port, message);
+	public void sendBroadcast(String type, int port, String message, String sname) throws IOException {
+		sendAnnouncement(new InetSocketAddress(BROADCAST, this.port), type, port, message, sname);
 	}
 
 	/**
@@ -203,7 +204,7 @@ public abstract class AbstractDiscoveryService extends Thread {
 	 * @throws IOException
 	 *             When sending failed
 	 */
-	public synchronized void sendAnnouncement(InetSocketAddress addr, String type, int aport, String message) throws IOException {
+	public synchronized void sendAnnouncement(InetSocketAddress addr, String type, int aport, String message, String sname) throws IOException {
 		System.out.println("send anc:" + addr + type + aport + message);
 		// Rate limit
 		if (lastSent + 50 >= System.currentTimeMillis()) {
@@ -224,6 +225,8 @@ public abstract class AbstractDiscoveryService extends Thread {
 		}
 		cbuf.append('\0'); // Separator
 		cbuf.append(message);
+		cbuf.append('\0'); // Separator
+		cbuf.append(sname);
 		cbuf.flip();
 		ByteBuffer bbuf = encoder.encode(cbuf);
 
@@ -272,7 +275,7 @@ public abstract class AbstractDiscoveryService extends Thread {
 		// Our debug handler just reports the messages it received.
 		AbstractDiscoveryService t = new AbstractDiscoveryService() {
 			@Override
-			public void handleBroadcast(String type, InetSocketAddress address, String content) {
+			public void handleBroadcast(String type, InetSocketAddress address, String content,String sname) {
 				System.err.println("Type: " + type);
 				System.err.println("Address: " + address);
 				System.err.println("Content: " + content);
@@ -282,7 +285,7 @@ public abstract class AbstractDiscoveryService extends Thread {
 		t.start();
 
 		try {
-			t.sendBroadcast("test-discovery", 1234, "Discovery test announcement.");
+			t.sendBroadcast("test-discovery", 1234, "Discovery test announcement.","testerserver");
 		} catch (IOException e) {
 			LOG.warning(e.getMessage());
 		}

@@ -45,15 +45,15 @@ public class ServerDiscoveryService extends AbstractDiscoveryService {
 	}
 
 	@Override
-	public void handleBroadcast(String type, InetSocketAddress addr, String content) throws IOException {
+	public void handleBroadcast(String type, InetSocketAddress addr, String content, String sname) throws IOException {
 		if (!this.client.equals(type)) {
 			return; // Not our client
 		}
 		if (LOG.isLoggable(Level.INFO)) {
-			LOG.info("Saw client announcement from: " + addr + " version: " + content);
+			LOG.info("Saw client announcement from: " + addr + " version: " + content + " name: " + sname);
 		}
 		sendAnnouncement(); //Announcement des Servers
-		sendAnnouncement(addr, server, port, version); //Announcement mit addrese des Clients
+		sendAnnouncement(addr, server, port, version, servername); //Announcement mit addrese des Clients
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class ServerDiscoveryService extends AbstractDiscoveryService {
 	 */
 	public void sendAnnouncement() {
 		try {
-			sendBroadcast(server, port, version);
+			sendBroadcast(server, port, version, servername);
 		} catch (IOException e) {
 			LOG.log(Level.SEVERE, e.getMessage(), e);
 		}

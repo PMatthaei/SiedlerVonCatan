@@ -91,14 +91,14 @@ public class CatanServerList extends JFrame {
 	 * <i>Must</i> be called from the Swing worker thread!
 	 */
 	protected void updateList() {
-		Collection<Entry<InetSocketAddress, String>> col = discovery.getDiscoveredServers();
+		Collection<Entry<InetSocketAddress, ServerIdentifier>> col = discovery.getDiscoveredServers();
 		if (LOG.isLoggable(Level.FINER)) {
 			LOG.finer("Updating server list: " + col.size() + " entries");
 		}
 		model.setRowCount(col.size());
-		Iterator<Entry<InetSocketAddress, String>> it = col.iterator();
+		Iterator<Entry<InetSocketAddress, ServerIdentifier>> it = col.iterator();
 		for (int i = 0; it.hasNext(); ++i) {
-			Entry<InetSocketAddress, String> pair = it.next();
+			Entry<InetSocketAddress, ServerIdentifier> pair = it.next();
 			model.setValueAt(pair.getKey(), i, 0);
 			model.setValueAt(pair.getValue(), i, 1);
 		}

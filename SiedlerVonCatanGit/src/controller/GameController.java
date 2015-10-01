@@ -27,6 +27,7 @@ import network.client.Client;
 import network.client.PlayerProtokoll;
 import networkdiscovery.catan.client.CatanClient;
 import networkdiscovery.catan.client.ClientDiscoveryService;
+import networkdiscovery.catan.server.ServerIdentifier;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -102,7 +103,7 @@ public class GameController {
 	
 
 	public void startDiscoveringClient(){
-		final Entry<InetSocketAddress, String> server = discoverServer();
+		final Entry<InetSocketAddress, ServerIdentifier> server = discoverServer();
 		if (server == null) {
 			System.err.println("No chat server discovered.");
 			return;
@@ -138,8 +139,8 @@ public class GameController {
 	 * 
 	 * @return First server discovered
 	 */
-	private static Entry<InetSocketAddress, String> discoverServer() {
-		Collection<Entry<InetSocketAddress, String>> servers;
+	private static Entry<InetSocketAddress, ServerIdentifier> discoverServer() {
+		Collection<Entry<InetSocketAddress, ServerIdentifier>> servers;
 		ClientDiscoveryService discovery = new ClientDiscoveryService("catan-client-ee", GameModel.getVersion(), "catan-server-ee");
 		discovery.start();
 		while ((servers = discovery.getDiscoveredServers()).size() == 0) {
@@ -157,11 +158,11 @@ public class GameController {
 			}
 		}
 		// Automatically choose the first server.
-		Iterator<Entry<InetSocketAddress, String>> iter = servers.iterator();
+		Iterator<Entry<InetSocketAddress, ServerIdentifier>> iter = servers.iterator();
 		if (!iter.hasNext()) {
 			return null;
 		}
-		Entry<InetSocketAddress, String> server = iter.next();
+		Entry<InetSocketAddress, ServerIdentifier> server = iter.next();
 		// Stop discovery thread.
 		discovery.shutdown();
 		return server;

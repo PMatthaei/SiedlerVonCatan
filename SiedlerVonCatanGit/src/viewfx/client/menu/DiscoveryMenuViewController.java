@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 
 import networkdiscovery.catan.client.ClientDiscoveryService;
 import networkdiscovery.catan.server.CatanServerList;
+import networkdiscovery.catan.server.ServerIdentifier;
 import utilities.game.PlayerColors;
 import viewfx.AbstractViewController;
 import viewfx.ViewController;
@@ -70,7 +71,7 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 	private TableView<ServersTable> serverlist;
 	
 	@FXML
-	private TableColumn<ServersTable,String> playercountColumn,ipColumn,portColumn;
+	private TableColumn<ServersTable,String> servernameColumn,playercountColumn,ipColumn,portColumn;
     
     @Override
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
@@ -104,10 +105,11 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 		    return row ;
 		});
 		
-		playercountColumn.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("playercount"));
+		servernameColumn.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("servername"));
         ipColumn.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("ip"));
         portColumn.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("port"));
-        
+		playercountColumn.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("playercount"));
+
 		updateThread = new UpdateThread();
 		
 		start();
@@ -156,23 +158,24 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 	 * <i>Must</i> be called from the Swing worker thread!
 	 */
 	protected void updateList() {
-		Collection<Entry<InetSocketAddress, String>> col = discovery.getDiscoveredServers();
+		Collection<Entry<InetSocketAddress, ServerIdentifier>> col = discovery.getDiscoveredServers();
 		if (LOG.isLoggable(Level.FINER)) {
 			LOG.finer("Updating server list: " + col.size() + " entries");
 		}
-		Iterator<Entry<InetSocketAddress, String>> it = col.iterator();
+		Iterator<Entry<InetSocketAddress, ServerIdentifier>> it = col.iterator();
 		while (it.hasNext()) {
-			Entry<InetSocketAddress, String> pair = it.next();
-			String name = controller.fetchServerName(pair.getKey());
-			System.out.println(pair.getValue());
-			ServersTable s = generateServer(name, ""+pair.getKey().getAddress().getHostAddress(), ""+pair.getKey().getPort());
+			Entry<InetSocketAddress, ServerIdentifier> pair = it.next();
+			ServerIdentifier sid = pair.getValue();
+			String ip = ""+pair.getKey().getAddress().getHostAddress();
+			String port = ""+pair.getKey().getPort();
+			ServersTable s = generateServer(sid.getServername(), ip, port, "0/4");
 			addServersTable(s);
 		}
         serverlist.setItems(data);
 	}
 
-	private ServersTable generateServer(String pc, String ip, String port) {
-		return new ServersTable(pc, ip, port);
+	private ServersTable generateServer(String pc, String ip, String port, String playercount) {
+		return new ServersTable(pc, ip, port, playercount);
 	}
         
     public void addServersTable(ServersTable server){

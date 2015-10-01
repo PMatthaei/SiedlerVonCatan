@@ -2,14 +2,14 @@ package viewfx;
 
 public enum Views {
 
-	STARTSERVER("main/server/StartServerView.fxml", false, false),
-	STARTCLIENT("main/client/StartClientView.fxml", false, false),
-	CLOSE("main/msgs/CloseView.fxml", false, false),
-	LOADGAME("main/client/menu/LoadGameView.fxml", false, false),
-	PLAY("main/client/menu/PlayMenuView.fxml", false, true),
-	STARTUP("main/client/menu/StartUpView.fxml", false, true),
-	OPTIONS("main/client/menu/OptionsMenuView.fxml", false, true),
-	DISCOVERY("main/client/menu/DiscoveryMenuView.fxml", false, true);
+	STARTSERVER("server/StartServerView.fxml", false, false),
+	STARTCLIENT("client/StartClientView.fxml", false, false),
+	CLOSE("msgs/CloseView.fxml", false, false),
+	LOADGAME("client/menu/LoadGameView.fxml", false, false),
+	PLAY("client/menu/PlayMenuView.fxml", false, true),
+	STARTUP("client/menu/StartUpView.fxml", false, true),
+	OPTIONS("client/menu/OptionsMenuView.fxml", false, true),
+	DISCOVERY("client/menu/DiscoveryMenuView.fxml", false, true);
 	
 	private String path;
 	private boolean initalized, isPane;

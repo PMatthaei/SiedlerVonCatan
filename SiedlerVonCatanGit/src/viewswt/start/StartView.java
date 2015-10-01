@@ -47,6 +47,7 @@ import utilities.game.PlayerColors;
 import viewswt.ViewSettings;
 import network.client.Client;
 import networkdiscovery.catan.client.ClientDiscoveryService;
+import networkdiscovery.catan.server.ServerIdentifier;
 
 /**
  * 
@@ -582,7 +583,7 @@ public class StartView extends JPanel implements ActionListener {
 			clientDiscoveryS.getDiscoveredServers();
 			JComboBox discoveredServers = new JComboBox();
 			discoveredServers.addActionListener(this);
-			for(Entry<InetSocketAddress, String> c :clientDiscoveryS.getDiscoveredServers())
+			for(Entry<InetSocketAddress, ServerIdentifier> c :clientDiscoveryS.getDiscoveredServers())
 			{
 				System.out.println(c.getKey().getPort());
 				

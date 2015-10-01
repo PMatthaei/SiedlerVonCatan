@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import networkdiscovery.catan.server.ServerIdentifier;
 import networkdiscovery.discovery.AbstractDiscoveryService;
 
 /**
@@ -24,7 +25,8 @@ public class ClientDiscoveryService extends AbstractDiscoveryService {
 	String server, client, version;
 
 	/** Server list */
-	ConcurrentSkipListMap<InetSocketAddress, String> servers = new ConcurrentSkipListMap<>(new AddressComparator());
+//	ConcurrentSkipListMap<InetSocketAddress, String> servers = new ConcurrentSkipListMap<>(new AddressComparator());
+	ConcurrentSkipListMap<InetSocketAddress, ServerIdentifier> servers = new ConcurrentSkipListMap<>(new AddressComparator());
 
 	/**
 	 * Constructor.
@@ -44,18 +46,18 @@ public class ClientDiscoveryService extends AbstractDiscoveryService {
 	}
 
 	@Override
-	public void handleBroadcast(String type, InetSocketAddress addr, String content) throws IOException {
+	public void handleBroadcast(String type, InetSocketAddress addr, String version, String sname) throws IOException {
 		if (!this.server.equals(type)) {
 			LOG.info("Not out server");
 			return; // Not our server
 		}
 
 		if (LOG.isLoggable(Level.INFO)) {
-			LOG.info("Saw server announcement from: " + addr + " version: " + content);
+			LOG.info("Saw server announcement from: " + addr + " version: " + version);
 		}
-		Object prev = servers.put(addr, content);
+		Object prev = servers.put(addr, new ServerIdentifier(sname,version));
 		// Notify threads waiting on us.
-		if (prev == null || !prev.equals(content)) {
+		if (prev == null || !prev.equals(version)) {
 			synchronized (this) {
 				LOG.finest("Notifying waiting threads.");
 				notifyAll();
@@ -69,7 +71,7 @@ public class ClientDiscoveryService extends AbstractDiscoveryService {
 	 */
 	public void sendAnnouncement() {
 		try {
-			sendBroadcast(client, getDiscoveryPort(), version);
+			sendBroadcast(client, getDiscoveryPort(), version, "");
 		} catch (IOException e) {
 			LOG.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -80,7 +82,7 @@ public class ClientDiscoveryService extends AbstractDiscoveryService {
 	 * 
 	 * @return Collection of servers
 	 */
-	public Collection<Map.Entry<InetSocketAddress, String>> getDiscoveredServers() {
+	public Collection<Map.Entry<InetSocketAddress, ServerIdentifier>> getDiscoveredServers() {
 		return servers.entrySet();
 	}
 
@@ -129,7 +131,7 @@ public class ClientDiscoveryService extends AbstractDiscoveryService {
 			LOG.log(Level.SEVERE, e.getMessage(), e);
 		}
 		// Report all discovered servers.
-		for (Map.Entry<InetSocketAddress, String> entry : t.getDiscoveredServers()) {
+		for (Map.Entry<InetSocketAddress, ServerIdentifier> entry : t.getDiscoveredServers()) {
 			System.out.println(entry.getKey() + ": " + entry.getValue());
 		}
 		// Stop the discovery thread.

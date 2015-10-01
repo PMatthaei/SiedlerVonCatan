@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane style="-fx-background-color: #413f57; -fx-border-color: white; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewfx.main.msgs.CloseViewController">
+<StackPane style="-fx-background-color: #413f57; -fx-border-color: white; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewfx.msgs.CloseViewController">
    <children>
       <GridPane prefHeight="168.0" prefWidth="288.0">
         <columnConstraints>
