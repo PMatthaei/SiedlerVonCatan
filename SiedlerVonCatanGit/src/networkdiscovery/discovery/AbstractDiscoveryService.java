@@ -138,7 +138,7 @@ public abstract class AbstractDiscoveryService extends Thread {
 		final String p = decoder.decode(packet).toString();
 		System.out.println(p);
 		final String[] msg = p.split("\0", 4);
-		if (msg.length < 4) {
+		if (msg.length < 3) {
 			LOG.warning("Incomplete message received from host " + remote.toString() + ": " + p.replace("\0", "\\0"));
 			return;
 		}

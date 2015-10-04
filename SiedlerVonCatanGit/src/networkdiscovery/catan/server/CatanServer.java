@@ -72,7 +72,7 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 		}
 		// Get the port we have been (automatically) assigned
 		int port = ((InetSocketAddress) ssc.getLocalAddress()).getPort();
-		discovery = new ServerDiscoveryService("catan-server-ee", ServerModel.getVersion(), port, "catan-client-ee", this.servermodel.getName());
+		discovery = new ServerDiscoveryService("catan-server-ee", ServerModel.getVersion(), port, "catan-client-ee", "");
 		// Add self to listeners (to broadcast)
 		addListener(this);
 	}
@@ -82,6 +82,7 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 		// Start the discovery service
 		discovery.start();
 		// Send initial announcement, if client was started first
+		generateServerInfo();
 		discovery.sendAnnouncement();
 		// Wait for connections
 		while (!servermodel.isShutdown()) {
@@ -103,8 +104,12 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 					serverprotokoll.handshake();
 
 					checkMaxPlayers();
+					generateServerInfo();
+					discovery.sendAnnouncement();
+
 					servermodel.setId(servermodel.getId()+1);
 
+					
 				}
 			} catch (IOException | JSONException e) {
 				if (LOG.isLoggable(Level.INFO)) {
@@ -128,6 +133,15 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 		LOG.info("Slots: " + conns + "/" + servermodel.getMaxPlayers()+"");
 	}
 
+	/**
+	 *	##<"servername">##<"connected/freeslots">## f.e. "##MyServer##2/4##
+	 */
+	public void generateServerInfo(){
+		String playercount = connections.size() + "/" + servermodel.getMaxPlayers();
+		String sinfo = "##"+this.servermodel.getName()+"##"+playercount+"##";
+		discovery.setServerInfo(sinfo);
+	}
+	
 	@Override
 	public void connected(String text, JSONSocketChannel conn) {
 		// Ignore.

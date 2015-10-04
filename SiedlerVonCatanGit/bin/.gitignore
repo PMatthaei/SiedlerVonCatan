@@ -1,11 +1,11 @@
 /textures/
 /viewfx/
-/sounds/
 /ai/
 /config.properties
 /controller/
 /data/
 /network/
 /networkdiscovery/
+/sounds/
 /utilities/
 /viewswt/

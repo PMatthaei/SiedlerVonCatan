@@ -46,7 +46,7 @@ public class ClientDiscoveryService extends AbstractDiscoveryService {
 	}
 
 	@Override
-	public void handleBroadcast(String type, InetSocketAddress addr, String version, String sname) throws IOException {
+	public void handleBroadcast(String type, InetSocketAddress addr, String version, String sinfo) throws IOException {
 		if (!this.server.equals(type)) {
 			LOG.info("Not out server");
 			return; // Not our server
@@ -55,7 +55,7 @@ public class ClientDiscoveryService extends AbstractDiscoveryService {
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info("Saw server announcement from: " + addr + " version: " + version);
 		}
-		Object prev = servers.put(addr, new ServerIdentifier(sname,version));
+		Object prev = servers.put(addr, new ServerIdentifier(sinfo,version));
 		// Notify threads waiting on us.
 		if (prev == null || !prev.equals(version)) {
 			synchronized (this) {

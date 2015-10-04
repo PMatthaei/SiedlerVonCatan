@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -25,6 +27,7 @@ import controller.GameController;
 import controller.ServerController;
 import data.PlayerModel;
 import data.isle.MapLocation;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
@@ -43,12 +46,12 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class DiscoveryMenuViewController extends ViewController implements Initializable,AbstractViewController{
-	    
-    private Stage primaryStage;
+public class DiscoveryMenuViewController extends ViewController implements Initializable, AbstractViewController {
 
-    private GameController controller;
-    
+	private Stage primaryStage;
+
+	private GameController controller;
+
 	/** Serialization version */
 	private static final long serialVersionUID = 1L;
 
@@ -61,30 +64,29 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 	/** Our discovery service */
 	private ClientDiscoveryService discovery;
 
-	/** Thread for updating the list */
-	private Thread updateThread;
-	
-    @FXML
-	private Button joinserver,refresh;
-	
+	@FXML
+	private Button joinserver, refresh;
+
 	@FXML
 	private TableView<ServersTable> serverlist;
-	
+
 	@FXML
-	private TableColumn<ServersTable,String> servernameColumn,playercountColumn,ipColumn,portColumn;
-    
-    @Override
-    public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
+	private TableColumn<ServersTable, String> servernameColumn, playercountColumn, ipColumn, portColumn;
+
+	private Thread updateThread;
+
+	@Override
+	public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
 
 		discovery = new ClientDiscoveryService("catan-client-ee", "v1.0a", "catan-server-ee");
-		
+
 		refresh.setOnMouseClicked((event) -> {
 			discovery.getDiscoveredServers().clear();
 			discovery.sendAnnouncement();
 			updateList();
 
 		});
-		
+
 		joinserver.setOnMouseClicked((event) -> {
 			TableViewSelectionModel<ServersTable> s = serverlist.getSelectionModel();
 			ServersTable selectedItem = s.getSelectedItem();
@@ -92,39 +94,40 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 			String ip = selectedItem.getIp();
 			controller.startClient(ip, port);
 		});
-		
-		serverlist.setRowFactory( tv -> {
-		    TableRow<ServersTable> row = new TableRow<>();
-		    row.setOnMouseClicked(event -> {
-		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-		        	ServersTable selectedItem = row.getItem();
+
+		serverlist.setRowFactory(tv -> {
+			TableRow<ServersTable> row = new TableRow<>();
+			row.setOnMouseClicked(event -> {
+				if (event.getClickCount() == 2 && (!row.isEmpty())) {
+					ServersTable selectedItem = row.getItem();
 					int port = Integer.parseInt(selectedItem.getPort());
 					String ip = selectedItem.getIp();
-					controller.startClient(ip, port);		        }
-		    });
-		    return row ;
+					controller.startClient(ip, port);
+				}
+			});
+			return row;
 		});
-		
-		servernameColumn.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("servername"));
-        ipColumn.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("ip"));
-        portColumn.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("port"));
-		playercountColumn.setCellValueFactory(new PropertyValueFactory<ServersTable,String>("playercount"));
 
+		servernameColumn.setCellValueFactory(new PropertyValueFactory<ServersTable, String>("servername"));
+		ipColumn.setCellValueFactory(new PropertyValueFactory<ServersTable, String>("ip"));
+		portColumn.setCellValueFactory(new PropertyValueFactory<ServersTable, String>("port"));
+		playercountColumn.setCellValueFactory(new PropertyValueFactory<ServersTable, String>("playercount"));
+		
 		updateThread = new UpdateThread();
 		
 		start();
-    }
+	}
 
-    
 	/**
 	 * Start (show) the user interface.
 	 */
 	public void start() {
 		updateThread.start();
+		System.out.println("UThread started");
 		discovery.start();
 		discovery.sendAnnouncement();
 	}
-	
+
 	/**
 	 * Thread to wait for updates of the server list.
 	 * 
@@ -137,12 +140,20 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 		@Override
 		public void run() {
 			while (true) {
+				System.out.println("UThread running");
 				synchronized (discovery) {
 					try {
 						// Wait for signal
 						discovery.wait();
 						LOG.finest("Server list was updated.");
-						updateList();
+						// Any changes to the UI should be done in the proper
+						// thread.
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								updateList();
+							}
+						});
 					} catch (InterruptedException e) {
 						// Wait was interrupted. Safe to ignore!
 					}
@@ -151,13 +162,13 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 		}
 	}
 
-	
 	/**
 	 * Update the list view.
 	 * 
 	 * <i>Must</i> be called from the Swing worker thread!
 	 */
 	protected void updateList() {
+		data.clear();
 		Collection<Entry<InetSocketAddress, ServerIdentifier>> col = discovery.getDiscoveredServers();
 		if (LOG.isLoggable(Level.FINER)) {
 			LOG.finer("Updating server list: " + col.size() + " entries");
@@ -166,29 +177,26 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 		while (it.hasNext()) {
 			Entry<InetSocketAddress, ServerIdentifier> pair = it.next();
 			ServerIdentifier sid = pair.getValue();
-			String ip = ""+pair.getKey().getAddress().getHostAddress();
-			String port = ""+pair.getKey().getPort();
-			ServersTable s = generateServer(sid.getServername(), ip, port, "0/4");
-			addServersTable(s);
+			InetSocketAddress inetsocketadrr = pair.getKey();
+
+			String ip = inetsocketadrr.getAddress().getHostAddress();
+			String port = inetsocketadrr.getPort() + "";
+			String servername = sid.getServerName();
+			String playercount = sid.getPlayercount();
+
+			ServersTable s = new ServersTable(servername, ip, port, playercount);
+			data.add(s);
 		}
-        serverlist.setItems(data);
+		serverlist.setItems(data);
 	}
 
-	private ServersTable generateServer(String pc, String ip, String port, String playercount) {
-		return new ServersTable(pc, ip, port, playercount);
+	public Stage getStage() {
+		return primaryStage;
 	}
-        
-    public void addServersTable(ServersTable server){
-    	data.add(server);
-    }
-    
-    public Stage getStage(){
-    	return primaryStage;
-    }
-    
-    public void setStage(Stage stage) {
-    	primaryStage = stage;
-    }
+
+	public void setStage(Stage stage) {
+		primaryStage = stage;
+	}
 
 	@Override
 	public void setGameController(GameController controller) {

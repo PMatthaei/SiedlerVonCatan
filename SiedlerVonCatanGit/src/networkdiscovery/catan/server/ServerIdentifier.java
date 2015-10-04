@@ -1,27 +1,49 @@
 package networkdiscovery.catan.server;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ServerIdentifier {
 
-	private String servername;
+	private String sinfo;
 	private String version;
+	
+	private Pattern p = Pattern.compile("##(.*)##(.*)##");
 
-	public ServerIdentifier(String servername, String version){
-		this.setServername(servername);
+	public ServerIdentifier(String sinfo, String version){
+		this.setServerInfo(sinfo);
 		this.setVersion(version);
 	}
 
+	public String getServerName(){
+		Matcher m = p.matcher(sinfo);
+		String servername = "";
+		if(m.find()){
+			servername = m.group(1);
+		}
+		return servername;
+	}
+	
+	public String getPlayercount(){
+		Matcher m = p.matcher(sinfo);
+		String playercount = "";
+		if(m.find()){
+			playercount = m.group(2);
+		}
+		return playercount;
+	}
 	/**
 	 * @return the servername
 	 */
-	public String getServername() {
-		return servername;
+	public String getServerInfo() {
+		return sinfo;
 	}
 
 	/**
 	 * @param servername the servername to set
 	 */
-	public void setServername(String servername) {
-		this.servername = servername;
+	public void setServerInfo(String servername) {
+		this.sinfo = servername;
 	}
 
 	/**

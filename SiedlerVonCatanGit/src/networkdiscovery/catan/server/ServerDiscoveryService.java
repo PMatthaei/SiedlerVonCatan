@@ -16,8 +16,10 @@ public class ServerDiscoveryService extends AbstractDiscoveryService {
 	/** Class logger */
 	private static final Logger LOG = Logger.getLogger(ServerDiscoveryService.class.getName());
 
-	/** Server name and version, client name */
-	String server, version, client, servername;
+	/** Server name and version, client name -- sinfo contains all relevant data about the server:
+	 *	##<"servername">##<"connected/freeslots">## f.e. "##MyServer##2/4##
+	 */
+	String server, version, client, sinfo;
 
 	/** Server port */
 	int port;
@@ -33,27 +35,27 @@ public class ServerDiscoveryService extends AbstractDiscoveryService {
 	 *            Server port (that is announced to clients)
 	 * @param sname
 	 *            Client name
-	 * @param name 
+	 * @param sinfo 
 	 */
-	public ServerDiscoveryService(String sname, String sversion, int port, String cname, String name) {
+	public ServerDiscoveryService(String sname, String sversion, int port, String cname, String sinfo) {
 		super();
 		this.server = sname;
 		this.version = sversion;
 		this.port = port;
 		this.client = cname;
-		this.servername = name;
+		this.sinfo = sinfo;
 	}
 
 	@Override
-	public void handleBroadcast(String type, InetSocketAddress addr, String content, String sname) throws IOException {
+	public void handleBroadcast(String type, InetSocketAddress addr, String content, String sinfo) throws IOException {
 		if (!this.client.equals(type)) {
 			return; // Not our client
 		}
 		if (LOG.isLoggable(Level.INFO)) {
-			LOG.info("Saw client announcement from: " + addr + " version: " + content + " name: " + sname);
+			LOG.info("Saw client announcement from: " + addr + " version: " + content + " serverinfo: " + sinfo);
 		}
 		sendAnnouncement(); //Announcement des Servers
-		sendAnnouncement(addr, server, port, version, servername); //Announcement mit addrese des Clients
+		sendAnnouncement(addr, server, port, version, sinfo); //Announcement mit addrese des Clients
 	}
 
 	/**
@@ -62,9 +64,13 @@ public class ServerDiscoveryService extends AbstractDiscoveryService {
 	 */
 	public void sendAnnouncement() {
 		try {
-			sendBroadcast(server, port, version, servername);
+			sendBroadcast(server, port, version, sinfo);
 		} catch (IOException e) {
 			LOG.log(Level.SEVERE, e.getMessage(), e);
 		}
+	}
+	
+	public void setServerInfo(String sinfo) {
+		this.sinfo = sinfo;
 	}
 }
