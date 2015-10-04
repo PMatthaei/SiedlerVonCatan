@@ -2,7 +2,7 @@ package data;
 
 import java.util.ArrayList;
 
-import network.client.PlayerProtokoll;
+import networkdiscovery.protocol.PlayerProtokoll;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package network;
+package networkdiscovery.protocol;
 
 import org.json.JSONException;
 import org.json.JSONObject;

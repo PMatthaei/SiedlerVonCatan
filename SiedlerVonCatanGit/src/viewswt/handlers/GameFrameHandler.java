@@ -27,13 +27,13 @@ import javax.swing.KeyStroke;
 import org.json.JSONException;
 
 import controller.GameController;
+import controller.GameStates;
 import data.GameModel;
 import data.buildings.Building;
 import data.buildings.BuildingType;
 import data.isle.Site;
 import data.isle.Tile;
 import utilities.game.Colors;
-import utilities.game.GameStates;
 import viewswt.ViewSettings;
 import viewswt.interaction.BuildProcessView;
 import viewswt.main.IslePanel;

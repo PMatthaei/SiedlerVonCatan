@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import controller.GameStates;
 import data.buildings.Building;
 import data.buildings.BuildingType;
 import data.isle.Dice;
@@ -15,8 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import utilities.config.Configuration;
 import utilities.game.LongestRoadAlgorithm;
-import utilities.game.GameStates;
-import network.server.ServerProtokoll;
+import networkdiscovery.protocol.ServerProtokoll;
 
 /**
  * Speichert den Zustand den das Spiel für jeden Spieler halten muss. Die Models

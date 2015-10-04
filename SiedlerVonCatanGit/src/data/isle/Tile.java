@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+import data.GameObject;
 import data.buildings.Building;
 import data.isle.TileEdge;
 import data.isle.TileNumbersRegular;
-import utilities.game.GameObject;
 /**
  * Klasse fuer die Kacheln.
  * 

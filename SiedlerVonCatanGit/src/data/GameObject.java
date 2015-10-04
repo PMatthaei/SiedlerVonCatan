@@ -1,4 +1,4 @@
-package utilities.game;
+package data;
 
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;

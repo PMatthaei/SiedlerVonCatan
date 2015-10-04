@@ -37,7 +37,6 @@ public abstract class ViewController implements AbstractViewController{
     
 	@Override
     public void setStage(Stage stage) {
-		System.out.println("ausgeführt");
     	primaryStage = stage;
     }
 	

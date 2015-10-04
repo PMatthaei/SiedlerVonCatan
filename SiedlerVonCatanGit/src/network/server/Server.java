@@ -2,6 +2,7 @@ package network.server;
 
 import network.PlayerConnectionThread;
 import networkdiscovery.catan.server.ServerDiscoveryService;
+import networkdiscovery.protocol.ServerProtokoll;
 
 import org.json.JSONException;
 import org.json.JSONObject;

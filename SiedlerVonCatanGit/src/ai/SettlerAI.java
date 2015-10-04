@@ -9,7 +9,7 @@ import data.buildings.BuildingType;
 import data.isle.Site;
 import ai.tactics.Brain;
 import network.client.Client;
-import network.client.PlayerProtokoll;
+import networkdiscovery.protocol.PlayerProtokoll;
 
 /**
  * 

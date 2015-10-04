@@ -3,7 +3,7 @@ package data.isle;
 import java.awt.Rectangle;
 import java.util.HashMap;
 
-import utilities.game.GameObject;
+import data.GameObject;
 
 /**
  * Der Raeuber.

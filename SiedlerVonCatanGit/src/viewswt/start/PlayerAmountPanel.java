@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
-import network.client.PlayerProtokoll;
-import network.server.ServerProtokoll;
+import networkdiscovery.protocol.PlayerProtokoll;
+import networkdiscovery.protocol.ServerProtokoll;
 
 import org.json.JSONObject;
 

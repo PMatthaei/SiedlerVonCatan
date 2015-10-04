@@ -1,4 +1,4 @@
-package network.client;
+package networkdiscovery.protocol;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import network.PlayerConnectionThread;
-import network.Protokoll;
 import networkdiscovery.catan.client.CatanClient;
 import networkdiscovery.catan.server.CatanServer.ConnectionThread;
 import networkdiscovery.json.JSONListener;
@@ -23,7 +22,6 @@ import org.json.JSONObject;
 
 import sounds.Sound;
 import utilities.game.PlayerColors;
-import utilities.game.GameStates;
 import viewswt.endscreens.DefeatView;
 import viewswt.endscreens.WinView;
 import viewswt.interaction.DiceView;
@@ -32,6 +30,7 @@ import viewswt.player.PlayerPanel;
 import viewswt.robber.DiscardCardsView;
 import viewswt.trade.TradeReceivePanel;
 import controller.GameController;
+import controller.GameStates;
 import data.ClientIsleModel;
 import data.PlayerModel;
 import data.TradeModel;

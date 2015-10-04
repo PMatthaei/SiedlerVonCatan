@@ -19,10 +19,10 @@ import javax.swing.event.ChangeListener;
 import org.json.JSONException;
 
 import controller.GameController;
+import controller.GameStates;
 import data.GameModel;
 import data.PlayerModel;
 import sounds.Sound;
-import utilities.game.GameStates;
 import viewswt.ViewSettings;
 import viewswt.player.PlayerPanel;
 import viewswt.trade.TradeView;

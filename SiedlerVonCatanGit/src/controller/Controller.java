@@ -10,13 +10,14 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import network.Protokoll;
-import network.client.PlayerProtokoll;
+import networkdiscovery.protocol.PlayerProtokoll;
+import networkdiscovery.protocol.Protokoll;
 
 import org.json.JSONException;
 
 import data.ClientIsleModel;
 import data.GameModel;
+import data.GameObject;
 import data.IsleModel;
 import data.Model;
 import data.PlayerModel;
@@ -35,9 +36,7 @@ import data.isle.TileEdge;
 import data.isle.TileStates;
 import data.isle.TileType;
 import sounds.Sound;
-import utilities.game.GameObject;
-import utilities.game.GameUI;
-import utilities.game.GameStates;
+import utilities.renderer.GameUI;
 import viewswt.main.GameView;
 import viewswt.main.IslePanel;
 import viewswt.start.StartView;

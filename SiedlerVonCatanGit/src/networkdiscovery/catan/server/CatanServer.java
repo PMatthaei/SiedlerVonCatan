@@ -21,12 +21,12 @@ import org.json.JSONObject;
 
 import data.ServerModel;
 import network.PlayerConnectionThread;
-import network.server.ServerProtokoll;
 import networkdiscovery.catan.server.CatanServer.ConnectionThread;
 import networkdiscovery.json.AbstractJSONObservable;
 import networkdiscovery.json.JSONListener;
 import networkdiscovery.json.JSONSocketChannel;
 import networkdiscovery.json.TextUI;
+import networkdiscovery.protocol.ServerProtokoll;
 
 /**
  * This is a simple chat server using Java NIO, and one thread per client.

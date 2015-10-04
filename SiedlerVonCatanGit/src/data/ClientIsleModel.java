@@ -24,6 +24,7 @@ import java.util.Random;
 import data.buildings.Building;
 import data.buildings.BuildingFactory;
 import data.buildings.BuildingType;
+import data.isle.CoordinateRange;
 import data.isle.HarborTile;
 import data.isle.HarborType;
 import data.isle.MapLocation;
@@ -40,7 +41,6 @@ import data.isle.TileNumbersRegular;
 import data.isle.TileType;
 import utilities.config.Configuration;
 import utilities.game.Colors;
-import utilities.game.CoordinateRange;
 import viewswt.main.IslePanel;
 
 /**

@@ -165,7 +165,7 @@ public class DiscoveryMenuViewController extends ViewController implements Initi
 	/**
 	 * Update the list view.
 	 * 
-	 * <i>Must</i> be called from the Swing worker thread!
+	 * <i>Must</i> be called from the JAVAFX worker thread!
 	 */
 	protected void updateList() {
 		data.clear();

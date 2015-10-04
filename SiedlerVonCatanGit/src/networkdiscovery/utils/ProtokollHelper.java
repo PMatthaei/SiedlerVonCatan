@@ -1,4 +1,4 @@
-package utilities.networkutils;
+package networkdiscovery.utils;
 
 public class ProtokollHelper {
 

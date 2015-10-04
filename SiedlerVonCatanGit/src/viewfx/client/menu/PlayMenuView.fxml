@@ -36,7 +36,7 @@
                <children>
                   <ImageView fx:id="redBtn" fitHeight="37.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../res/buildings/castle_red.png" />
+                        <Image url="@../../../textures/buildings/castle_red.png" />
                      </image>
                      <HBox.margin>
                         <Insets left="5.0" />
@@ -47,12 +47,12 @@
                         <Insets left="5.0" />
                      </HBox.margin>
                      <image>
-                        <Image url="@../../../../res/buildings/castle_yellow.png" />
+                        <Image url="@../../../textures/buildings/castle_yellow.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="whiteBtn" fitHeight="37.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../res/buildings/castle_white.png" />
+                        <Image url="@../../../textures/buildings/castle_white.png" />
                      </image>
                      <HBox.margin>
                         <Insets left="5.0" />
@@ -60,7 +60,7 @@
                   </ImageView>
                   <ImageView fx:id="blueBtn" fitHeight="37.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../res/buildings/castle_blue.png" />
+                        <Image url="@../../../textures/buildings/castle_blue.png" />
                      </image>
                      <HBox.margin>
                         <Insets left="5.0" />

@@ -1,4 +1,4 @@
-package utilities.game;
+package controller;
 
 /**
  * Dieses Enum beinhaltet alle Spielstatus, die fuer den Ablauf des Spiels noetig sind

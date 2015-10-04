@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+import networkdiscovery.protocol.Protokoll;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

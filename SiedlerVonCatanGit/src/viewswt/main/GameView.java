@@ -31,7 +31,6 @@ import org.json.JSONException;
 
 import sounds.Sound;
 import utilities.game.Colors;
-import utilities.game.GameStates;
 import viewswt.Background;
 import viewswt.ComponentResizer;
 import viewswt.ViewSettings;
@@ -46,6 +45,7 @@ import viewswt.player.PlayerStatsPanel;
 import viewswt.robber.ChooseVictimView;
 import viewswt.robber.DiscardCardsView;
 import controller.GameController;
+import controller.GameStates;
 import data.GameModel;
 import data.PlayerModel;
 import data.buildings.Building;

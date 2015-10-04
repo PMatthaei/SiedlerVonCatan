@@ -8,15 +8,23 @@ public class ServerIdentifier {
 	private String sinfo;
 	private String version;
 	
-	private Pattern p = Pattern.compile("##(.*)##(.*)##");
-
+	/**
+	 * This Pattern is searching for the corresponding part of the serverinformation
+	 *	##<"servername">##<"connected/freeslots">## f.e. "##MyServer##2/4##
+	 *	Group:	1	Servername
+	 *			2	Currently connected Players of max slots
+	 */
+	//									.group():	1	  2
+	private Pattern sinfo_pat = Pattern.compile("##(.*)##(.*)##");
+	private Matcher m;
+	
 	public ServerIdentifier(String sinfo, String version){
 		this.setServerInfo(sinfo);
 		this.setVersion(version);
 	}
 
 	public String getServerName(){
-		Matcher m = p.matcher(sinfo);
+		m = sinfo_pat.matcher(sinfo);
 		String servername = "";
 		if(m.find()){
 			servername = m.group(1);
@@ -25,13 +33,14 @@ public class ServerIdentifier {
 	}
 	
 	public String getPlayercount(){
-		Matcher m = p.matcher(sinfo);
+		m = sinfo_pat.matcher(sinfo);
 		String playercount = "";
 		if(m.find()){
 			playercount = m.group(2);
 		}
 		return playercount;
 	}
+	
 	/**
 	 * @return the servername
 	 */

@@ -24,10 +24,11 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import network.client.Client;
-import network.client.PlayerProtokoll;
 import networkdiscovery.catan.client.CatanClient;
 import networkdiscovery.catan.client.ClientDiscoveryService;
 import networkdiscovery.catan.server.ServerIdentifier;
+import networkdiscovery.protocol.PlayerProtokoll;
+import networkdiscovery.utils.ActionRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +36,7 @@ import org.json.JSONObject;
 
 import data.ClientIsleModel;
 import data.GameModel;
+import data.GameObject;
 import data.PlayerModel;
 import data.ServerIsleModel;
 import data.ServerModel;
@@ -61,12 +63,9 @@ import data.isle.TileNumbersRegular;
 import data.isle.TileStates;
 import data.isle.TileType;
 import sounds.Sound;
-import utilities.game.GameObject;
-import utilities.game.GameUI;
 import utilities.game.LongestRoadAlgorithm;
-import utilities.game.GameStates;
 import utilities.game.PlayerColors;
-import utilities.networkutils.ActionRequest;
+import utilities.renderer.GameUI;
 import viewswt.main.GameView;
 import viewswt.main.IslePanel;
 import viewswt.start.StartView;

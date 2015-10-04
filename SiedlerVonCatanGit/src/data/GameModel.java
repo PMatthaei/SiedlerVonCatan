@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.logging.Logger;
 
+import controller.GameStates;
 import data.cards.ResourceCard;
 import data.isle.Dice;
 import data.isle.Robber;
 import data.isle.TileNumbersRegular;
 import javafx.collections.FXCollections;
 import utilities.config.Configuration;
-import utilities.game.GameStates;
-import network.client.PlayerProtokoll;
+import networkdiscovery.protocol.PlayerProtokoll;
 
 public class GameModel extends Model {
 	

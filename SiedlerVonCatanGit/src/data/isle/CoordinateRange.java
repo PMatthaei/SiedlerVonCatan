@@ -1,4 +1,4 @@
-package utilities.game;
+package data.isle;
 /**
  * 
  * Klasse zum Speichern der wichtigen Daten des Feldkoordinatensystems<br>

@@ -1,4 +1,4 @@
-package utilities.game;
+package utilities.renderer;
 
 import java.awt.Rectangle;
 

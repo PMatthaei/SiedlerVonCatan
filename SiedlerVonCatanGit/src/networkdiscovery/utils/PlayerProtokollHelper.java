@@ -1,4 +1,4 @@
-package utilities.networkutils;
+package networkdiscovery.utils;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -19,7 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import network.client.PlayerProtokoll;
+import networkdiscovery.protocol.PlayerProtokoll;
 
 import org.json.JSONObject;
 

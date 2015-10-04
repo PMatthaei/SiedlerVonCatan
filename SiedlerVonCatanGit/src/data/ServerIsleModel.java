@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import data.buildings.Building;
+import data.isle.CoordinateRange;
 import data.isle.HarborTile;
 import data.isle.HarborType;
 import data.isle.IsleRing;
@@ -38,7 +39,6 @@ import data.isle.TileType;
 import sun.util.logging.resources.logging;
 import utilities.config.Configuration;
 import utilities.game.Colors;
-import utilities.game.CoordinateRange;
 
 /**
  * Spezielle Version der Insel die für den Server ausgelegt ist.

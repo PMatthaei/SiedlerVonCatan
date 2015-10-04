@@ -16,10 +16,10 @@ import org.json.JSONObject;
 
 import controller.GameController;
 import data.GameModel;
-import network.client.PlayerProtokoll;
 import networkdiscovery.json.AbstractJSONObservable;
 import networkdiscovery.json.JSONSocketChannel;
 import networkdiscovery.json.TextUI;
+import networkdiscovery.protocol.PlayerProtokoll;
 
 /**
  * A simple chat client.
@@ -41,6 +41,7 @@ public class CatanClient extends AbstractJSONObservable implements Runnable {
 
 	/** **/
 	private PlayerProtokoll playerprotokoll;
+	
 	/**
 	 * Constructor.
 	 * 

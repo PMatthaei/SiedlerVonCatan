@@ -39,9 +39,9 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
 
-import utilities.game.GameStates;
 import utilities.renderer.IsleRenderer;
 import controller.GameController;
+import controller.GameStates;
 import data.ClientIsleModel;
 import data.isle.HarborTile;
 import data.isle.HarborType;

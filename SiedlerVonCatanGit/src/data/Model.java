@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.logging.Logger;
 
+import controller.GameStates;
 import data.isle.Dice;
 import utilities.config.Configuration;
-import utilities.game.GameStates;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 

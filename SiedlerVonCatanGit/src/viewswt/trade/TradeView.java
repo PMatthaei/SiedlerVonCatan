@@ -37,7 +37,8 @@ import javax.swing.event.ChangeListener;
 
 import org.json.JSONObject;
 
-import network.client.PlayerProtokoll;
+import networkdiscovery.protocol.PlayerProtokoll;
+import networkdiscovery.utils.JSON2ObjectParser;
 import controller.GameController;
 import data.GameModel;
 import data.PlayerModel;
@@ -45,7 +46,6 @@ import data.cards.ResourceType;
 import sounds.Sound;
 import sun.swing.BakedArrayList;
 import utilities.game.Colors;
-import utilities.networkutils.JSON2ObjectParser;
 import viewswt.ViewSettings;
 
 /**

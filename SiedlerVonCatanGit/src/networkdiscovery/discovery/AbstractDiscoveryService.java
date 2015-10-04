@@ -201,10 +201,12 @@ public abstract class AbstractDiscoveryService extends Thread {
 	 *            Port to announce
 	 * @param countent
 	 *            Message content
+	 * @param sinfo
+	 *            Serverinformation in one String. Sepearted with ServerIdentifier class
 	 * @throws IOException
 	 *             When sending failed
 	 */
-	public synchronized void sendAnnouncement(InetSocketAddress addr, String type, int aport, String message, String sname) throws IOException {
+	public synchronized void sendAnnouncement(InetSocketAddress addr, String type, int aport, String message, String sinfo) throws IOException {
 		System.out.println("send anc:" + addr + type + aport + message);
 		// Rate limit
 		if (lastSent + 50 >= System.currentTimeMillis()) {
@@ -226,7 +228,7 @@ public abstract class AbstractDiscoveryService extends Thread {
 		cbuf.append('\0'); // Separator
 		cbuf.append(message);
 		cbuf.append('\0'); // Separator
-		cbuf.append(sname);
+		cbuf.append(sinfo);
 		cbuf.flip();
 		ByteBuffer bbuf = encoder.encode(cbuf);
 

@@ -16,12 +16,12 @@ import java.util.logging.SimpleFormatter;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
-import network.client.PlayerProtokoll;
 import network.server.Server;
-import network.server.ServerProtokoll;
 import networkdiscovery.catan.server.CatanServer;
 import networkdiscovery.json.JSONSocketChannel;
 import networkdiscovery.json.TextUI;
+import networkdiscovery.protocol.PlayerProtokoll;
+import networkdiscovery.protocol.ServerProtokoll;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +49,6 @@ import data.isle.TileEdge;
 import data.isle.TileStates;
 import data.isle.TileType;
 import sounds.Sound;
-import utilities.game.GameStates;
 import viewfx.server.StartServerViewController;
 import viewfx.utilities.PlayersTable;
 import viewswt.main.GameView;

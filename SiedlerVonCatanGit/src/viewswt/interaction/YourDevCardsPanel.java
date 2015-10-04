@@ -21,7 +21,7 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-import network.client.PlayerProtokoll;
+import networkdiscovery.protocol.PlayerProtokoll;
 import controller.GameController;
 import data.GameModel;
 import data.PlayerModel;

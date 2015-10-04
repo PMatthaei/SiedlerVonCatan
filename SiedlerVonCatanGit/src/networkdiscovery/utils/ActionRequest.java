@@ -1,12 +1,12 @@
-package utilities.networkutils;
+package networkdiscovery.utils;
 
 import java.util.ArrayList;
 
+import data.GameObject;
 import data.buildings.Building;
 import data.isle.Robber;
 import data.isle.Site;
 import data.isle.Tile;
-import utilities.game.GameObject;
 
 /**
  * Hält alle Informationen, die der Client an den Server zur Abfrage auf eine gültige Aktion schicken soll.

@@ -1,4 +1,4 @@
-package network.server;
+package networkdiscovery.protocol;
 
 import java.net.Socket;
 import java.util.ArrayList;
@@ -19,11 +19,13 @@ import java.util.stream.Collectors;
 
 import javafx.collections.ObservableMap;
 import network.PlayerConnectionThread;
-import network.Protokoll;
 import networkdiscovery.catan.server.CatanServer;
 import networkdiscovery.catan.server.CatanServer.ConnectionThread;
 import networkdiscovery.json.JSONListener;
 import networkdiscovery.json.JSONSocketChannel;
+import networkdiscovery.utils.JSON2ObjectParser;
+import networkdiscovery.utils.PlayerProtokollHelper;
+import networkdiscovery.utils.ServerProtokollHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,15 +34,12 @@ import org.json.JSONObject;
 import com.sun.corba.se.spi.orbutil.fsm.State;
 
 import utilities.game.PlayerColors;
-import utilities.game.GameStates;
-import utilities.networkutils.JSON2ObjectParser;
-import utilities.networkutils.PlayerProtokollHelper;
-import utilities.networkutils.ServerProtokollHelper;
 import viewswt.main.GameView;
 import viewswt.player.PlayerStatsPanel;
 import viewswt.start.PlayerAmountPanel;
 import viewswt.start.ServerStartedView;
 import controller.GameController;
+import controller.GameStates;
 import controller.ServerController;
 import data.ClientIsleModel;
 import data.GameModel;

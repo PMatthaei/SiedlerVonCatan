@@ -32,7 +32,7 @@ import org.json.JSONObject;
 import controller.GameController;
 import data.GameModel;
 import data.PlayerModel;
-import network.client.PlayerProtokoll;
+import networkdiscovery.protocol.PlayerProtokoll;
 import sounds.Sound;
 import utilities.game.Colors;
 import viewswt.ViewSettings;

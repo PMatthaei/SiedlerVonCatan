@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import utilities.game.PlayerColors;
-import network.client.PlayerProtokoll;
+import networkdiscovery.protocol.PlayerProtokoll;
 import controller.GameController;
 import data.buildings.Building;
 import data.buildings.BuildingFactory;

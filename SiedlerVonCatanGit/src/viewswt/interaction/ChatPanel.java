@@ -34,7 +34,7 @@ import org.json.JSONException;
 
 import utilities.game.Colors;
 import controller.GameController;
-import network.client.PlayerProtokoll;
+import networkdiscovery.protocol.PlayerProtokoll;
 
 /**
  * ChatPanel for the GameView

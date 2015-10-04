@@ -12,10 +12,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
+import data.GameObject;
 import data.PlayerModel;
 import data.buildings.Building;
 import data.buildings.BuildingType;
-import utilities.game.GameObject;
 
 /**
  * Bauplatz f�r Stra�en oder H�user

@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import data.buildings.Building;
 import data.buildings.BuildingType;
+import data.isle.CoordinateRange;
 import data.isle.HarborTile;
 import data.isle.HarborType;
 import data.isle.MapLocation;
@@ -27,7 +28,6 @@ import data.isle.TileNumbersRegular;
 import data.isle.TileType;
 import utilities.config.Configuration;
 import utilities.game.Colors;
-import utilities.game.CoordinateRange;
 
 /**
  * Abstrakte Oberklasse für alle InselModels - Server und Clientversion<br>
