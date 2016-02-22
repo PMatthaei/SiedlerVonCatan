@@ -24,11 +24,11 @@ import networkdiscovery.protocol.PlayerProtokoll;
 import org.json.JSONObject;
 
 import sounds.Sound;
-import utilities.game.Colors;
 import viewswt.ViewSettings;
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
+import data.utils.Colors;
 
 /**
  * 
@@ -519,7 +519,7 @@ public class DiscardCardsView extends JPanel  {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		DiscardCardsView panel = new DiscardCardsView(new PlayerModel(), new GameController(new GameModel()));
+		DiscardCardsView panel = new DiscardCardsView(new PlayerModel(), new GameController(new GameData()));
 		panel.getFrame().setVisible(true);
 	}
 

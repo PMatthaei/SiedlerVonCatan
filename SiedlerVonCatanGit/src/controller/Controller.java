@@ -12,13 +12,19 @@ import java.util.logging.SimpleFormatter;
 
 import networkdiscovery.protocol.PlayerProtokoll;
 import networkdiscovery.protocol.Protokoll;
+import playingfield.Dice;
+import playingfield.MapLocation;
+import playingfield.Robber;
+import playingfield.Site;
+import playingfield.Tile;
+import playingfield.TileEdge;
+import playingfield.TileStates;
+import playingfield.TileType;
 
 import org.json.JSONException;
 
-import data.ClientIsleModel;
-import data.GameModel;
+import data.GameData;
 import data.GameObject;
-import data.IsleModel;
 import data.Model;
 import data.PlayerModel;
 import data.buildings.Building;
@@ -27,19 +33,12 @@ import data.buildings.BuildingType;
 import data.cards.DevelopmentCard;
 import data.cards.DevelopmentCardType;
 import data.cards.ResourceType;
-import data.isle.Dice;
-import data.isle.MapLocation;
-import data.isle.Robber;
-import data.isle.Site;
-import data.isle.Tile;
-import data.isle.TileEdge;
-import data.isle.TileStates;
-import data.isle.TileType;
+import data.island.ClientIsleModel;
+import data.island.IsleModel;
 import sounds.Sound;
 import utilities.renderer.GameUI;
 import viewswt.main.GameView;
 import viewswt.main.IslePanel;
-import viewswt.start.StartView;
 
 public abstract class Controller {
 	private static Logger log = Logger.getLogger(GameController.class.getName());
@@ -172,7 +171,7 @@ public abstract class Controller {
 					
 					PlayerModel owner = building.getOwner();
 
-					if(model instanceof GameModel){
+					if(model instanceof GameData){
 						//Nimmt site aus der Zeichenliste
 						stopDrawing(site);
 					}

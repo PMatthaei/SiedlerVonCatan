@@ -34,7 +34,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import data.cards.ResourceType;
-import utilities.game.Colors;
+import data.utils.Colors;
 
 public class ViewSettings {
 

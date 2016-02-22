@@ -19,8 +19,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
+import data.utils.Colors;
 import edu.cmu.relativelayout.Binding;
 import edu.cmu.relativelayout.BindingFactory;
 import edu.cmu.relativelayout.RelativeConstraints;
@@ -32,7 +33,6 @@ import javax.swing.text.DefaultCaret;
 
 import org.json.JSONException;
 
-import utilities.game.Colors;
 import controller.GameController;
 import networkdiscovery.protocol.PlayerProtokoll;
 

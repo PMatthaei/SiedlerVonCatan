@@ -13,8 +13,7 @@ import viewfx.utilities.PlayersTable;
 import controller.GameController;
 import controller.ServerController;
 import data.PlayerModel;
-import data.ServerModel;
-import data.isle.MapLocation;
+import data.ServerData;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
@@ -31,11 +30,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import playingfield.MapLocation;
 
 public class StartServerViewController extends ViewController implements Initializable{
 	
 	private ServerController servercontroller;
-	private ServerModel servermodel;
+	private ServerData servermodel;
 	
     private Stage primaryStage;
     
@@ -65,7 +65,7 @@ public class StartServerViewController extends ViewController implements Initial
 	
     @Override
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-    	servermodel = new ServerModel();
+    	servermodel = new ServerData();
     	servercontroller = new ServerController(servermodel);
     	
     	addBackground(gridPane, "/textures/start/fish.png");

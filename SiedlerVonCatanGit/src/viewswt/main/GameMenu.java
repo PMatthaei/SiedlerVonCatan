@@ -30,12 +30,12 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
+import data.utils.Colors;
+import data.utils.PlayerColors;
 import sounds.Sound;
 import sun.swing.SwingUtilities2;
-import utilities.game.Colors;
-import utilities.game.PlayerColors;
 import viewswt.ViewSettings;
 import viewswt.interaction.BuildingCostsView;
 
@@ -73,19 +73,19 @@ public class GameMenu {
 		for(Entry<Integer, PlayerModel> entry : controller.getGame().getPlayers().entrySet()) {
 				if(playerID==entry.getValue().getPlayerID()) {
 					switch(entry.getValue().getPlayerColor()) {
-					case YELLOW:// gelbe elfin
+					case PL_YELLOW:// gelbe elfin
 						playerIcon = new ImageIcon(GameMenu.class.getResource("/res/player/mini/player_yellow.png"));	
 						playerColor = new JLabel("YELLOW");
 						break;
-					case WHITE:// grauer gandalf
+					case PL_WHITE:// grauer gandalf
 						playerIcon = new ImageIcon(GameMenu.class.getResource("/res/player/mini/player_white.png"));
 						playerColor = new JLabel("WHITE");
 						break;
-					case RED:// roter zwerg
+					case PL_RED:// roter zwerg
 						playerIcon = new ImageIcon(GameMenu.class.getResource("/res/player/mini/player_red.png"));
 						playerColor = new JLabel("RED");
 						break;
-					case BLUE:// blauer fischkopf
+					case PL_BLUE:// blauer fischkopf
 						playerIcon = new ImageIcon(GameMenu.class.getResource("/res/player/mini/player_blue.png"));
 						playerColor = new JLabel("BLUE");
 						break;

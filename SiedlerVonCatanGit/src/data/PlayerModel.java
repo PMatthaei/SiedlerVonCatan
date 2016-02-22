@@ -3,16 +3,17 @@ package data;
 import java.util.ArrayList;
 import java.util.Observable;
 
-import utilities.game.PlayerColors;
 import networkdiscovery.protocol.PlayerProtokoll;
+import playingfield.MapLocation;
+import playingfield.Site;
 import controller.GameController;
 import data.buildings.Building;
 import data.buildings.BuildingFactory;
 import data.buildings.BuildingType;
 import data.cards.DevelopmentCard;
 import data.cards.DevelopmentCardType;
-import data.isle.MapLocation;
-import data.isle.Site;
+import data.utils.Colors;
+import data.utils.PlayerColors;
 
 /**
  * 
@@ -23,7 +24,7 @@ public class PlayerModel extends Observable {
 
 	// Spieler Informationen
 	/** Die Spielfarbe mit der der Spieler spielt **/
-	private PlayerColors playerColor;
+	private Colors playerColor;
 
 	/** Der Status eines Spielers **/
 	private String playerStatus;
@@ -171,7 +172,7 @@ public class PlayerModel extends Observable {
 
 	
 	public String toString(){
-		return "Spieler: " + playerName + " mit ID: " + playerID;
+		return "Spieler: " + playerName + " mit ID: " + playerID + " Farbe:"+playerColor;
 	}
 	
 	
@@ -201,7 +202,7 @@ public class PlayerModel extends Observable {
 	 * 
 	 * @return playerColor
 	 */
-	public PlayerColors getPlayerColor() {
+	public Colors getPlayerColor() {
 		return playerColor;
 	}
 
@@ -209,7 +210,7 @@ public class PlayerModel extends Observable {
 	 * 
 	 * @param playerColor
 	 */
-	public void setPlayerColor(PlayerColors playerColor) {
+	public void setPlayerColor(Colors playerColor) {
 		this.playerColor = playerColor;
 		setChanged();
 		notifyObservers();

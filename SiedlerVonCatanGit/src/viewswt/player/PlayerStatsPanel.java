@@ -12,7 +12,7 @@ import javax.swing.border.EmptyBorder;
 
 import data.PlayerModel;
 import data.cards.ResourceType;
-import utilities.game.Colors;
+import data.utils.Colors;
 import viewswt.ViewSettings;
 
 /**

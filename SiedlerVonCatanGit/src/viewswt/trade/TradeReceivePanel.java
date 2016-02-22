@@ -30,11 +30,11 @@ import javax.swing.event.ChangeListener;
 import org.json.JSONObject;
 
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
+import data.utils.Colors;
 import networkdiscovery.protocol.PlayerProtokoll;
 import sounds.Sound;
-import utilities.game.Colors;
 import viewswt.ViewSettings;
 
 public class TradeReceivePanel extends JPanel {
@@ -56,7 +56,7 @@ public class TradeReceivePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	
-	private GameModel gameModel;
+	private GameData gameModel;
 	private GameController controller;
 	/** Das Protokoll für die Netzwerkkommunikation **/
 	private PlayerProtokoll playerProtokoll;
@@ -200,7 +200,7 @@ public class TradeReceivePanel extends JPanel {
 			int[] nachfrage = {0,0,1,2,3};
 			
 			int tradeId = 0;
-			TradeReceivePanel t = new TradeReceivePanel(playerID,tradeId, angebot, nachfrage,new GameController(new GameModel()),new PlayerModel());
+			TradeReceivePanel t = new TradeReceivePanel(playerID,tradeId, angebot, nachfrage,new GameController(new GameData()),new PlayerModel());
 			t.getFrame().setVisible(true);
 		}
 			

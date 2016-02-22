@@ -21,11 +21,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import sounds.Sound;
-import utilities.game.Colors;
 import viewswt.ViewSettings;
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
+import data.utils.Colors;
 
 public class ChooseRessourceView extends JPanel{
 
@@ -155,7 +155,7 @@ public class ChooseRessourceView extends JPanel{
 //	 * @param args
 //	 */
 	public static void main(String[] args) {
-		ChooseRessourceView panel = new ChooseRessourceView( new GameController(new GameModel()),new PlayerModel());
+		ChooseRessourceView panel = new ChooseRessourceView( new GameController(new GameData()),new PlayerModel());
 		panel.frame.setVisible(true);
 	}
 

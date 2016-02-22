@@ -12,8 +12,7 @@ import viewfx.server.StartServerViewController;
 import viewswt.main.GameView;
 import controller.GameController;
 import controller.ServerController;
-import data.GameModel;
-import data.isle.MapLocation;
+import data.GameData;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -29,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import playingfield.MapLocation;
 
 public class CloseViewController extends ViewController implements Initializable,AbstractViewController{
 	    

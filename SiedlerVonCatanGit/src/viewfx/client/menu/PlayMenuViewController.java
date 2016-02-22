@@ -3,23 +3,13 @@ package viewfx.client.menu;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
-
-
-
-
-
-
-
-
-
-import utilities.game.PlayerColors;
 import viewfx.AbstractViewController;
 import viewfx.ViewController;
 import controller.GameController;
 import controller.ServerController;
 import data.PlayerModel;
-import data.isle.MapLocation;
+import data.utils.Colors;
+import data.utils.PlayerColors;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -35,12 +25,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import playingfield.MapLocation;
 
 public class PlayMenuViewController extends ViewController implements Initializable,AbstractViewController{
 	
 	private GameController controller;
     
-	private PlayerColors color;
+	private Colors color;
 
 	/** View - Variablen **/
     private Stage primaryStage;
@@ -63,16 +54,16 @@ public class PlayMenuViewController extends ViewController implements Initializa
     	statusLabel.setVisible(false);
     	
     	redBtn.setOnMouseClicked((event) -> {
-    		lockColor(redBtn,PlayerColors.RED);
+    		lockColor(redBtn,Colors.PL_RED);
     	});
     	whiteBtn.setOnMouseClicked((event) -> {
-    		lockColor(whiteBtn,PlayerColors.WHITE);
+    		lockColor(whiteBtn,Colors.PL_WHITE);
     	});
     	yellowBtn.setOnMouseClicked((event) -> {
-    		lockColor(yellowBtn,PlayerColors.YELLOW);
+    		lockColor(yellowBtn,Colors.PL_YELLOW);
     	});
     	blueBtn.setOnMouseClicked((event) -> {
-    		lockColor(blueBtn,PlayerColors.BLUE);
+    		lockColor(blueBtn,Colors.PL_BLUE);
     	});
     	
     	startGameBtn.setOnAction((event) -> {
@@ -104,7 +95,7 @@ public class PlayMenuViewController extends ViewController implements Initializa
         
     }
 
-    public void lockColor(ImageView btn, PlayerColors color){
+    public void lockColor(ImageView btn, Colors color){
 		setColor(color);
 		showStatus("Du hast " + color + " als Farbe gewählt", true);
 
@@ -153,7 +144,7 @@ public class PlayMenuViewController extends ViewController implements Initializa
 	/**
 	 * @return the color
 	 */
-	public PlayerColors getColor() {
+	public Colors getColor() {
 		return color;
 	}
 
@@ -161,7 +152,7 @@ public class PlayMenuViewController extends ViewController implements Initializa
 	/**
 	 * @param color the color to set
 	 */
-	public void setColor(PlayerColors color) {
+	public void setColor(Colors color) {
 		this.color = color;
 	}
     

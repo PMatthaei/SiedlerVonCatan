@@ -7,7 +7,6 @@ import viewfx.AbstractViewController;
 import viewfx.ViewController;
 import controller.GameController;
 import controller.ServerController;
-import data.isle.MapLocation;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -18,6 +17,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import playingfield.MapLocation;
 
 public class OptionsMenuViewController extends ViewController implements Initializable,AbstractViewController{
 	    

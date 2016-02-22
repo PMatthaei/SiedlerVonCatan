@@ -23,11 +23,11 @@ import javax.swing.border.LineBorder;
 
 import networkdiscovery.protocol.PlayerProtokoll;
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
 import data.cards.DevelopmentCardType;
+import data.utils.Colors;
 import sounds.Sound;
-import utilities.game.Colors;
 import viewswt.ViewSettings;
 
 /**
@@ -449,7 +449,7 @@ public class YourDevCardsPanel extends JPanel implements ActionListener {
 	
 	public static void main(String[] args) {
 		PlayerModel p = new PlayerModel();
-		YourDevCardsPanel yourDevCards = new YourDevCardsPanel(p.getPlayerID(), new GameController(new GameModel()),p);
+		YourDevCardsPanel yourDevCards = new YourDevCardsPanel(p.getPlayerID(), new GameController(new GameData()),p);
 		yourDevCards.devCardsFrame.setVisible(true);
 	}
 	

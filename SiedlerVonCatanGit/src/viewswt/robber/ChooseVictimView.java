@@ -27,14 +27,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import sounds.Sound;
-import utilities.game.Colors;
 import viewswt.ViewSettings;
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
 import data.buildings.Building;
-import data.isle.Site;
-import data.isle.Tile;
+import data.utils.Colors;
+import playingfield.Site;
+import playingfield.Tile;
 
 /**
  * class for the frame that appears, if a 7 has been rolled and the player on
@@ -280,19 +280,19 @@ public class ChooseVictimView extends JPanel implements ActionListener {
 		ImageIcon player4Icon_no = new ImageIcon(getClass().getResource(
 				"/textures/player/mini/player_blue_NOSAT.png"));
 		switch (playerModel.getPlayerColor()) {
-		case BLUE:
+		case PL_BLUE:
 			icon = player4Icon;
 			noIcon = player4Icon_no;
 			break;
-		case RED:
+		case PL_RED:
 			icon = player3Icon;
 			noIcon = player3Icon_no;
 			break;
-		case WHITE:
+		case PL_WHITE:
 			icon = player2Icon;
 			noIcon = player2Icon_no;
 			break;
-		case YELLOW:
+		case PL_YELLOW:
 			icon = player1Icon;
 			noIcon = player1Icon_no;
 			break;

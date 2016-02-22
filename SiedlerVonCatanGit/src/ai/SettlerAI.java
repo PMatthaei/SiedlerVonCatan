@@ -6,10 +6,9 @@ import data.PlayerModel;
 import data.buildings.Building;
 import data.buildings.BuildingFactory;
 import data.buildings.BuildingType;
-import data.isle.Site;
 import ai.tactics.Brain;
-import network.client.Client;
 import networkdiscovery.protocol.PlayerProtokoll;
+import playingfield.Site;
 
 /**
  * 
@@ -19,7 +18,7 @@ import networkdiscovery.protocol.PlayerProtokoll;
  *         Dabei stellt die KI einen Client dar der selbst an passenden Stellen den besten Zug auswertet und
  *         dann an den Server schickt.
  */
-public class SettlerAI extends Client{
+public class SettlerAI {
 
 	private PlayerModel botModel;
 
@@ -30,7 +29,7 @@ public class SettlerAI extends Client{
 	private int difficulty = 1;
 	
 	public SettlerAI(){
-		setBot(true);
+
 	}
 	
 	public void buyDevCard(){

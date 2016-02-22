@@ -16,39 +16,39 @@ import java.util.logging.SimpleFormatter;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
-import network.server.Server;
 import networkdiscovery.catan.server.CatanServer;
 import networkdiscovery.json.JSONSocketChannel;
 import networkdiscovery.json.TextUI;
 import networkdiscovery.protocol.PlayerProtokoll;
 import networkdiscovery.protocol.ServerProtokoll;
+import playingfield.Dice;
+import playingfield.MapLocation;
+import playingfield.Robber;
+import playingfield.Site;
+import playingfield.Tile;
+import playingfield.TileEdge;
+import playingfield.TileStates;
+import playingfield.TileType;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.sun.corba.se.spi.activation.ServerOperations;
 
-import data.ClientIsleModel;
-import data.GameModel;
+import data.GameData;
 import data.Model;
 import data.PlayerModel;
-import data.ServerIsleModel;
-import data.ServerModel;
+import data.ServerData;
 import data.buildings.Building;
 import data.buildings.BuildingFactory;
 import data.buildings.BuildingType;
 import data.cards.DevelopmentCard;
 import data.cards.DevelopmentCardType;
 import data.cards.ResourceType;
-import data.isle.Dice;
-import data.isle.MapLocation;
-import data.isle.Robber;
-import data.isle.Site;
-import data.isle.Tile;
-import data.isle.TileEdge;
-import data.isle.TileStates;
-import data.isle.TileType;
+import data.island.ClientIsleModel;
+import data.island.ServerIsleModel;
 import sounds.Sound;
+import utilities.math.LongestRoadAlgorithm;
 import viewfx.server.StartServerViewController;
 import viewfx.utilities.PlayersTable;
 import viewswt.main.GameView;
@@ -64,12 +64,12 @@ public class ServerController{
 		
 	private ServerProtokoll serverprotokoll;
 	
-	private ServerModel servermodel;
+	private ServerData servermodel;
 	
 	private CatanServer server;
 	
 		
-	public ServerController(ServerModel servermodel) {
+	public ServerController(ServerData servermodel) {
 		this.servermodel = servermodel;
 
 
@@ -106,7 +106,7 @@ public class ServerController{
 	
 	public void assignServerdata(String sname, String maxplayers) {
     	servermodel.setMaxPlayers(Integer.parseInt(maxplayers));
-    	ServerModel.setName(sname);
+    	ServerData.setName(sname);
 	}
 	
 	
@@ -143,7 +143,37 @@ public class ServerController{
 	}
 	
 	
-	
+	/**
+	 * Berechnet die laengste Strasse unter allen Spielern
+	 */
+	public int calculateLongestRoad() {
+		int longest = 0;
+		PlayerModel best = null;
+		
+		//Errechne für jeden Spieler seine längste Handelsstraße und finde den besten
+		for (PlayerModel p : servermodel.getPlayers().values()) {
+
+			LongestRoadAlgorithm l = new LongestRoadAlgorithm(p);
+			int newlongest = l.calculateLongestRoad();
+			p.setLongestRoadValue(newlongest);
+			
+			if(longest < newlongest){
+				longest = newlongest;
+				best = p;
+			} else if( longest == newlongest){
+				best = null;
+				break;
+			}
+		}
+		
+		//Falls es keinen besten gab
+		if(best == null){
+			serverprotokoll.sendChatMsgToAll("Keine längste Strasse gefunden", 1337);
+		} else {
+			serverprotokoll.sendChatMsgToAll("Längste Strasse gefunden! Glückwunsch Spieler: "  + best.getPlayerName(), 1337);
+		}
+		return longest;
+	}
 	
 	
 
@@ -913,7 +943,7 @@ public class ServerController{
 	/**
 	 * @return the game
 	 */
-	public ServerModel getServerModel() {
+	public ServerData getServerModel() {
 		return servermodel;
 	}
 
@@ -921,7 +951,7 @@ public class ServerController{
 	 * @param game
 	 *            the game to set
 	 */
-	public void setServerModel(ServerModel serverModel) {
+	public void setServerModel(ServerData serverModel) {
 		this.servermodel = serverModel;
 	}
 
@@ -944,7 +974,7 @@ public class ServerController{
 	/**
 	 * @return the model
 	 */
-	public ServerModel getModel() {
+	public ServerData getModel() {
 		return servermodel;
 	}
 
@@ -952,7 +982,7 @@ public class ServerController{
 	/**
 	 * @param model the model to set
 	 */
-	public void setModel(ServerModel model) {
+	public void setModel(ServerData model) {
 		this.servermodel = model;
 	}
 	

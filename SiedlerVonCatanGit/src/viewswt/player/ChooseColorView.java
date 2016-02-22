@@ -21,11 +21,11 @@ import javax.swing.event.ChangeListener;
 import org.json.JSONException;
 
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
+import data.utils.Colors;
+import data.utils.PlayerColors;
 import sounds.Sound;
-import utilities.game.Colors;
-import utilities.game.PlayerColors;
 import viewswt.ViewSettings;
 
 public class ChooseColorView extends JPanel implements ActionListener{
@@ -103,7 +103,7 @@ public class ChooseColorView extends JPanel implements ActionListener{
 				if (model.isSelected()) {
 					redButton.setSelected(true);
 					redButton.setIcon(buttonRedHover);
-					playerModel.setPlayerColor(PlayerColors.RED);
+					playerModel.setPlayerColor(Colors.PL_RED);
 					if (model.isPressed()) {
 						Sound.playButtonSound();
 						redButton.setIcon(buttonRedHover);
@@ -128,7 +128,7 @@ public class ChooseColorView extends JPanel implements ActionListener{
 				if (model.isSelected()) {
 					whiteButton.setSelected(true);
 					whiteButton.setIcon(buttonWhiteHover);
-					playerModel.setPlayerColor(PlayerColors.WHITE);
+					playerModel.setPlayerColor(Colors.PL_WHITE);
 					if (model.isPressed()) {
 						Sound.playButtonSound();
 						whiteButton.setIcon(buttonWhiteHover);
@@ -153,7 +153,7 @@ public class ChooseColorView extends JPanel implements ActionListener{
 				if (model.isSelected()) {
 					blueButton.setSelected(true);
 					blueButton.setIcon(buttonBlueHover);
-					playerModel.setPlayerColor(PlayerColors.BLUE);		
+					playerModel.setPlayerColor(Colors.PL_BLUE);		
 					if (model.isPressed()) {
 						Sound.playButtonSound();
 
@@ -179,7 +179,7 @@ public class ChooseColorView extends JPanel implements ActionListener{
 				if (model.isSelected()) {
 					yellowButton.setSelected(true);
 					yellowButton.setIcon(buttonYellowHover);
-					playerModel.setPlayerColor(PlayerColors.YELLOW);			
+					playerModel.setPlayerColor(Colors.PL_YELLOW);			
 					if (model.isPressed()) {
 						Sound.playButtonSound();
 
@@ -215,7 +215,7 @@ public class ChooseColorView extends JPanel implements ActionListener{
 		frame.setVisible(true);
 	}
 	public static void main(String[] args) {
-		ChooseColorView cc = new ChooseColorView(new GameController(new GameModel()),new PlayerModel());
+		ChooseColorView cc = new ChooseColorView(new GameController(new GameData()),new PlayerModel());
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -231,7 +231,7 @@ public class ChooseColorView extends JPanel implements ActionListener{
 				
 			}
 			try {
-				controller.getPlayerProtokoll().setNameColor();
+				controller.getPlayerProtokoll().sendPlayerData();
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

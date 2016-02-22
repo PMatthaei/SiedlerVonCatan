@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableMap;
-import network.PlayerConnectionThread;
 import networkdiscovery.catan.server.CatanServer;
 import networkdiscovery.catan.server.CatanServer.ConnectionThread;
 import networkdiscovery.json.JSONListener;
@@ -26,6 +25,13 @@ import networkdiscovery.json.JSONSocketChannel;
 import networkdiscovery.utils.JSON2ObjectParser;
 import networkdiscovery.utils.PlayerProtokollHelper;
 import networkdiscovery.utils.ServerProtokollHelper;
+import playingfield.HarborTile;
+import playingfield.HarborType;
+import playingfield.MapLocation;
+import playingfield.Robber;
+import playingfield.Site;
+import playingfield.Tile;
+import playingfield.TileType;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,32 +39,24 @@ import org.json.JSONObject;
 
 import com.sun.corba.se.spi.orbutil.fsm.State;
 
-import utilities.game.PlayerColors;
 import viewswt.main.GameView;
 import viewswt.player.PlayerStatsPanel;
-import viewswt.start.PlayerAmountPanel;
-import viewswt.start.ServerStartedView;
 import controller.GameController;
 import controller.GameStates;
 import controller.ServerController;
-import data.ClientIsleModel;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
-import data.ServerIsleModel;
-import data.ServerModel;
+import data.ServerData;
 import data.TradeModel;
 import data.buildings.Building;
 import data.buildings.BuildingType;
 import data.cards.DevelopmentCard;
 import data.cards.DevelopmentCardType;
 import data.cards.ResourceType;
-import data.isle.HarborTile;
-import data.isle.HarborType;
-import data.isle.MapLocation;
-import data.isle.Robber;
-import data.isle.Site;
-import data.isle.Tile;
-import data.isle.TileType;
+import data.island.ClientIsleModel;
+import data.island.ServerIsleModel;
+import data.utils.Colors;
+import data.utils.PlayerColors;
 
 /**
  * 
@@ -72,16 +70,17 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 
 	private ServerProtokollHelper serverprotokollhelper;
 	
-	private ServerModel serverModel;
+	private ServerData serverModel;
 	
 	private ServerController servercontroller;
 	
+	private static final String PROTOCOL_V = "1.0";
 
 	//TODO: servercontroller richtig einbinden!
 		
 	
 	/** zuständig für die Antworten des Servers **/
-	public ServerProtokoll(CatanServer server, ServerModel servermodel, ServerController servercontroller) {
+	public ServerProtokoll(CatanServer server, ServerData servermodel, ServerController servercontroller) {
 		this.server = server;
 		this.serverModel = servermodel;
 		this.servercontroller = servercontroller;
@@ -121,7 +120,7 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 		JSONObject json2 = new JSONObject();
 		try {
 			json2.put("Version", "SwingClient 1.0 (EisfreieEleven)");
-			json2.put("Protokoll", 1.0);
+			json2.put("Protokoll", PROTOCOL_V);
 			json.put("Hallo", json2);
 			System.out.println("Handshake: " + json);
 			
@@ -230,12 +229,14 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 		server.send2All(json);
 	}
 
+	boolean received = true;
+	
 	/**
 	 * Behandelt einkommende Daten der Clients und trägt sie ins serverseitige
 	 * MVC ein. Anschließend sendet der Server an alle Clients die Änderungen.
 	 */
 	public void handleReceivedData(JSONObject json, int idPc) throws JSONException {
-
+		System.out.println(json + " erhalten");
 		Iterator<?> keys = json.keys();
 		
 		TradeModel tradeModel = serverModel.getTradeModel();
@@ -252,27 +253,10 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 
 			case "Hallo": {
 				
-				System.out.println("ID " + idPc + " wurde vergeben");
-				
+				String version = json.getJSONObject("Hallo").getString("Version");
+
 				server.send2ID(idPc, makeJSONWelcome(idPc));
-				sendAndSavePlayerStatus(idPc, GameStates.GAME_START);
-
-				//Für jeden bereits verbundenen Spieler eine Statusnachricht an den neu verbundenen Spieler schicken
-				for(PlayerModel playerModel : players.values()){ //Map aller Spieler die verbunden sind
-					int newplayerID = playerModel.getPlayerID();
-					String newplayerStatus = playerModel.getPlayerStatus();
-					if(idPc != newplayerID){ //Nicht dem Sender des hallo schicken
-						//Connection die bereits beigetretene Spieler wissen will
-//						playerConnectionsMap.get(idPc).sendData(makeJSONPlayerStatus(newplayerID,newplayerStatus)); 
-						server.send2ID(idPc, makeJSONPlayerStatus(newplayerID,newplayerStatus));
-					}
-				}
 				
-				int playerID = idPcPlayer.getPlayerID();
-				String playerStatus = idPcPlayer.getPlayerStatus();
-				//Schicke eine Statusnachricht mit dem neuen Spieler an alle anderen spieler
-				server.send2NonID(idPc, makeJSONPlayerStatus(playerID,playerStatus));
-
 				break;
 			}
 			
@@ -289,7 +273,7 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 			
 			/** 7 Konfiguration und Spielstart **/
 			case "Spieler": {
-				
+				System.out.println("Spielerdaten behandelt");
 				boolean foundColor = false;
 				
 				String color = json.getJSONObject("Spieler").getString("Farbe");
@@ -309,7 +293,7 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 				}
 				
 				// Farbe und Name in das Model auf dem Server eintragen
-				PlayerColors playercolor = serverprotokollhelper.parse2PlayerColor(color);
+				Colors playercolor = serverprotokollhelper.parse2PlayerColor(color);
 				idPcPlayer.setPlayerColor(playercolor);
 				String name = json.getJSONObject("Spieler").getString("Name");
 				idPcPlayer.setPlayerName(name);
@@ -317,6 +301,24 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 				players.remove(idPc); //feuert nicht wenn ein Objekt mit dem selben Key schon enthalten ist
 				players.put(idPc, idPcPlayer);
 				
+				sendAndSavePlayerStatus(idPc, GameStates.GAME_START);
+
+				//Für jeden bereits verbundenen Spieler eine Statusnachricht an den neu verbundenen Spieler schicken
+				for(PlayerModel playerModel : players.values()){ //Map aller Spieler die verbunden sind
+					int newplayerID = playerModel.getPlayerID();
+					String newplayerStatus = playerModel.getPlayerStatus();
+					if(idPc != newplayerID){ //Nicht dem Sender des hallo schicken
+						//Connection die bereits beigetretene Spieler wissen will
+//						playerConnectionsMap.get(idPc).sendData(makeJSONPlayerStatus(newplayerID,newplayerStatus)); 
+						server.send2ID(idPc, makeJSONPlayerStatus(newplayerID,newplayerStatus));
+					}
+				}
+				
+				int playerID = idPcPlayer.getPlayerID();
+				String playerStatus = idPcPlayer.getPlayerStatus();
+				//Schicke eine Statusnachricht mit dem neuen Spieler an alle anderen spieler
+				server.send2NonID(idPc, makeJSONPlayerStatus(playerID,playerStatus));
+
 				System.out.println("Spieler mit Name "+ name + " hat Farbe " + playercolor + " erhalten.");
 				break;
 			}
@@ -840,13 +842,13 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 	public void startKonfiguration() {
 
 		// initialisiere die Reihenfolge der Spieler
-		ServerModel.setOrder(new int[server.getConnectedThreads()]);
-		ServerModel.setOrignalOrder(new int[server.getConnectedThreads()]);
+		ServerData.setOrder(new int[server.getConnectedThreads()]);
+		ServerData.setOrignalOrder(new int[server.getConnectedThreads()]);
 		
 		int j = 0;
 		for (PlayerModel player : serverModel.getPlayers().values()){
-			ServerModel.getOrder()[j] = player.getPlayerID();
-			ServerModel.getOrignalOrder()[j] = player.getPlayerID();
+			ServerData.getOrder()[j] = player.getPlayerID();
+			ServerData.getOrignalOrder()[j] = player.getPlayerID();
 			j++;
 		}
 		
@@ -855,7 +857,7 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 		// BUILD_VILLAGE Status dem ersten in der Reihenfolge anderen Spielern ein Wait status jedes spielers an alle geschickt
 		for (HashMap.Entry<Integer, PlayerModel> playermodels : serverModel.getPlayers().entrySet()) {
 			Integer id = playermodels.getKey();
-			if (id == ServerModel.getOrder()[0]) {
+			if (id == ServerData.getOrder()[0]) {
 				//build or trade senden um zu zeigen spieler ist am zug und darf gleich bauen
 				JSONObject buildOrTradeStatus = makeJSONPlayerStatus(id, GameStates.BUILD_OR_TRADE.getGameState());
 				server.send2All(buildOrTradeStatus);
@@ -875,7 +877,7 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 	 **/
 	public void nextInOrder() {
 		int roundCounter = serverModel.getRoundCounter();
-		int[] order = ServerModel.getOrder();
+		int[] order = ServerData.getOrder();
 		
 		int firstInput = order[0];
 		for (int i = 0; i < order.length; i++) {
@@ -884,7 +886,7 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 			}
 		}
 		order[order.length - 1] = firstInput;
-		if (Arrays.equals(order, ServerModel.getOrignalOrder())) {
+		if (Arrays.equals(order, ServerData.getOrignalOrder())) {
 			serverModel.setRoundCounter(roundCounter+1);
 			System.out.println("Runde beendet");
 		}
@@ -951,7 +953,7 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 		nextInOrder();
 		
 		//ID des Spielers der gerade dran ist -> jetzt ID von jemand neuem
-		int firstInOrderID = ServerModel.getOrder()[0];
+		int firstInOrderID = ServerData.getOrder()[0];
 		
 		if (serverModel.getRoundCounter() < 2) {
 
@@ -1664,16 +1666,18 @@ public class ServerProtokoll implements Protokoll,JSONListener {
 			json.put("id", iD);
 			json.put("Status", playerStatus);
 
-			PlayerModel value = serverModel.getPlayers().get(iD);
-			String color = serverprotokollhelper.parse2ColorString(value.getPlayerColor());
+			PlayerModel player = serverModel.getPlayers().get(iD);
+			System.out.println(player);
+			System.out.println(serverModel.getPlayers());
+			String color = serverprotokollhelper.parse2ColorString(player.getPlayerColor());
 			json.put("Farbe", color);
-			json.put("Name", value.getPlayerName());
-			json.put("Siegpunkte", value.getVictoryPoints());
+			json.put("Name", player.getPlayerName());
+			json.put("Siegpunkte", player.getVictoryPoints());
 			//Rohstoffe werden gesetzt entweder 0 wenn man keine hat oder Jsonobject mit rohstoffen
-			if(!value.hasRessources()){
+			if(!player.hasRessources()){
 				json.put("Rohstoffe", 0);
 			} else {
-				JSONObject rohstoffe = makeJSONRessources(value.getResourceCards());
+				JSONObject rohstoffe = makeJSONRessources(player.getResourceCards());
 				json.put("Rohstoffe", rohstoffe);
 			}				
 			json2.put("Spieler", json);

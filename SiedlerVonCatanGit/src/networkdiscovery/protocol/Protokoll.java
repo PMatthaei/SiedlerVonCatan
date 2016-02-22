@@ -19,4 +19,6 @@ public interface Protokoll {
 	 * @throws JSONException
 	 */
 	public void handleReceivedData(JSONObject json, int id) throws JSONException;
+	
+
 }

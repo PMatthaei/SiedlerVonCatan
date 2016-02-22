@@ -20,7 +20,7 @@ import org.json.JSONException;
 
 import controller.GameController;
 import controller.GameStates;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
 import sounds.Sound;
 import viewswt.ViewSettings;
@@ -51,7 +51,7 @@ public class MenuPanel extends JPanel implements ActionListener {
 
 	/** Game Controller and Model */
 	private GameController controller;
-	private GameModel model;
+	private GameData model;
 
 	/** get other panels */
 	private PlayerPanel playerPanel;
@@ -97,7 +97,7 @@ public class MenuPanel extends JPanel implements ActionListener {
 	 * @param model, controller
 	 * 
 	 */
-	public MenuPanel(GameModel model, GameController controller,PlayerModel playerModel) {
+	public MenuPanel(GameData model, GameController controller,PlayerModel playerModel) {
 		this.setModel(model);
 		this.setController(controller);
 		this.playerModel =playerModel;
@@ -450,7 +450,7 @@ public class MenuPanel extends JPanel implements ActionListener {
 	/**
 	 * @return the model
 	 */
-	public GameModel getModel() {
+	public GameData getModel() {
 		return model;
 	}
 
@@ -458,7 +458,7 @@ public class MenuPanel extends JPanel implements ActionListener {
 	 * @param model
 	 *            the model to set
 	 */
-	public void setModel(GameModel model) {
+	public void setModel(GameData model) {
 		this.model = model;
 	}
 

@@ -12,9 +12,10 @@ import javax.imageio.ImageIO;
 
 import data.buildings.Building;
 import data.buildings.BuildingType;
-import data.isle.MapLocation;
-import data.isle.TileType;
-import utilities.game.PlayerColors;
+import data.utils.Colors;
+import data.utils.PlayerColors;
+import playingfield.MapLocation;
+import playingfield.TileType;
 
 /**
  * Rendert ein Gebaeude
@@ -66,29 +67,29 @@ public class BuildingRenderer {
 	 */
 	private BufferedImage getImageFromColor(Building b) {
 				
-		PlayerColors playerColor = b.getOwner().getPlayerColor();
+		Colors playerColor = b.getOwner().getPlayerColor();
 		BuildingType btype = b.getBuildingType();
 		
 		switch(playerColor){
-		case BLUE:
+		case PL_BLUE:
 			if(btype == BuildingType.CASTLE){
 				return castle_b;
 			} else if(btype == BuildingType.HUT){
 				return hut_b;
 			}
-		case RED:
+		case PL_RED:
 			if(btype == BuildingType.CASTLE){
 				return castle_r;
 			} else if(btype == BuildingType.HUT){
 				return hut_r;
 			}
-		case WHITE:
+		case PL_WHITE:
 			if(btype == BuildingType.CASTLE){
 				return castle_w;
 			} else if(btype == BuildingType.HUT){
 				return hut_w;
 			}
-		case YELLOW:
+		case PL_YELLOW:
 			if(btype == BuildingType.CASTLE){
 				return castle_y;
 			} else if(btype == BuildingType.HUT){

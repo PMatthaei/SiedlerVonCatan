@@ -23,23 +23,33 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import network.client.Client;
 import networkdiscovery.catan.client.CatanClient;
 import networkdiscovery.catan.client.ClientDiscoveryService;
 import networkdiscovery.catan.server.ServerIdentifier;
 import networkdiscovery.protocol.PlayerProtokoll;
 import networkdiscovery.utils.ActionRequest;
+import playingfield.Dice;
+import playingfield.HarborTile;
+import playingfield.HarborType;
+import playingfield.MapLocation;
+import playingfield.Neighborhood;
+import playingfield.Robber;
+import playingfield.Site;
+import playingfield.Tile;
+import playingfield.TileEdge;
+import playingfield.TileFactory;
+import playingfield.TileNumbersRegular;
+import playingfield.TileStates;
+import playingfield.TileType;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import data.ClientIsleModel;
-import data.GameModel;
+import data.GameData;
 import data.GameObject;
 import data.PlayerModel;
-import data.ServerIsleModel;
-import data.ServerModel;
+import data.ServerData;
 import data.buildings.Building;
 import data.buildings.BuildingFactory;
 import data.buildings.BuildingType;
@@ -49,26 +59,15 @@ import data.cards.DevelopmentCard;
 import data.cards.DevelopmentCardType;
 import data.cards.ResourceCard;
 import data.cards.ResourceType;
-import data.isle.Dice;
-import data.isle.HarborTile;
-import data.isle.HarborType;
-import data.isle.MapLocation;
-import data.isle.Neighborhood;
-import data.isle.Robber;
-import data.isle.Site;
-import data.isle.Tile;
-import data.isle.TileEdge;
-import data.isle.TileFactory;
-import data.isle.TileNumbersRegular;
-import data.isle.TileStates;
-import data.isle.TileType;
+import data.island.ClientIsleModel;
+import data.island.ServerIsleModel;
+import data.utils.Colors;
+import data.utils.PlayerColors;
 import sounds.Sound;
-import utilities.game.LongestRoadAlgorithm;
-import utilities.game.PlayerColors;
+import utilities.math.LongestRoadAlgorithm;
 import utilities.renderer.GameUI;
 import viewswt.main.GameView;
 import viewswt.main.IslePanel;
-import viewswt.start.StartView;
 
 public class GameController {
 
@@ -76,7 +75,7 @@ public class GameController {
 	private FileHandler fh;
 
 	/** Die Daten des Spiels **/
-	private GameModel model;
+	private GameData model;
 	
 	/** Die SpielView des Clients **/
 	private GameView view;
@@ -94,7 +93,7 @@ public class GameController {
 	/** default -1 für keine devCard diese Runde gekauft*/
 	private int devCardBuyThisTurn=-1; //TODO anders machen
 	
-	public GameController(GameModel model) {
+	public GameController(GameData model) {
 		this.setGameModel(model);
 //		 writeInLog();
 		
@@ -104,33 +103,30 @@ public class GameController {
 	public void startDiscoveringClient(){
 		final Entry<InetSocketAddress, ServerIdentifier> server = discoverServer();
 		if (server == null) {
-			System.err.println("No chat server discovered.");
+			System.err.println("No server discovered.");
 			return;
 		}
 		client = new CatanClient(server.getKey());
-
+		
+		PlayerProtokoll playerProtokoll = new PlayerProtokoll(client, getGame().getClientplayer(), this);
+		client.setPlayerprotokoll(playerProtokoll);
+		
 		new Thread(client).start();
 		
-		//TODO wie playerdaten mit denen er connecten möchte zusammensammeln
-		PlayerModel playerModel = new PlayerModel();
-		playerModel.setPlayerColor(PlayerColors.RED);
-		playerModel.setPlayerName("Hans");
-		PlayerProtokoll playerProtokoll = new PlayerProtokoll(client, playerModel, this);
-		client.setPlayerprotokoll(playerProtokoll);
+
 	}
 	
 	public void startClient(String ip, int port){
+		
 		client = new CatanClient(new InetSocketAddress(ip, port));
+		PlayerProtokoll playerProtokoll = new PlayerProtokoll(client, getGame().getClientplayer(), this);
+		
+		client.setPlayerprotokoll(playerProtokoll);
+		
 		new Thread(client).start();
 		
-		PlayerModel playerModel = new PlayerModel();
-		playerModel.setPlayerColor(PlayerColors.RED);
-		playerModel.setPlayerName("Hans");
 		
-		//TODO wie playerdaten mit denen er connecten möchte zusammensammeln
-		PlayerProtokoll playerProtokoll = new PlayerProtokoll(client, playerModel, this);
-;
-		client.setPlayerprotokoll(playerProtokoll);
+
 	}
 	
 	/**
@@ -140,7 +136,7 @@ public class GameController {
 	 */
 	private static Entry<InetSocketAddress, ServerIdentifier> discoverServer() {
 		Collection<Entry<InetSocketAddress, ServerIdentifier>> servers;
-		ClientDiscoveryService discovery = new ClientDiscoveryService("catan-client-ee", GameModel.getVersion(), "catan-server-ee");
+		ClientDiscoveryService discovery = new ClientDiscoveryService("catan-client-ee", GameData.getVersion(), "catan-server-ee");
 		discovery.start();
 		while ((servers = discovery.getDiscoveredServers()).size() == 0) {
 			if (LOG.isLoggable(Level.INFO)) {
@@ -1011,7 +1007,7 @@ public class GameController {
 	/**
 	 * @return the game
 	 */
-	public GameModel getGame() {
+	public GameData getGame() {
 		return model;
 	}
 
@@ -1019,7 +1015,7 @@ public class GameController {
 	 * @param game
 	 *            the game to set
 	 */
-	public void setGameModel(GameModel game) {
+	public void setGameModel(GameData game) {
 		this.model = game;
 	}
 

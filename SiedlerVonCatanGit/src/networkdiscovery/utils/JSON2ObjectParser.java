@@ -9,13 +9,13 @@ import java.util.HashSet;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import data.ServerIsleModel;
-import data.ServerModel;
-import data.isle.HarborTile;
-import data.isle.MapLocation;
-import data.isle.Site;
-import data.isle.Tile;
-import data.isle.TileEdge;
+import playingfield.HarborTile;
+import playingfield.MapLocation;
+import playingfield.Site;
+import playingfield.Tile;
+import playingfield.TileEdge;
+import data.ServerData;
+import data.island.ServerIsleModel;
 
 /**
  * Parst die eingehenden Strings und ints etc. in Spielobjekte unseres Spiels
@@ -25,9 +25,9 @@ import data.isle.TileEdge;
  */
 public class JSON2ObjectParser {
 	
-	private ServerModel serverModel;
+	private ServerData serverModel;
 
-	public JSON2ObjectParser(ServerModel serverModel){
+	public JSON2ObjectParser(ServerData serverModel){
 		this.serverModel = serverModel;
 	}
 

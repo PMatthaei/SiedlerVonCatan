@@ -19,7 +19,7 @@ import viewfx.ViewFactory;
 import viewfx.Views;
 import viewswt.main.GameView;
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -36,7 +36,7 @@ import javafx.stage.StageStyle;
 
 public class StartClientViewController extends ViewController implements Initializable{
 	
-	private GameModel game;
+	private GameData game;
 	private GameController controller;
 	private GameView view;
     
@@ -56,7 +56,7 @@ public class StartClientViewController extends ViewController implements Initial
     @Override
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
     	    	
-		game = new GameModel();
+		game = new GameData();
 		controller = new GameController(game);
 //		view = new GameView(game, controller);
 //		controller.setView(view);
@@ -163,14 +163,14 @@ public class StartClientViewController extends ViewController implements Initial
 	/**
 	 * @return the game
 	 */
-	public GameModel getGame() {
+	public GameData getGame() {
 		return game;
 	}
 
 	/**
 	 * @param game the game to set
 	 */
-	public void setGame(GameModel game) {
+	public void setGame(GameData game) {
 		this.game = game;
 	}
 

@@ -5,23 +5,22 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 
-import network.server.Server;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import data.ClientIsleModel;
 import data.PlayerModel;
-import data.ServerIsleModel;
-import data.ServerModel;
+import data.ServerData;
 import data.buildings.BuildingType;
-import data.isle.MapLocation;
-import data.isle.Robber;
-import data.isle.Site;
-import data.isle.Tile;
-import data.isle.TileEdge;
-import utilities.game.PlayerColors;
+import data.island.ClientIsleModel;
+import data.island.ServerIsleModel;
+import data.utils.Colors;
+import data.utils.PlayerColors;
+import playingfield.MapLocation;
+import playingfield.Robber;
+import playingfield.Site;
+import playingfield.Tile;
+import playingfield.TileEdge;
 
 /**
  * Bereitet Daten unseres Models so auf, dass sie vom Protokoll verwendet werden
@@ -32,9 +31,9 @@ import utilities.game.PlayerColors;
  */
 public class ServerProtokollHelper {
 		
-	private ServerModel serverModel;
+	private ServerData serverModel;
 	
-	public ServerProtokollHelper(ServerModel serverModel){
+	public ServerProtokollHelper(ServerData serverModel){
 		this.serverModel = serverModel;
 	}
 	
@@ -72,37 +71,38 @@ public class ServerProtokollHelper {
 		return -1;
 	}
 	
-	public PlayerColors parse2PlayerColor(String color){
-		PlayerColors playercolor = null;
+	public Colors parse2PlayerColor(String color){
+		Colors playercolor = null;
 		switch(color){
 			case"Rot":
-				playercolor = PlayerColors.RED;
+				playercolor = Colors.PL_RED;
 
 				break;
 			case"Orange":
-				playercolor = PlayerColors.YELLOW;
+				playercolor = Colors.PL_YELLOW;
 
 				break;
 			case"Blau":
-				playercolor = PlayerColors.BLUE;
+				playercolor = Colors.PL_BLUE;
 
 				break;
 			case"Weiß":
-				playercolor = PlayerColors.WHITE;
+				playercolor = Colors.PL_WHITE;
 				break;
 		}
 		return playercolor;
 	}
 	
-	public String parse2ColorString(PlayerColors color){
+	public String parse2ColorString(Colors color){
+		System.out.println(color);
 		switch (color) {
-		case BLUE:
+		case PL_BLUE:
 			return "Blau";
-		case RED:
+		case PL_RED:
 			return "Rot";
-		case WHITE:
+		case PL_WHITE:
 			return "Weiß";
-		case YELLOW:
+		case PL_YELLOW:
 			return "Orange";
 		default:
 			break;

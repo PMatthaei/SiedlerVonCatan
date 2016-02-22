@@ -40,12 +40,12 @@ import org.json.JSONObject;
 import networkdiscovery.protocol.PlayerProtokoll;
 import networkdiscovery.utils.JSON2ObjectParser;
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
 import data.cards.ResourceType;
+import data.utils.Colors;
 import sounds.Sound;
 import sun.swing.BakedArrayList;
-import utilities.game.Colors;
 import viewswt.ViewSettings;
 
 /**
@@ -1612,7 +1612,7 @@ public class TradeView extends JPanel implements ActionListener, MouseListener {
 		int playerID = 1;
 		// int model =
 		PlayerModel p = new PlayerModel();
-		TradeView t = new TradeView(playerID, p,new GameController(new GameModel()));
+		TradeView t = new TradeView(playerID, p,new GameController(new GameData()));
 		t.repaint();
 
 	}

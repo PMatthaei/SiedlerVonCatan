@@ -1,6 +1,6 @@
 package data.buildings;
 
-import data.isle.MapLocation;
+import playingfield.MapLocation;
 
 /**
  * 

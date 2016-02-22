@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 
-import network.server.Server;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import data.ClientIsleModel;
 import data.PlayerModel;
-import data.ServerIsleModel;
-import data.ServerModel;
-import data.isle.MapLocation;
-import data.isle.Robber;
-import data.isle.Site;
-import data.isle.Tile;
+import data.island.ClientIsleModel;
+import data.island.ServerIsleModel;
+import playingfield.MapLocation;
+import playingfield.Robber;
+import playingfield.Site;
+import playingfield.Tile;
+import data.ServerData;
 
 /**
  * Bereitet Daten unseres Models so auf, dass sie vom Protokoll verwendet werden
@@ -28,9 +26,9 @@ import data.isle.Tile;
  */
 public class PlayerProtokollHelper {
 	
-	private Server server;
+//	private Server server;
 	
-	public Site parse2Site(JSONArray buildingPlaces, ServerModel model) throws JSONException {
+	public Site parse2Site(JSONArray buildingPlaces, ServerData model) throws JSONException {
 		
 		ServerIsleModel serverIsle = model.getServerIsle();
 		HashSet<MapLocation> connectedTiles = new HashSet<MapLocation>();

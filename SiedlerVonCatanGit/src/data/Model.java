@@ -5,10 +5,11 @@ import java.util.Observable;
 import java.util.logging.Logger;
 
 import controller.GameStates;
-import data.isle.Dice;
+import data.island.IsleModel;
 import utilities.config.Configuration;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import playingfield.Dice;
 
 /**
  * Klasse von der alle SpielModel erben -> Server und Clientversion
@@ -20,7 +21,7 @@ import javafx.collections.ObservableMap;
 public abstract class Model extends Observable {
 	
 	/** Logging **/
-	private static Logger log = Logger.getLogger(GameModel.class.getName());
+	private static Logger log = Logger.getLogger(GameData.class.getName());
 
 	/** Configfile **/
 	private final Configuration config = Configuration.getInstance();

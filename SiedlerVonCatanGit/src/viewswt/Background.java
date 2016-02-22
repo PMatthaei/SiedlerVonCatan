@@ -28,7 +28,7 @@ public class Background extends JPanel {
 	public Background() {
 		/** load backgroundImage */
 		try {
-			backgroundImage = ImageIO.read(getClass().getResource("/res/background_wood.jpg"));												
+			backgroundImage = ImageIO.read(getClass().getResource("/textures/background_wood.jpg"));												
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

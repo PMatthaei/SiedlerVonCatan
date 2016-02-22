@@ -17,8 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import controller.GameController;
+import data.utils.Colors;
 import sounds.Sound;
-import utilities.game.Colors;
 import viewswt.ViewSettings;
 
 

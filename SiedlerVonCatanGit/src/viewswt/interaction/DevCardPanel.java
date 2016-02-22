@@ -23,10 +23,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
+import data.utils.Colors;
 import sounds.Sound;
-import utilities.game.Colors;
 import viewswt.ViewSettings;
 import viewswt.errormsgs.ErrorNextTurnView;
 /**

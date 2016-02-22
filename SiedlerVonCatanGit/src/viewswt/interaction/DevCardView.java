@@ -26,10 +26,10 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import utilities.game.Colors;
 import viewswt.ViewSettings;
 import controller.GameController;
 import data.PlayerModel;
+import data.utils.Colors;
 
 /**
  * 

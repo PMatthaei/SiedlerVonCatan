@@ -54,7 +54,7 @@ public class AbstractJSONObservable implements JSONObservable {
 	protected void fireReceived(JSONSocketChannel conn, JSONObject message) {
 		for (JSONListener listener : listeners) {
 			listener.received(message, conn);
-			System.out.println("got msg: " + message);
+			System.out.println("Received msg: " + message);
 		}
 	}
 

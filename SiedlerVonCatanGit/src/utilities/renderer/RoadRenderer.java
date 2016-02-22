@@ -7,9 +7,9 @@ import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
-import data.isle.Site;
-import utilities.game.Colors;
-import utilities.game.PlayerColors;
+import data.utils.Colors;
+import data.utils.PlayerColors;
+import playingfield.Site;
 
 /**
  * Klasse zum Rendern der Strassen
@@ -40,7 +40,7 @@ public class RoadRenderer {
 	public void drawRoad(Graphics2D g2d, Site site, double factor) {
 
 		// Farbe der zu zeichnenden Strasse
-		Color siteColor = site.getBuilding().getOwner().getPlayerColor().getColor();
+		Color siteColor = site.getBuilding().getOwner().getPlayerColor().color();
 
 		rectangle = new Rectangle2D.Double(site.getX() - side / 2, site.getY() - side * 0.15 / 2, side, side * 0.15);
 		System.out.println(rectangle + " Straße");

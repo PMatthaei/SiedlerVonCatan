@@ -20,12 +20,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import utilities.game.PlayerColors;
 import viewfx.AbstractViewController;
 import viewfx.ViewController;
 import viewfx.client.menu.elements.LoadingSprite;
 import controller.GameController;
 import data.PlayerModel;
+import data.utils.PlayerColors;
 
 public class LoadGameViewController extends ViewController implements Initializable, AbstractViewController{
 	

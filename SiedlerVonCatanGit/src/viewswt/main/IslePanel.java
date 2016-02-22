@@ -42,15 +42,15 @@ import javax.swing.OverlayLayout;
 import utilities.renderer.IsleRenderer;
 import controller.GameController;
 import controller.GameStates;
-import data.ClientIsleModel;
-import data.isle.HarborTile;
-import data.isle.HarborType;
-import data.isle.Neighborhood;
-import data.isle.Site;
-import data.isle.Tile;
-import data.isle.TileEdge;
-import data.isle.TileNumbersRegular;
-import data.isle.TileType;
+import data.island.ClientIsleModel;
+import playingfield.HarborTile;
+import playingfield.HarborType;
+import playingfield.Neighborhood;
+import playingfield.Site;
+import playingfield.Tile;
+import playingfield.TileEdge;
+import playingfield.TileNumbersRegular;
+import playingfield.TileType;
 
 /**
  * IslePanel zeigt alle Daten der Insel - also das Spielfeld - an.

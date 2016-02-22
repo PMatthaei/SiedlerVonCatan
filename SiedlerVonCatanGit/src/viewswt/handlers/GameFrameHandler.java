@@ -28,12 +28,12 @@ import org.json.JSONException;
 
 import controller.GameController;
 import controller.GameStates;
-import data.GameModel;
+import data.GameData;
 import data.buildings.Building;
 import data.buildings.BuildingType;
-import data.isle.Site;
-import data.isle.Tile;
-import utilities.game.Colors;
+import data.utils.Colors;
+import playingfield.Site;
+import playingfield.Tile;
 import viewswt.ViewSettings;
 import viewswt.interaction.BuildProcessView;
 import viewswt.main.IslePanel;
@@ -48,7 +48,7 @@ public class GameFrameHandler extends WindowAdapter implements MouseListener, Mo
 
 	private GameController controller;
 	
-	private GameModel model;
+	private GameData model;
 
 	
 	private Site clickedSite;

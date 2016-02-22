@@ -27,12 +27,12 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
 import data.cards.ResourceType;
+import data.utils.Colors;
+import data.utils.PlayerColors;
 import sounds.Sound;
-import utilities.game.Colors;
-import utilities.game.PlayerColors;
 import viewswt.ViewSettings;
 import viewswt.player.PlayerPanel;
 
@@ -169,11 +169,11 @@ public class PlayerTradePanel  {
 	 * Setze die Funktion der Buttons und ihre Farbe
 	 * 
 	 * **/
-	public void setPlayerButtons(PlayerColors pc,PlayerModel playerModel)
+	public void setPlayerButtons(Colors pc,PlayerModel playerModel)
 	{
 		switch(pc)
 		{
-			case BLUE:
+			case PL_BLUE:
 				player3Button = new JButton();
 				ViewSettings.setButton(player3Button);
 				player3Icon = new ImageIcon(getClass().getResource("/res/player/mini/player_blue.png"));
@@ -191,7 +191,7 @@ public class PlayerTradePanel  {
 				});
 				
 				break;
-			case RED:
+			case PL_RED:
 				player4Button = new JButton();
 				ViewSettings.setButton(player4Button);
 				player4Icon = new ImageIcon(getClass().getResource("/res/player/mini/player_red.png"));
@@ -208,7 +208,7 @@ public class PlayerTradePanel  {
 					}
 				});
 				break;
-			case YELLOW:
+			case PL_YELLOW:
 				player1Button = new JButton();
 				ViewSettings.setButton(player1Button);
 				player1Icon = new ImageIcon(getClass().getResource("/res/player/mini/player_yellow.png"));
@@ -225,7 +225,7 @@ public class PlayerTradePanel  {
 					}
 				});
 				break;
-			case WHITE:
+			case PL_WHITE:
 				player2Button = new JButton();
 				ViewSettings.setButton(player2Button);
 				player2Icon = new ImageIcon(getClass().getResource("/res/player/mini/player_white.png"));
@@ -296,7 +296,7 @@ public class PlayerTradePanel  {
 		int playerID = 1;
 		// int model =
 
-		PlayerTradePanel t = new PlayerTradePanel(new GameController(new GameModel()));
+		PlayerTradePanel t = new PlayerTradePanel(new GameController(new GameData()));
 
 	}
 

@@ -10,7 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import utilities.game.Colors;
+import data.utils.Colors;
 import viewswt.ViewSettings;
 
 /**

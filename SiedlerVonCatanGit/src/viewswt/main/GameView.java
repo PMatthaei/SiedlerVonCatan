@@ -30,7 +30,6 @@ import javax.swing.border.EmptyBorder;
 import org.json.JSONException;
 
 import sounds.Sound;
-import utilities.game.Colors;
 import viewswt.Background;
 import viewswt.ComponentResizer;
 import viewswt.ViewSettings;
@@ -46,21 +45,22 @@ import viewswt.robber.ChooseVictimView;
 import viewswt.robber.DiscardCardsView;
 import controller.GameController;
 import controller.GameStates;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
 import data.buildings.Building;
 import data.buildings.BuildingType;
-import data.isle.Robber;
-import data.isle.Site;
-import data.isle.Tile;
-import data.isle.TileEdge;
-import data.isle.TileNumbersRegular;
+import data.utils.Colors;
 import edu.cmu.relativelayout.Binding;
 import edu.cmu.relativelayout.BindingFactory;
 import edu.cmu.relativelayout.Direction;
 import edu.cmu.relativelayout.Edge;
 import edu.cmu.relativelayout.RelativeConstraints;
 import edu.cmu.relativelayout.RelativeLayout;
+import playingfield.Robber;
+import playingfield.Site;
+import playingfield.Tile;
+import playingfield.TileEdge;
+import playingfield.TileNumbersRegular;
 
 /**
  * GameFrame contains all Panels of the GameView
@@ -72,7 +72,7 @@ public class GameView extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
 
-	private GameModel model;
+	private GameData model;
 	private GameController controller;
 	
 	/** mouse position */
@@ -112,7 +112,7 @@ public class GameView extends JFrame implements Observer {
 	 * @param model
 	 * @param controller
 	 */
-	public GameView(GameModel model, GameController controller) {
+	public GameView(GameData model, GameController controller) {
 
 		this.model = model;
 		this.controller = controller;
@@ -657,7 +657,7 @@ public class GameView extends JFrame implements Observer {
 	/**
 	 * @return the model
 	 */
-	public GameModel getModel() {
+	public GameData getModel() {
 		return model;
 	}
 
@@ -665,7 +665,7 @@ public class GameView extends JFrame implements Observer {
 	 * @param model
 	 *            the model to set
 	 */
-	public void setModel(GameModel model) {
+	public void setModel(GameData model) {
 		this.model = model;
 	}
 

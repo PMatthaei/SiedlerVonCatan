@@ -21,8 +21,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import data.utils.Colors;
 import sounds.Sound;
-import utilities.game.Colors;
 import viewswt.ViewSettings;
 
 /**

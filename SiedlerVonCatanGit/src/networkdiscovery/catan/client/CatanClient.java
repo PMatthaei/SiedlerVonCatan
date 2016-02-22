@@ -15,7 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 import networkdiscovery.json.AbstractJSONObservable;
 import networkdiscovery.json.JSONSocketChannel;
 import networkdiscovery.json.TextUI;
@@ -92,7 +92,6 @@ public class CatanClient extends AbstractJSONObservable implements Runnable {
 					System.out.println("null msg");
 					break; // Disconnected.
 				}
-				System.out.println("incoming msg: " + message);
 				playerprotokoll.handleReceivedData(message, 0);
 				fireReceived(conn, message);
 			}

@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import controller.Controller;
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 
 public class StartClient extends GameApplication{
 	

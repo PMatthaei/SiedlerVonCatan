@@ -4,8 +4,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import data.utils.Colors;
 import sounds.Sound;
-import utilities.game.Colors;
 import viewswt.ViewSettings;
 import viewswt.robber.ChooseVictimView;
 

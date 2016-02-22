@@ -30,14 +30,14 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import sounds.Sound;
-import utilities.game.Colors;
-import utilities.game.PlayerColors;
 import viewswt.ViewSettings;
 import viewswt.interaction.DevCardView;
 import viewswt.interaction.YourDevCardsPanel;
 import controller.GameController;
-import data.GameModel;
+import data.GameData;
 import data.PlayerModel;
+import data.utils.Colors;
+import data.utils.PlayerColors;
 
 /**
  * 
@@ -139,19 +139,19 @@ public class PlayerPanel extends JPanel implements Observer {
 				if(playerID==entry.getValue().getPlayerID())
 				{
 				switch(entry.getValue().getPlayerColor()) {
-				case YELLOW:// gelbe elfin
+				case PL_YELLOW:// gelbe elfin
 					playerImage = ImageIO.read(getClass().getResource("/res/player/player_yellow.png"));
 					whoseTurn.setBorder(BorderFactory.createEmptyBorder(0, 115, 0, 0));
 					break;
-				case WHITE:// grauer gandalf
+				case PL_WHITE:// grauer gandalf
 					playerImage = ImageIO.read(getClass().getResource("/res/player/player_white.png"));
 					whoseTurn.setBorder(BorderFactory.createEmptyBorder(0, 115, 0, 0));
 					break;
-				case RED:// roter zwerg
+				case PL_RED:// roter zwerg
 					playerImage = ImageIO.read(getClass().getResource("/res/player/player_red.png"));
 					whoseTurn.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
 					break;
-				case BLUE:// blauer fischkopf
+				case PL_BLUE:// blauer fischkopf
 					playerImage = ImageIO.read(getClass().getResource("/res/player/player_blue.png"));
 					whoseTurn.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
 					break;
@@ -161,19 +161,19 @@ public class PlayerPanel extends JPanel implements Observer {
 			if(playerID==playerModel.getPlayerID())
 			{
 			switch(playerModel.getPlayerColor()) {
-			case YELLOW:// gelbe elfin
+			case PL_YELLOW:// gelbe elfin
 				playerImage = ImageIO.read(getClass().getResource("/res/player/player_yellow.png"));
 				whoseTurn.setBorder(BorderFactory.createEmptyBorder(0, 115, 0, 0));
 				break;
-			case WHITE:// grauer gandalf
+			case PL_WHITE:// grauer gandalf
 				playerImage = ImageIO.read(getClass().getResource("/res/player/player_white.png"));
 				whoseTurn.setBorder(BorderFactory.createEmptyBorder(0, 115, 0, 0));
 				break;
-			case RED:// roter zwerg
+			case PL_RED:// roter zwerg
 				playerImage = ImageIO.read(getClass().getResource("/res/player/player_red.png"));
 				whoseTurn.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
 				break;
-			case BLUE:// blauer fischkopf
+			case PL_BLUE:// blauer fischkopf
 				playerImage = ImageIO.read(getClass().getResource("/res/player/player_blue.png"));
 				whoseTurn.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
 				break;

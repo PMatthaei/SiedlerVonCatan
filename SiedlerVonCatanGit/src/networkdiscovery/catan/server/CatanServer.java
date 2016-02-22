@@ -19,8 +19,7 @@ import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import data.ServerModel;
-import network.PlayerConnectionThread;
+import data.ServerData;
 import networkdiscovery.catan.server.CatanServer.ConnectionThread;
 import networkdiscovery.json.AbstractJSONObservable;
 import networkdiscovery.json.JSONListener;
@@ -54,7 +53,7 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 	private HashMap<Integer, ConnectionThread> connections = new HashMap<Integer, ConnectionThread>();
 
 	/** Data of the Server */
-	private ServerModel servermodel;
+	private ServerData servermodel;
 
 
 	/**
@@ -63,7 +62,7 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 	 * @throws IOException
 	 *             when the server cannot start.
 	 */
-	public CatanServer(ServerModel servermodel) throws IOException {
+	public CatanServer(ServerData servermodel) throws IOException {
 		this.servermodel = servermodel;
 		ssc = ServerSocketChannel.open();
 		ssc.bind(null); // Bind to an arbitrary port.
@@ -72,7 +71,7 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 		}
 		// Get the port we have been (automatically) assigned
 		int port = ((InetSocketAddress) ssc.getLocalAddress()).getPort();
-		discovery = new ServerDiscoveryService("catan-server-ee", ServerModel.getVersion(), port, "catan-client-ee", "");
+		discovery = new ServerDiscoveryService("catan-server-ee", ServerData.getVersion(), port, "catan-client-ee", "");
 		// Add self to listeners (to broadcast)
 		addListener(this);
 	}
@@ -161,8 +160,6 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 				return;
 			}
 	    }
-
-
 	}
 	
 	/**
@@ -216,10 +213,10 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 			ConnectionThread ct = entry.getValue();
 			if (id == key) {
 				ct.conn.send(json);
+				LOG.info("Server sent "+ json +" to " + id);
+				return;
 			}
 		}
-		LOG.info("Server sent "+ json +" to " + id);
-
 	}
 	
 	/**
@@ -263,7 +260,8 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 				String s = "{"+id +": " + message+"}";
 				JSONObject json = new JSONObject(s);
 				t.conn.send(json);
-				serverprotokoll.handleReceivedData(json, id);
+				System.out.println("send data to clients " +json);
+				//serverprotokoll.handleReceivedData(json, id);
 
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -272,7 +270,7 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 	}
 
 	/**
-	 * Shutdown the chat server.
+	 * Shutdown the server.
 	 */
 	public void shutdown() {
 		if (LOG.isLoggable(Level.INFO)) {
@@ -314,6 +312,8 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 					if (message == null) {
 						break; // Disconnected.
 					}
+					System.out.println(conn.getId() +" "+message);
+					serverprotokoll.handleReceivedData(message, conn.getId()); //TODO getId holt falsche id da "unsere" wo anders liegt
 					fireReceived(conn, message);
 				}
 			} catch (IOException e) {
@@ -391,14 +391,14 @@ public class CatanServer extends AbstractJSONObservable implements Runnable, JSO
 	/**
 	 * @return the servermodel
 	 */
-	public ServerModel getServermodel() {
+	public ServerData getServermodel() {
 		return servermodel;
 	}
 
 	/**
 	 * @param servermodel the servermodel to set
 	 */
-	public void setServermodel(ServerModel servermodel) {
+	public void setServermodel(ServerData servermodel) {
 		this.servermodel = servermodel;
 	}
 	

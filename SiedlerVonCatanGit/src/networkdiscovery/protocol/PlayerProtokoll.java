@@ -10,18 +10,24 @@ import java.util.logging.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
-import network.PlayerConnectionThread;
 import networkdiscovery.catan.client.CatanClient;
 import networkdiscovery.catan.server.CatanServer.ConnectionThread;
 import networkdiscovery.json.JSONListener;
 import networkdiscovery.json.JSONSocketChannel;
+import playingfield.HarborTile;
+import playingfield.HarborType;
+import playingfield.MapLocation;
+import playingfield.Site;
+import playingfield.Tile;
+import playingfield.TileEdge;
+import playingfield.TileNumbersRegular;
+import playingfield.TileType;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import sounds.Sound;
-import utilities.game.PlayerColors;
 import viewswt.endscreens.DefeatView;
 import viewswt.endscreens.WinView;
 import viewswt.interaction.DiceView;
@@ -31,21 +37,15 @@ import viewswt.robber.DiscardCardsView;
 import viewswt.trade.TradeReceivePanel;
 import controller.GameController;
 import controller.GameStates;
-import data.ClientIsleModel;
 import data.PlayerModel;
 import data.TradeModel;
 import data.buildings.Building;
 import data.buildings.BuildingType;
 import data.cards.DevelopmentCard;
 import data.cards.DevelopmentCardType;
-import data.isle.HarborTile;
-import data.isle.HarborType;
-import data.isle.MapLocation;
-import data.isle.Site;
-import data.isle.Tile;
-import data.isle.TileEdge;
-import data.isle.TileNumbersRegular;
-import data.isle.TileType;
+import data.island.ClientIsleModel;
+import data.utils.Colors;
+import data.utils.PlayerColors;
 
 /**
  * Client verbindet sich -> Spiel starten -> Spiel fertig -> Warten auf
@@ -85,12 +85,6 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 		controller.setPlayerProtokoll(this);
 		tradeModel = controller.getGame().getTradeModel();
 
-		try {
-			setNameColor();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
 	}
 	
 	@Override
@@ -118,23 +112,23 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 	 * setzt die Farbe und den Namen des spielers und verschickt diese an den
 	 * Server
 	 **/
-	public void setNameColor() throws JSONException {
+	public void sendPlayerData() throws JSONException {
 		JSONObject json = new JSONObject();
 		JSONObject json2 = new JSONObject();
 		json2.put("Name", playerModel.getPlayerName());
 
 		switch (playerModel.getPlayerColor()) {
 
-		case BLUE:
+		case PL_BLUE:
 			json2.put("Farbe", "Blau");
 			break;
-		case RED:
+		case PL_RED:
 			json2.put("Farbe", "Rot");
 			break;
-		case WHITE:
+		case PL_WHITE:
 			json2.put("Farbe", "Weiß");
 			break;
-		case YELLOW:
+		case PL_YELLOW:
 			json2.put("Farbe", "Orange");
 			break;
 		default:
@@ -142,8 +136,8 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 
 		}
 		json.put("Spieler", json2);
-		log.info("Farbe " + playerModel.getPlayerColor() + " verschickt");
-		client.send(json);
+		log.info(playerModel + " verschickt");
+		controller.getClient().send(json);
 	}
 
 	/**
@@ -621,9 +615,9 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 	/**
 	 * Behandelt einkommende Nachrichten des Servers und trägt sie in das Model
 	 * des Clients ein und führt bei Bedarf entsprechende Repaints etc aus.
-	 * 
+	 * TODO: id wird nicht gebraucht(wasted) client bekommt id in jsons
 	 */
-	public void handleReceivedData(JSONObject json, int idPc) throws JSONException {
+	public void handleReceivedData(JSONObject json, int wasted) throws JSONException {
 
 		Iterator<?> keys = json.keys();
 
@@ -642,10 +636,8 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 				JSONObject j2 = new JSONObject();
 				JSONObject j3 = new JSONObject();
 				j3.put("Version", json.getJSONObject("Hallo").getString("Version"));
-
 				j2.put("Hallo", j3);
 				controller.getClient().send(j2);
-				System.out.println("Version wurde gesendet " + j2);
 				break;
 
 			}
@@ -655,8 +647,8 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 				int id = json.getJSONObject("Willkommen").getInt("id");
 				playerModel.setPlayerID(id);
 				players.put(id, playerModel);
-				System.out.println("Willkommen ID " + id + " erhalten");
-
+				sendPlayerData();
+				System.out.println("Spielerdaten gesendet");
 				break;
 			}
 
@@ -710,7 +702,6 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 			}
 
 			case "Ok": {
-				System.out.println("Ok empfangen. Spiel startet.");
 				startGame();
 				playerModel.setPlayerStatus(GameStates.WAIT_GAME_START.getGameState());
 				break;
@@ -1430,16 +1421,16 @@ public class PlayerProtokoll implements Protokoll,JSONListener {
 		return new int[] { wood, clay, sheep, wheat, ore };
 	}
 
-	private PlayerColors parsePlayerColor(String string) {
+	private Colors parsePlayerColor(String string) {
 		switch (string) {
 		case "Blau":
-			return PlayerColors.BLUE;
+			return Colors.PL_BLUE;
 		case "Rot":
-			return PlayerColors.RED;
+			return Colors.PL_RED;
 		case "Weiß":
-			return PlayerColors.WHITE;
+			return Colors.PL_WHITE;
 		case "Orange":
-			return PlayerColors.YELLOW;
+			return Colors.PL_YELLOW;
 		}
 		return null;
 	}
