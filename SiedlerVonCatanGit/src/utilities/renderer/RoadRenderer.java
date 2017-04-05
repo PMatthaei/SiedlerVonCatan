@@ -7,9 +7,9 @@ import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
+import data.playingfield.Site;
 import data.utils.Colors;
 import data.utils.PlayerColors;
-import playingfield.Site;
 
 /**
  * Klasse zum Rendern der Strassen

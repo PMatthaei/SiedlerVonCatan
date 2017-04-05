@@ -1,9 +1,9 @@
-package playingfield;
+package data.playingfield;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import playingfield.Tile;
+import data.playingfield.Tile;
 
 /**
  * Speichert alle anliegenden Kacheln einer Kachel. 

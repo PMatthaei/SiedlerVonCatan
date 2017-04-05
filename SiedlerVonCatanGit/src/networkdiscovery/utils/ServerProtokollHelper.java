@@ -14,13 +14,13 @@ import data.ServerData;
 import data.buildings.BuildingType;
 import data.island.ClientIsleModel;
 import data.island.ServerIsleModel;
+import data.playingfield.MapLocation;
+import data.playingfield.Robber;
+import data.playingfield.Site;
+import data.playingfield.Tile;
+import data.playingfield.TileEdge;
 import data.utils.Colors;
 import data.utils.PlayerColors;
-import playingfield.MapLocation;
-import playingfield.Robber;
-import playingfield.Site;
-import playingfield.Tile;
-import playingfield.TileEdge;
 
 /**
  * Bereitet Daten unseres Models so auf, dass sie vom Protokoll verwendet werden

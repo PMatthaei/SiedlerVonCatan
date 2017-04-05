@@ -7,8 +7,8 @@ import java.util.HashSet;
 import data.PlayerModel;
 import data.buildings.Building;
 import data.buildings.BuildingType;
-import playingfield.Site;
-import playingfield.TileEdge;
+import data.playingfield.Site;
+import data.playingfield.TileEdge;
 
 public class LongestRoadAlgorithm {
 

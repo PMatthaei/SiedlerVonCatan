@@ -32,9 +32,9 @@ import controller.GameController;
 import data.GameData;
 import data.PlayerModel;
 import data.buildings.Building;
+import data.playingfield.Site;
+import data.playingfield.Tile;
 import data.utils.Colors;
-import playingfield.Site;
-import playingfield.Tile;
 
 /**
  * class for the frame that appears, if a 7 has been rolled and the player on

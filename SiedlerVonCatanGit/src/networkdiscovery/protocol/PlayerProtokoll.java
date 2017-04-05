@@ -10,18 +10,10 @@ import java.util.logging.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
-import networkdiscovery.catan.client.CatanClient;
-import networkdiscovery.catan.server.CatanServer.ConnectionThread;
+import networkdiscovery.client.CatanClient;
 import networkdiscovery.json.JSONListener;
 import networkdiscovery.json.JSONSocketChannel;
-import playingfield.HarborTile;
-import playingfield.HarborType;
-import playingfield.MapLocation;
-import playingfield.Site;
-import playingfield.Tile;
-import playingfield.TileEdge;
-import playingfield.TileNumbersRegular;
-import playingfield.TileType;
+import networkdiscovery.server.CatanServer.ConnectionThread;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +36,14 @@ import data.buildings.BuildingType;
 import data.cards.DevelopmentCard;
 import data.cards.DevelopmentCardType;
 import data.island.ClientIsleModel;
+import data.playingfield.HarborTile;
+import data.playingfield.HarborType;
+import data.playingfield.MapLocation;
+import data.playingfield.Site;
+import data.playingfield.Tile;
+import data.playingfield.TileEdge;
+import data.playingfield.TileNumbersRegular;
+import data.playingfield.TileType;
 import data.utils.Colors;
 import data.utils.PlayerColors;
 

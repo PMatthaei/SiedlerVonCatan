@@ -6,10 +6,10 @@ import java.util.logging.Logger;
 
 import controller.GameStates;
 import data.island.IsleModel;
+import data.playingfield.Dice;
 import utilities.config.Configuration;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
-import playingfield.Dice;
 
 /**
  * Klasse von der alle SpielModel erben -> Server und Clientversion

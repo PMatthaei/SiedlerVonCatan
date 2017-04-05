@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import data.GameObject;
 import data.buildings.Building;
-import playingfield.Robber;
-import playingfield.Site;
-import playingfield.Tile;
+import data.playingfield.Robber;
+import data.playingfield.Site;
+import data.playingfield.Tile;
 
 /**
  * Hält alle Informationen, die der Client an den Server zur Abfrage auf eine gültige Aktion schicken soll.

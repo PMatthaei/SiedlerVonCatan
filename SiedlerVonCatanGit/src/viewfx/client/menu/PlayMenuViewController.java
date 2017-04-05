@@ -8,6 +8,7 @@ import viewfx.ViewController;
 import controller.GameController;
 import controller.ServerController;
 import data.PlayerModel;
+import data.playingfield.MapLocation;
 import data.utils.Colors;
 import data.utils.PlayerColors;
 import javafx.animation.KeyFrame;
@@ -25,7 +26,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import playingfield.MapLocation;
 
 public class PlayMenuViewController extends ViewController implements Initializable,AbstractViewController{
 	

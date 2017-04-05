@@ -23,24 +23,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import networkdiscovery.catan.client.CatanClient;
-import networkdiscovery.catan.client.ClientDiscoveryService;
-import networkdiscovery.catan.server.ServerIdentifier;
+import networkdiscovery.client.CatanClient;
+import networkdiscovery.client.ClientDiscoveryService;
 import networkdiscovery.protocol.PlayerProtokoll;
+import networkdiscovery.server.ServerIdentifier;
 import networkdiscovery.utils.ActionRequest;
-import playingfield.Dice;
-import playingfield.HarborTile;
-import playingfield.HarborType;
-import playingfield.MapLocation;
-import playingfield.Neighborhood;
-import playingfield.Robber;
-import playingfield.Site;
-import playingfield.Tile;
-import playingfield.TileEdge;
-import playingfield.TileFactory;
-import playingfield.TileNumbersRegular;
-import playingfield.TileStates;
-import playingfield.TileType;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,6 +48,19 @@ import data.cards.ResourceCard;
 import data.cards.ResourceType;
 import data.island.ClientIsleModel;
 import data.island.ServerIsleModel;
+import data.playingfield.Dice;
+import data.playingfield.HarborTile;
+import data.playingfield.HarborType;
+import data.playingfield.MapLocation;
+import data.playingfield.Neighborhood;
+import data.playingfield.Robber;
+import data.playingfield.Site;
+import data.playingfield.Tile;
+import data.playingfield.TileEdge;
+import data.playingfield.TileFactory;
+import data.playingfield.TileNumbersRegular;
+import data.playingfield.TileStates;
+import data.playingfield.TileType;
 import data.utils.Colors;
 import data.utils.PlayerColors;
 import sounds.Sound;
@@ -124,9 +124,6 @@ public class GameController {
 		client.setPlayerprotokoll(playerProtokoll);
 		
 		new Thread(client).start();
-		
-		
-
 	}
 	
 	/**

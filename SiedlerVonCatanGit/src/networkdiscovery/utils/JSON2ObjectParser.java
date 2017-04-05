@@ -9,13 +9,13 @@ import java.util.HashSet;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import playingfield.HarborTile;
-import playingfield.MapLocation;
-import playingfield.Site;
-import playingfield.Tile;
-import playingfield.TileEdge;
 import data.ServerData;
 import data.island.ServerIsleModel;
+import data.playingfield.HarborTile;
+import data.playingfield.MapLocation;
+import data.playingfield.Site;
+import data.playingfield.Tile;
+import data.playingfield.TileEdge;
 
 /**
  * Parst die eingehenden Strings und ints etc. in Spielobjekte unseres Spiels

@@ -43,14 +43,14 @@ import utilities.renderer.IsleRenderer;
 import controller.GameController;
 import controller.GameStates;
 import data.island.ClientIsleModel;
-import playingfield.HarborTile;
-import playingfield.HarborType;
-import playingfield.Neighborhood;
-import playingfield.Site;
-import playingfield.Tile;
-import playingfield.TileEdge;
-import playingfield.TileNumbersRegular;
-import playingfield.TileType;
+import data.playingfield.HarborTile;
+import data.playingfield.HarborType;
+import data.playingfield.Neighborhood;
+import data.playingfield.Site;
+import data.playingfield.Tile;
+import data.playingfield.TileEdge;
+import data.playingfield.TileNumbersRegular;
+import data.playingfield.TileType;
 
 /**
  * IslePanel zeigt alle Daten der Insel - also das Spielfeld - an.

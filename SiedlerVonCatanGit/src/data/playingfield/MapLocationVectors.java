@@ -1,4 +1,4 @@
-package playingfield;
+package data.playingfield;
 /**
  * Verschiebungsvektoren um auf die Nachbarfelder zu kommen
  * @author Patrick

@@ -11,10 +11,10 @@ import org.json.JSONObject;
 import data.PlayerModel;
 import data.island.ClientIsleModel;
 import data.island.ServerIsleModel;
-import playingfield.MapLocation;
-import playingfield.Robber;
-import playingfield.Site;
-import playingfield.Tile;
+import data.playingfield.MapLocation;
+import data.playingfield.Robber;
+import data.playingfield.Site;
+import data.playingfield.Tile;
 import data.ServerData;
 
 /**

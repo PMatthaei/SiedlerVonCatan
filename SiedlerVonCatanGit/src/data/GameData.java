@@ -10,12 +10,12 @@ import java.util.logging.Logger;
 import controller.GameStates;
 import data.cards.ResourceCard;
 import data.island.ClientIsleModel;
+import data.playingfield.Dice;
+import data.playingfield.Robber;
+import data.playingfield.TileNumbersRegular;
 import javafx.collections.FXCollections;
 import utilities.config.Configuration;
 import networkdiscovery.protocol.PlayerProtokoll;
-import playingfield.Dice;
-import playingfield.Robber;
-import playingfield.TileNumbersRegular;
 
 public class GameData extends Model {
 	

@@ -1,4 +1,4 @@
-package playingfield;
+package data.playingfield;
 /**
  * Spielfeldnachbar, ob Kachel oder Kante oder Bauplatz
  * @author Dev

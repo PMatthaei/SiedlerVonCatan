@@ -49,6 +49,11 @@ import data.GameData;
 import data.PlayerModel;
 import data.buildings.Building;
 import data.buildings.BuildingType;
+import data.playingfield.Robber;
+import data.playingfield.Site;
+import data.playingfield.Tile;
+import data.playingfield.TileEdge;
+import data.playingfield.TileNumbersRegular;
 import data.utils.Colors;
 import edu.cmu.relativelayout.Binding;
 import edu.cmu.relativelayout.BindingFactory;
@@ -56,11 +61,6 @@ import edu.cmu.relativelayout.Direction;
 import edu.cmu.relativelayout.Edge;
 import edu.cmu.relativelayout.RelativeConstraints;
 import edu.cmu.relativelayout.RelativeLayout;
-import playingfield.Robber;
-import playingfield.Site;
-import playingfield.Tile;
-import playingfield.TileEdge;
-import playingfield.TileNumbersRegular;
 
 /**
  * GameFrame contains all Panels of the GameView

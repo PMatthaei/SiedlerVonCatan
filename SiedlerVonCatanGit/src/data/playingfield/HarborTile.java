@@ -1,4 +1,4 @@
-package playingfield;
+package data.playingfield;
 
 import java.awt.Point;
 import java.awt.geom.Line2D;

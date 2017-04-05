@@ -1,4 +1,4 @@
-package playingfield;
+package data.playingfield;
 
 /**
  * Enum, das alle moeglichen Zustaende einer Kachel beinhaltet

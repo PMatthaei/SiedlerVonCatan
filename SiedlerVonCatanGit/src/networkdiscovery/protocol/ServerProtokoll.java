@@ -18,20 +18,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableMap;
-import networkdiscovery.catan.server.CatanServer;
-import networkdiscovery.catan.server.CatanServer.ConnectionThread;
 import networkdiscovery.json.JSONListener;
 import networkdiscovery.json.JSONSocketChannel;
+import networkdiscovery.server.CatanServer;
+import networkdiscovery.server.CatanServer.ConnectionThread;
 import networkdiscovery.utils.JSON2ObjectParser;
 import networkdiscovery.utils.PlayerProtokollHelper;
 import networkdiscovery.utils.ServerProtokollHelper;
-import playingfield.HarborTile;
-import playingfield.HarborType;
-import playingfield.MapLocation;
-import playingfield.Robber;
-import playingfield.Site;
-import playingfield.Tile;
-import playingfield.TileType;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,6 +48,13 @@ import data.cards.DevelopmentCardType;
 import data.cards.ResourceType;
 import data.island.ClientIsleModel;
 import data.island.ServerIsleModel;
+import data.playingfield.HarborTile;
+import data.playingfield.HarborType;
+import data.playingfield.MapLocation;
+import data.playingfield.Robber;
+import data.playingfield.Site;
+import data.playingfield.Tile;
+import data.playingfield.TileType;
 import data.utils.Colors;
 import data.utils.PlayerColors;
 

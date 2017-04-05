@@ -1,4 +1,4 @@
-package playingfield;
+package data.playingfield;
 
 
 import java.awt.Color;
@@ -13,8 +13,8 @@ import java.util.Random;
 
 import data.GameObject;
 import data.buildings.Building;
-import playingfield.TileEdge;
-import playingfield.TileNumbersRegular;
+import data.playingfield.TileEdge;
+import data.playingfield.TileNumbersRegular;
 /**
  * Klasse fuer die Kacheln.
  * 

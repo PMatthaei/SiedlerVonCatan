@@ -12,14 +12,6 @@ import java.util.logging.SimpleFormatter;
 
 import networkdiscovery.protocol.PlayerProtokoll;
 import networkdiscovery.protocol.Protokoll;
-import playingfield.Dice;
-import playingfield.MapLocation;
-import playingfield.Robber;
-import playingfield.Site;
-import playingfield.Tile;
-import playingfield.TileEdge;
-import playingfield.TileStates;
-import playingfield.TileType;
 
 import org.json.JSONException;
 
@@ -35,13 +27,23 @@ import data.cards.DevelopmentCardType;
 import data.cards.ResourceType;
 import data.island.ClientIsleModel;
 import data.island.IsleModel;
+import data.playingfield.Dice;
+import data.playingfield.MapLocation;
+import data.playingfield.Robber;
+import data.playingfield.Site;
+import data.playingfield.Tile;
+import data.playingfield.TileEdge;
+import data.playingfield.TileStates;
+import data.playingfield.TileType;
 import sounds.Sound;
 import utilities.renderer.GameUI;
 import viewswt.main.GameView;
 import viewswt.main.IslePanel;
 
 public abstract class Controller {
+	
 	private static Logger log = Logger.getLogger(GameController.class.getName());
+	
 	private FileHandler fh;
 
 	/** Die Daten des Spiels **/

@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import networkdiscovery.protocol.PlayerProtokoll;
-import playingfield.MapLocation;
-import playingfield.Site;
 import controller.GameController;
 import data.buildings.Building;
 import data.buildings.BuildingFactory;
 import data.buildings.BuildingType;
 import data.cards.DevelopmentCard;
 import data.cards.DevelopmentCardType;
+import data.playingfield.MapLocation;
+import data.playingfield.Site;
 import data.utils.Colors;
 import data.utils.PlayerColors;
 

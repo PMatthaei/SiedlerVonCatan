@@ -1,4 +1,4 @@
-package playingfield;
+package data.playingfield;
 
 /**
  * Factory zum Erstellen aller Kacheltypen

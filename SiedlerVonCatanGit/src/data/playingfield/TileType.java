@@ -1,4 +1,4 @@
-package playingfield;
+package data.playingfield;
 
 /**
  * Enum aller Kacheln, die in der TileFactory gebaut werden

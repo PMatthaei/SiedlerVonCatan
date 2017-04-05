@@ -1,4 +1,4 @@
-package networkdiscovery.catan.client;
+package networkdiscovery.client;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,8 +9,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import networkdiscovery.catan.server.ServerIdentifier;
 import networkdiscovery.discovery.AbstractDiscoveryService;
+import networkdiscovery.server.ServerIdentifier;
 
 /**
  * Discovery service implementation for the game client.

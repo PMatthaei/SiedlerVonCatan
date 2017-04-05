@@ -1,4 +1,4 @@
-package networkdiscovery.catan.server;
+package networkdiscovery.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

@@ -6,9 +6,9 @@ import data.PlayerModel;
 import data.buildings.Building;
 import data.buildings.BuildingFactory;
 import data.buildings.BuildingType;
+import data.playingfield.Site;
 import ai.tactics.Brain;
 import networkdiscovery.protocol.PlayerProtokoll;
-import playingfield.Site;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package networkdiscovery.catan.server;
+package networkdiscovery.server;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -17,7 +17,7 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import networkdiscovery.catan.client.ClientDiscoveryService;
+import networkdiscovery.client.ClientDiscoveryService;
 
 /**
  * Example how to get a list of all discovered game servers.

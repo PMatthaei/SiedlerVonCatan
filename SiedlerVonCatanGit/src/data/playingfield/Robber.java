@@ -1,4 +1,4 @@
-package playingfield;
+package data.playingfield;
 
 import java.awt.Rectangle;
 import java.util.HashMap;

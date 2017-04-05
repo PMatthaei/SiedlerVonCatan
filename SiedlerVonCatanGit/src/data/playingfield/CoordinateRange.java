@@ -1,4 +1,4 @@
-package playingfield;
+package data.playingfield;
 /**
  * 
  * Klasse zum Speichern der wichtigen Daten des Feldkoordinatensystems<br>

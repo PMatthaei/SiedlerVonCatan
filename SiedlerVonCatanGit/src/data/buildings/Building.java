@@ -5,8 +5,8 @@ import java.awt.geom.Rectangle2D;
 
 import data.GameObject;
 import data.PlayerModel;
-import playingfield.MapLocation;
-import playingfield.Site;
+import data.playingfield.MapLocation;
+import data.playingfield.Site;
 
 /**
  * 

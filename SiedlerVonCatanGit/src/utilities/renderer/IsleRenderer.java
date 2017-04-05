@@ -40,17 +40,17 @@ import javax.swing.ImageIcon;
 import data.buildings.Building;
 import data.buildings.BuildingType;
 import data.island.ClientIsleModel;
+import data.playingfield.HarborTile;
+import data.playingfield.HarborType;
+import data.playingfield.MapLocation;
+import data.playingfield.PositionType;
+import data.playingfield.Robber;
+import data.playingfield.Site;
+import data.playingfield.Tile;
+import data.playingfield.TileEdge;
+import data.playingfield.TileNumbersRegular;
+import data.playingfield.TileType;
 import data.utils.PlayerColors;
-import playingfield.HarborTile;
-import playingfield.HarborType;
-import playingfield.MapLocation;
-import playingfield.PositionType;
-import playingfield.Robber;
-import playingfield.Site;
-import playingfield.Tile;
-import playingfield.TileEdge;
-import playingfield.TileNumbersRegular;
-import playingfield.TileType;
 import viewswt.main.IslePanel;
 
 /**

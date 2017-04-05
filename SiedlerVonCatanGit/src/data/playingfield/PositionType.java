@@ -1,4 +1,4 @@
-package playingfield;
+package data.playingfield;
 /**
  * Eigenschaften verschiedner Postionen zb Kacheln, Bauplätze, Kanten - wie sie zu einem Betrachtungsursprung liegen
  * @author Patrick

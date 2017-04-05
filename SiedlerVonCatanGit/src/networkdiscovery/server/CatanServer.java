@@ -1,4 +1,4 @@
-package networkdiscovery.catan.server;
+package networkdiscovery.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -20,12 +20,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import data.ServerData;
-import networkdiscovery.catan.server.CatanServer.ConnectionThread;
 import networkdiscovery.json.AbstractJSONObservable;
 import networkdiscovery.json.JSONListener;
 import networkdiscovery.json.JSONSocketChannel;
 import networkdiscovery.json.TextUI;
 import networkdiscovery.protocol.ServerProtokoll;
+import networkdiscovery.server.CatanServer.ConnectionThread;
 
 /**
  * This is a simple chat server using Java NIO, and one thread per client.

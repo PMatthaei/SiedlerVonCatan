@@ -1,4 +1,4 @@
-package playingfield;
+package data.playingfield;
 
 import java.awt.Color;
 import java.awt.Shape;

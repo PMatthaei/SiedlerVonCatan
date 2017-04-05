@@ -12,10 +12,10 @@ import javax.imageio.ImageIO;
 
 import data.buildings.Building;
 import data.buildings.BuildingType;
+import data.playingfield.MapLocation;
+import data.playingfield.TileType;
 import data.utils.Colors;
 import data.utils.PlayerColors;
-import playingfield.MapLocation;
-import playingfield.TileType;
 
 /**
  * Rendert ein Gebaeude

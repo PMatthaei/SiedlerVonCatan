@@ -14,6 +14,7 @@ import controller.GameController;
 import controller.ServerController;
 import data.PlayerModel;
 import data.ServerData;
+import data.playingfield.MapLocation;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
@@ -30,7 +31,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import playingfield.MapLocation;
 
 public class StartServerViewController extends ViewController implements Initializable{
 	
